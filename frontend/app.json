@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "ECHO",
+    "slug": "echo-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "echo",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#0F1115"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.echo.events"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0F1115"
+      },
+      "package": "com.echo.events"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow ECHO to access your contacts so you can invite friends faster."
+        }
+      ]
+    ],
+    "experiments": {},
+    "newArchEnabled": true
+  }
+}
