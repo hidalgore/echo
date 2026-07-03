@@ -54,6 +54,25 @@ export type SessionDTO = {
 /** Publish lifecycle as served. `draft` exists server-side but is never served. */
 export type EventStatusDTO = 'scheduled' | 'on_sale' | 'live' | 'ended';
 
+// ── Phase 3 AMENDMENT (flagged, needs registry lock sign-off) ────────────────
+// Donation campaigns ride the event payload: the checkout/nonprofit UI renders
+// campaign progress BEFORE any intent exists (DonationCard), so serving them
+// through the intent is unimplementable. Progress only — donor identities are
+// never wired. Stored statuses only; goal_reached/goal_exceeded are client
+// display logic derived from the amounts.
+
+export type DonationCampaignDTO = {
+  echo_id: EchoId;
+  nonprofit_name: string;
+  cause_title: string;
+  cause_description: string;
+  goal_cents: number;
+  raised_cents: number;
+  donor_count: number;
+  suggested_amounts_cents: number[];
+  status: 'active' | 'closed';
+};
+
 export type TicketTierDTO = {
   echo_id: EchoId;
   name: string;
@@ -87,6 +106,8 @@ export type EventDTO = {
   /** 0..1 — drives glow/waveform amplitude. Never displayed as a number. */
   atmosphere_intensity: number;
   tiers: TicketTierDTO[];
+  /** Phase 3 amendment: null for events without a campaign. */
+  donation_campaign: DonationCampaignDTO | null;
 };
 
 /** GET /v1/events/:eventId/inventory — fresh availability for the tier picker. */
@@ -114,17 +135,58 @@ export type CredentialDTO = {
   expires_at: string;
 };
 
+// ── Phase 3 AMENDMENT (flagged, needs registry lock sign-off) ────────────────
+// CheckoutIntentDTO reconciled with the pre-ports locked S-05 intent shape
+// (services/checkoutIntentService.ts): tier_id/quantity/currency/expires_at
+// existed there and the checkout UI needs them (TTL countdown, per-tier
+// rows); donation_fee_cents keeps the wire rows summing to total_cents (the
+// donation carries its own processing fee — locked fee model). The request
+// shapes below are the same locked client contract, wired for apiCall.
+
+export type CreateCheckoutIntentRequestDTO = {
+  event_id: EchoId;
+  /** Omitted -> the event's first tier (matches the locked mock behavior). */
+  ticket_type_id?: string;
+  quantity: number;
+  donation_cents?: number;
+  currency?: 'USD';
+  client_context?: { platform: 'web' | 'ios' | 'android'; locale: string };
+};
+
+export type PaymentMethodDTO = {
+  type: 'card' | 'apple_pay' | 'google_pay';
+  /** Stripe PaymentMethod id minted by the client SDK; server confirms. */
+  token: string;
+};
+
 export type CheckoutIntentDTO = {
   echo_id: EchoId;
   event_id: EchoId;
+  tier_id: string;
+  quantity: number;
   status: 'requires_payment' | 'processing' | 'succeeded' | 'canceled' | 'requires_verification';
+  currency: 'USD';
   subtotal_cents: number;
   fees_cents: number;
   tax_cents: number;
   donation_cents: number;
+  donation_fee_cents: number;
   total_cents: number;
   /** Set when age verification must complete before payment (locked gate) */
   age_verification_required: boolean;
+  /** Inventory-hold TTL; the hold releases server-side after this. */
+  expires_at: string;
+};
+
+// ── Phase 3 AMENDMENT (flagged, needs registry lock sign-off) ────────────────
+// v1.0 typed confirmPayment as a single TicketDTO; quantity>1 purchases are
+// real (the locked "pay for all" flow) and the pre-ports locked S-05 confirm
+// response already returned tickets[]. One row per admission — door scans
+// (Phase 5) validate individuals.
+
+export type ConfirmPaymentResponseDTO = {
+  status: 'succeeded';
+  tickets: TicketDTO[];
 };
 
 export type DoorScanRequestDTO = {
