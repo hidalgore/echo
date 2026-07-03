@@ -176,6 +176,17 @@ ECHO_CHECKOUT_HOLD_TTL_SECONDS = int(env("ECHO_CHECKOUT_HOLD_TTL_SECONDS", "600"
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", "")
 STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET", "")
 
+# ─── Credentials (Phase 4: consumed by tickets.credentials; fail-closed) ─────
+
+# Base64-encoded 32-byte Ed25519 private seed; mint one with
+# `manage.py generate_credential_signing_key`. Missing -> envelope 503
+# `credentials_not_configured` on every credential surface.
+ECHO_CREDENTIAL_SIGNING_KEY = env("ECHO_CREDENTIAL_SIGNING_KEY", "")
+# Credential lifetime — the locked ~30s rotation cadence (the client's
+# CONFIG.NFC_CREDENTIAL_ROTATE_INTERVAL_MS drives its refresh off the
+# credential's real expires_at).
+ECHO_CREDENTIAL_TTL_SECONDS = int(env("ECHO_CREDENTIAL_TTL_SECONDS", "30"))
+
 # ─── Sentry (slot — initialized in staging/prod when DSN is set) ─────────────
 
 SENTRY_DSN = env("SENTRY_DSN", "")
