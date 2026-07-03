@@ -1,38 +1,17 @@
 /**
- * ECHO Checkout Intent Service
- * ════════════════════════════
- * Implements the LOCKED S-05 Checkout (<3 Tickets) v1 API contract from
- * `ECHO_Engineering_Spec_v1.0_100p.pdf`.
+ * ECHO Checkout Intent Service — MOCK FIXTURE (demoted in Phase 3 / W5).
  *
- * Endpoints (per locked contract):
- *   POST /v1/checkout/intents       — Create/refresh intent
- *   POST /v1/payments/confirm       — Confirm payment for intent
- *   GET  /v1/checkout/intents/{id}  — Fetch intent status
+ * The real S-05 surface (POST /v1/checkout/intents, POST /v1/payments/confirm,
+ * GET /v1/checkout/intents/:id) is served by the backend and reached through
+ * `getPorts().checkout` (services/api/httpAdapters.ts) behind
+ * EXPO_PUBLIC_ECHO_CHECKOUT_MODE=live. Pricing, inventory holds, and ticket
+ * issuance are server-authoritative there (locked rule).
  *
- * Behavior:
- *   - When CONFIG.MOCK_MODE is true (current), all calls short-circuit to
- *     locally fabricated responses that match the locked response schemas
- *     exactly. This lets the UI exercise the full happy path on the web
- *     build with no backend wired.
- *   - When CONFIG.MOCK_MODE is false, all calls hit the real apiRequest()
- *     layer against CONFIG.API_BASE_URL.
- *
- * Pricing values in the intent.pricing block are LOCKED to be in **cents**
- * per the engineering spec (subtotal: 12000 = $120.00). The local mock
- * computes pricing in dollars via pricingEngine.computeCheckoutFees() and
- * scales to cents for the response, so the swap to a real backend changes
- * nothing about the UI's pricing math.
- *
- * SWAP-POINT: set CONFIG.MOCK_MODE = false and point CONFIG.API_BASE_URL
- * at the real ECHO API host. No call sites need to change.
- *
- * Stripe is the locked PCI processor (per ECHO_Payment_System_Doctrine).
- * The `payment_method.token` field in confirmPayment() carries the Stripe
- * PaymentMethod id or Apple Pay token issued by the platform-specific
- * collection layer (Stripe Elements on web, native Stripe SDK on iOS/Android).
+ * What remains here is the local fabricator that backs `mockPorts.checkout`
+ * (services/api/mockAdapters.ts) so the app keeps demoing offline: responses
+ * match the locked schemas (pricing in **cents**), tokens containing the
+ * literal "decline" simulate a card decline for QA.
  */
-import { CONFIG } from '../constants/config';
-import { apiRequest } from './apiClient';
 import { computeCheckoutFees } from './pricingEngine';
 
 // ── Types matching the LOCKED S-05 API schema ───────────────────────────
@@ -74,7 +53,7 @@ export interface CreateCheckoutIntentRequest {
   ticket_type_id?: string;
   /** Optional donation amount in cents. */
   donation_cents?: number;
-  /** Pricing subtotal in dollars, used for mock-mode pricing only. */
+  /** Pricing subtotal in dollars (mock pricing input). */
   mock_subtotal_dollars?: number;
   currency?: 'USD';
   client_context?: {
@@ -115,13 +94,7 @@ export interface ConfirmPaymentResponse {
   error_message?: string;
 }
 
-// ── Endpoints (locked) ──────────────────────────────────────────────────
-
-const ENDPOINT_CREATE_INTENT = '/v1/checkout/intents';
-const ENDPOINT_CONFIRM_PAYMENT = '/v1/payments/confirm';
-const ENDPOINT_FETCH_INTENT = (id: string) => `/v1/checkout/intents/${id}`;
-
-// ── Mock helpers ────────────────────────────────────────────────────────
+// ── Mock fabricators ────────────────────────────────────────────────────
 
 const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -170,61 +143,26 @@ function fabricateMockConfirmation(req: ConfirmPaymentRequest): ConfirmPaymentRe
   };
 }
 
-// ── Public API ──────────────────────────────────────────────────────────
+// ── Public API (mock-only; the live path is getPorts().checkout) ────────
 
-/**
- * Create or refresh a checkout intent. Matches POST /v1/checkout/intents.
- * Returns the locked intent envelope, including pricing in cents.
- */
 export async function createCheckoutIntent(
   req: CreateCheckoutIntentRequest,
 ): Promise<CheckoutIntent> {
-  if (!CONFIG.MOCK_MODE) {
-    return apiRequest<CheckoutIntent>(ENDPOINT_CREATE_INTENT, {
-      method: 'POST',
-      body: JSON.stringify({
-        event_id: req.event_id,
-        quantity: req.quantity,
-        ticket_type_id: req.ticket_type_id,
-        donation_cents: req.donation_cents,
-        currency: req.currency ?? 'USD',
-        client_context: req.client_context,
-      }),
-    });
-  }
   await delay(180);
   return fabricateMockIntent(req);
 }
 
-/**
- * Confirm a checkout intent. Matches POST /v1/payments/confirm.
- * Idempotency key is REQUIRED per the locked contract.
- */
 export async function confirmPayment(
   req: ConfirmPaymentRequest,
 ): Promise<ConfirmPaymentResponse> {
   if (!req.idempotency_key) {
     throw new Error('confirmPayment requires an idempotency_key (locked S-05 rule)');
   }
-  if (!CONFIG.MOCK_MODE) {
-    return apiRequest<ConfirmPaymentResponse>(ENDPOINT_CONFIRM_PAYMENT, {
-      method: 'POST',
-      body: JSON.stringify(req),
-      headers: { 'Idempotency-Key': req.idempotency_key },
-    });
-  }
   await delay(640);
   return fabricateMockConfirmation(req);
 }
 
-/**
- * Fetch the latest state of a checkout intent. Matches GET /v1/checkout/intents/{id}.
- * Used to poll an intent that's transitioned to 'processing' or for 3DS recovery.
- */
 export async function getCheckoutIntent(intentId: string): Promise<CheckoutIntent> {
-  if (!CONFIG.MOCK_MODE) {
-    return apiRequest<CheckoutIntent>(ENDPOINT_FETCH_INTENT(intentId));
-  }
   await delay(120);
   return {
     intent_id: intentId,
@@ -237,26 +175,8 @@ export async function getCheckoutIntent(intentId: string): Promise<CheckoutInten
   };
 }
 
-// ── Idempotency key helper ──────────────────────────────────────────────
-
-/**
- * Generate an RFC4122-ish v4 UUID for idempotency keys. Web crypto when
- * available, falls back to math.random for environments without crypto.
- */
-export function newIdempotencyKey(): string {
-  const g: any = globalThis as any;
-  if (g.crypto?.randomUUID) return g.crypto.randomUUID();
-  // Fallback (non-crypto, sufficient for retry de-dupe in mock mode)
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
-
 export const checkoutIntentService = {
   createCheckoutIntent,
   confirmPayment,
   getCheckoutIntent,
-  newIdempotencyKey,
 };

@@ -35,7 +35,8 @@
           "contactsPermission": "Allow ECHO to access your contacts so you can invite friends faster."
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "@stripe/stripe-react-native"
     ],
     "experiments": {},
     "newArchEnabled": true

@@ -6,14 +6,17 @@
  * DTO-typed at the boundary; domain mapping happens in the callers via
  * services/api/mappers.
  *
- * Phase 2 lands the first one (DiscoveryPort / S-03). Later phases add their
- * domain here and extend the binding in app/_layout.tsx — mock stays the
- * default for every unswapped domain.
+ * Phase 2 landed the first one (DiscoveryPort / S-03); Phase 3 adds
+ * CheckoutPort (S-05). Later phases add their domain here and extend the
+ * binding in app/_layout.tsx — mock stays the default for every unswapped
+ * domain.
  */
 
 import type { Paged } from '../../types/api/shared';
-import type { EventDTO, EventInventoryDTO } from '../../types/api/dto';
-import type { DiscoveryPort } from './ports';
+import type {
+  CheckoutIntentDTO, ConfirmPaymentResponseDTO, EventDTO, EventInventoryDTO,
+} from '../../types/api/dto';
+import type { CheckoutPort, DiscoveryPort } from './ports';
 import { apiCall } from './apiClient';
 
 export const httpDiscoveryPort: DiscoveryPort = {
@@ -33,5 +36,18 @@ export const httpDiscoveryPort: DiscoveryPort = {
   listSavedEvents: (params) =>
     apiCall<Paged<EventDTO>>('savedEvents', {
       query: { cursor: params.cursor, limit: params.limit },
+    }),
+};
+
+export const httpCheckoutPort: CheckoutPort = {
+  createIntent: (request, idempotencyKey) =>
+    apiCall<CheckoutIntentDTO>('createCheckoutIntent', { body: request, idempotencyKey }),
+
+  getIntent: (id) => apiCall<CheckoutIntentDTO>('checkoutIntent', { params: { id } }),
+
+  confirmPayment: (intentId, paymentMethod, idempotencyKey) =>
+    apiCall<ConfirmPaymentResponseDTO>('confirmPayment', {
+      body: { intent_id: intentId, payment_method: paymentMethod },
+      idempotencyKey,
     }),
 };

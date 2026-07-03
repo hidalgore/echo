@@ -12,6 +12,7 @@
 import type { ApiResult, Paged, PageParams } from '../../types/api/shared';
 import type {
   EventDTO, EventInventoryDTO, TicketDTO, CredentialDTO, CheckoutIntentDTO,
+  ConfirmPaymentResponseDTO, CreateCheckoutIntentRequestDTO, PaymentMethodDTO,
   DoorScanRequestDTO, DoorScanResultDTO, CircleDTO, RiskDecisionDTO,
 } from '../../types/api/dto';
 
@@ -26,10 +27,20 @@ export type DiscoveryPort = {
   listSavedEvents(params: PageParams): Promise<ApiResult<Paged<EventDTO>>>;
 };
 
+// Phase 3: createIntent carries the locked request shape (tier/quantity/
+// donation — the v1.0 eventId-only signature couldn't express the real
+// checkout), and confirmPayment returns the amended tickets[] response.
 export type CheckoutPort = {
-  createIntent(eventId: string, idempotencyKey: string): Promise<ApiResult<CheckoutIntentDTO>>;
+  createIntent(
+    request: CreateCheckoutIntentRequestDTO,
+    idempotencyKey: string,
+  ): Promise<ApiResult<CheckoutIntentDTO>>;
   getIntent(id: string): Promise<ApiResult<CheckoutIntentDTO>>;
-  confirmPayment(intentId: string, idempotencyKey: string): Promise<ApiResult<TicketDTO>>;
+  confirmPayment(
+    intentId: string,
+    paymentMethod: PaymentMethodDTO,
+    idempotencyKey: string,
+  ): Promise<ApiResult<ConfirmPaymentResponseDTO>>;
 };
 
 export type TicketPort = {

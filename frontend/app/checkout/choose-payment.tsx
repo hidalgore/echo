@@ -15,6 +15,7 @@ import { Text } from '../../components/ui';
 import { CircleEventCard, GradientCTA } from '../../components/circle';
 import { EchoMark } from '../../components/shared/EchoMark';
 import { MOCK_EVENTS } from '../../services/mock';
+import { useEventStore } from '../../stores/eventStore';
 import { useCircleStore } from '../../stores/circleStore';
 import { createFreshCircle } from '../../services/circleMock';
 import { CONFIG } from '../../constants/config';
@@ -43,7 +44,10 @@ export default function ChoosePaymentScreen() {
     quantity?: string;
     selections?: string;
   }>();
-  const event = MOCK_EVENTS.find(e => e.id === eventId) || MOCK_EVENTS[0];
+  // Live discovery serves backend events the bundled corpus doesn't know —
+  // resolve through the store (it falls back to MOCK_EVENTS internally).
+  const storeEvent = useEventStore((state) => state.getEventById(eventId ?? ''));
+  const event = storeEvent || MOCK_EVENTS.find(e => e.id === eventId) || MOCK_EVENTS[0];
   const ticketPrice = event?.ticket_types?.[0]?.price ?? 40;
 
   const selectedTickets = useMemo<CheckoutSelection[]>(() => {

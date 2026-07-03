@@ -19,10 +19,25 @@ const AUTH_MODE: 'live' | 'mock' =
 const DISCOVERY_MODE: 'live' | 'mock' =
   process.env.EXPO_PUBLIC_ECHO_DISCOVERY_MODE === 'live' ? 'live' : 'mock';
 
+/**
+ * Checkout domain swap gate (Phase 3 / W5), mirroring the others. 'live'
+ * binds the http CheckoutPort (S-05) and routes single-checkout through the
+ * real intent -> Stripe -> confirm sequence; 'mock' keeps the local simulated
+ * payment. Mock stays the default until the operator smokes the staging swap
+ * — flip per environment with EXPO_PUBLIC_ECHO_CHECKOUT_MODE=live (inlined by
+ * Expo at bundle time).
+ */
+const CHECKOUT_MODE: 'live' | 'mock' =
+  process.env.EXPO_PUBLIC_ECHO_CHECKOUT_MODE === 'live' ? 'live' : 'mock';
+
 export const CONFIG = {
   MOCK_MODE: true,
   AUTH_MODE,
   DISCOVERY_MODE,
+  CHECKOUT_MODE,
+  /** Stripe publishable key (test mode until launch); empty = collection
+   *  fails visibly at pay time, never silently. */
+  STRIPE_PUBLISHABLE_KEY: process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
   API_BASE_URL: process.env.EXPO_PUBLIC_ECHO_API_URL || 'https://api.echo.events',
   WEB_BASE_URL: 'https://getechoaccess.com',
   SEARCH_API_BASE_PATH: '/v1/search',
