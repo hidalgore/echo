@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "core",
     "identity",
     "audit",
+    "events",
 ]
 
 AUTH_USER_MODEL = "identity.User"
