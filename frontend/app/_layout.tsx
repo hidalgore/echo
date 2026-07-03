@@ -11,7 +11,7 @@ import { CONFIG } from '../constants/config';
 import { configureApiClient } from '../services/api/apiClient';
 import { bindPorts } from '../services/api/ports';
 import { mockPorts } from '../services/api/mockAdapters';
-import { httpCheckoutPort, httpDiscoveryPort } from '../services/api/httpAdapters';
+import { httpCheckoutPort, httpDiscoveryPort, httpTicketPort } from '../services/api/httpAdapters';
 import { refreshSession } from '../services/auth/authService';
 import { getAccessTokenSync } from '../services/auth/tokenStorage';
 import { PaymentProvider } from '../components/checkout/StripeCheckout';
@@ -21,7 +21,8 @@ import { PaymentProvider } from '../components/checkout/StripeCheckout';
 // screen edits). Phase 1: the auth domain rides the bearer + single-flight
 // refresh hooks (tokenStorage/authService). Phase 2: discovery rides the S-03
 // http port behind EXPO_PUBLIC_ECHO_DISCOVERY_MODE. Phase 3: checkout rides
-// the S-05 http port behind EXPO_PUBLIC_ECHO_CHECKOUT_MODE (mock defaults
+// the S-05 http port behind EXPO_PUBLIC_ECHO_CHECKOUT_MODE. Phase 4: tickets
+// ride the S-06 http port behind EXPO_PUBLIC_ECHO_TICKET_MODE (mock defaults
 // until the operator smokes staging). Every other domain still resolves
 // through mockPorts.
 configureApiClient({
@@ -33,6 +34,7 @@ bindPorts({
   ...mockPorts,
   ...(CONFIG.DISCOVERY_MODE === 'live' ? { discovery: httpDiscoveryPort } : null),
   ...(CONFIG.CHECKOUT_MODE === 'live' ? { checkout: httpCheckoutPort } : null),
+  ...(CONFIG.TICKET_MODE === 'live' ? { ticket: httpTicketPort } : null),
 });
 
 function RootInner() {

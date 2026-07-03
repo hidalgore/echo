@@ -43,10 +43,14 @@ export type CheckoutPort = {
   ): Promise<ApiResult<ConfirmPaymentResponseDTO>>;
 };
 
+// Phase 4: listWallet backs GET /v1/wallet (registry row without a port
+// method until now — a frontend-internal addition, not a registry amendment).
+// Per-admission rows; the client groups by the amended intent_id.
 export type TicketPort = {
   getTicket(ticketId: string): Promise<ApiResult<TicketDTO>>;
   getCredential(ticketId: string): Promise<ApiResult<CredentialDTO>>;
   refreshCredential(ticketId: string): Promise<ApiResult<CredentialDTO>>;
+  listWallet(params: PageParams): Promise<ApiResult<Paged<TicketDTO>>>;
 };
 
 export type DoorPort = {

@@ -14,9 +14,10 @@
 
 import type { Paged } from '../../types/api/shared';
 import type {
-  CheckoutIntentDTO, ConfirmPaymentResponseDTO, EventDTO, EventInventoryDTO,
+  CheckoutIntentDTO, ConfirmPaymentResponseDTO, CredentialDTO, EventDTO,
+  EventInventoryDTO, TicketDTO,
 } from '../../types/api/dto';
-import type { CheckoutPort, DiscoveryPort } from './ports';
+import type { CheckoutPort, DiscoveryPort, TicketPort } from './ports';
 import { apiCall } from './apiClient';
 
 export const httpDiscoveryPort: DiscoveryPort = {
@@ -49,5 +50,21 @@ export const httpCheckoutPort: CheckoutPort = {
     apiCall<ConfirmPaymentResponseDTO>('confirmPayment', {
       body: { intent_id: intentId, payment_method: paymentMethod },
       idempotencyKey,
+    }),
+};
+
+// Phase 4 (S-06). ticketRefresh is a plain POST — NOT idempotency-flagged in
+// the locked registry (rotation is the point; a replayed refresh minting
+// again is correct, not a duplicate hazard).
+export const httpTicketPort: TicketPort = {
+  getTicket: (ticketId) => apiCall<TicketDTO>('ticket', { params: { ticketId } }),
+
+  getCredential: (ticketId) => apiCall<CredentialDTO>('ticketCredential', { params: { ticketId } }),
+
+  refreshCredential: (ticketId) => apiCall<CredentialDTO>('ticketRefresh', { params: { ticketId } }),
+
+  listWallet: (params) =>
+    apiCall<Paged<TicketDTO>>('wallet', {
+      query: { cursor: params.cursor, limit: params.limit },
     }),
 };
