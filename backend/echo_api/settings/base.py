@@ -124,6 +124,9 @@ REST_FRAMEWORK = {
         "admin": env("RATE_LIMIT_ADMIN", "120/min"),
         # Phase 3 compliance note: low per-(user, event) on intent creation.
         "checkout_intent": env("RATE_LIMIT_CHECKOUT_INTENT", "6/min"),
+        # Phase 4: per-(identity, ticket) on credential get/refresh — the 30s
+        # rotation cadence is 2/min, so this is pure headroom + abuse ceiling.
+        "credential": env("RATE_LIMIT_CREDENTIAL", "30/min"),
     },
 }
 
@@ -134,6 +137,11 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
     # Contract paths are absolute (/v1/...); don't strip a common prefix.
     "SCHEMA_PATH_PREFIX": "",
+    # Multiple serializers expose a `status` choices field (events vs tickets);
+    # name the ticket one explicitly so schema generation stays deterministic.
+    "ENUM_NAME_OVERRIDES": {
+        "TicketStatusEnum": "tickets.models.TicketStatus.choices",
+    },
 }
 
 # ─── Identity / tokens (Phase 1) ─────────────────────────────────────────────

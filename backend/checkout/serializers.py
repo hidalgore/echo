@@ -1,17 +1,18 @@
 """
 S-05 wire serializers (Phase 3 / W3) — snake_case, matching the (Phase 3-
-amended) CheckoutIntentDTO / ConfirmPaymentResponseDTO / TicketDTO in
+amended) CheckoutIntentDTO / ConfirmPaymentResponseDTO in
 frontend/types/api/dto.ts. Request shapes follow the locked S-05 client
 contract (services/checkoutIntentService.ts CreateCheckoutIntentRequest /
 ConfirmPaymentRequest; the Idempotency-Key rides the header, per the platform
 rule, not the body).
+
+TicketSerializer moved to tickets.serializers in Phase 4 — the S-06 surface
+owns the shape now; the confirm response imports it from there (one copy).
 """
 
 from rest_framework import serializers
 
 from checkout.models import CheckoutIntent, IntentStatus
-from events.serializers import age_badge
-from tickets.models import Ticket
 
 MAX_QUANTITY_PER_INTENT = 8  # the locked checkout UI's "Max 8 per reservation"
 
@@ -81,18 +82,3 @@ class CheckoutIntentSerializer(serializers.ModelSerializer):
 
     def get_fees_cents(self, intent) -> int:
         return intent.platform_fee_cents + intent.processing_fee_cents
-
-
-class TicketSerializer(serializers.ModelSerializer):
-    """Locked TicketDTO: active, tier, age badge (credentials are Phase 4)."""
-
-    event_id = serializers.UUIDField(read_only=True)
-    tier_id = serializers.UUIDField(read_only=True)
-    age_badge = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Ticket
-        fields = ["echo_id", "event_id", "tier_id", "status", "age_badge", "issued_at"]
-
-    def get_age_badge(self, ticket) -> str:
-        return age_badge(ticket.event.age_restriction)

@@ -11,7 +11,8 @@ from checkout.tests.conftest import confirm_payment, create_intent
 from events.models import DonationCampaign
 from tickets.models import Ticket
 
-TICKET_KEYS = {"echo_id", "event_id", "tier_id", "status", "age_badge", "issued_at"}
+# intent_id: the flagged Phase 4 TicketDTO amendment (wallet grouping linkage).
+TICKET_KEYS = {"echo_id", "event_id", "tier_id", "intent_id", "status", "age_badge", "issued_at"}
 
 
 def _created_intent(user_client, event, tier, **kwargs):

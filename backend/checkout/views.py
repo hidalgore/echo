@@ -39,13 +39,13 @@ from checkout.serializers import (
     CheckoutIntentSerializer,
     ConfirmPaymentRequestSerializer,
     CreateCheckoutIntentRequestSerializer,
-    TicketSerializer,
 )
 from checkout.throttling import CheckoutIntentThrottle
 from core.envelope import error_response
 from core.idempotency import IDEMPOTENCY_HEADER, IdempotencyMixin
 from core.ratelimit import UserRateThrottle
 from events.models import VISIBLE_STATUSES, Event, EventStatus
+from tickets.serializers import TicketSerializer
 
 logger = logging.getLogger(__name__)
 
