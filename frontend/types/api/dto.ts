@@ -116,10 +116,20 @@ export type EventInventoryDTO = {
   tiers: TicketTierDTO[];
 };
 
+// ── Phase 4 AMENDMENT (flagged, needs registry lock sign-off) ────────────────
+// TicketDTO gains `intent_id`. GET /v1/wallet serves one row per admission
+// (server truth — door scans validate individuals) while the locked wallet UI
+// renders one card per *purchase*; intent linkage is what lets the client
+// group per-admission rows back into purchase cards when hydrating across
+// installs. Served by both /v1/wallet and the S-05 confirm response (one
+// serializer, one shape).
+
 export type TicketDTO = {
   echo_id: EchoId;
   event_id: EchoId;
   tier_id: string;
+  /** Phase 4 amendment: the purchase (checkout intent) this admission belongs to. */
+  intent_id: EchoId;
   status: TicketStatusDTO;
   age_badge: AgeBadgeDTO;
   issued_at: string;
