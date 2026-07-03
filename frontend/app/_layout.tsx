@@ -7,6 +7,16 @@ import { colors } from '../theme/tokens';
 import { DynamicThemeProvider, useDynamicTheme } from '../theme/dynamicTheme';
 import { useAuthStore } from '../stores/authStore';
 import { installAppLogging, NavigationTransitionLogger, logEvent } from '../services/logging';
+import { CONFIG } from '../constants/config';
+import { configureApiClient } from '../services/api/apiClient';
+import { bindPorts } from '../services/api/ports';
+import { mockPorts } from '../services/api/mockAdapters';
+
+// Bind the API seam before any screen renders. Mock adapters today; http
+// adapters replace them domain-by-domain as backend phases land (the swap is
+// this one binding — no screen edits).
+configureApiClient({ baseUrl: CONFIG.API_BASE_URL });
+bindPorts(mockPorts);
 
 function RootInner() {
   const [ready, setReady] = useState(false);

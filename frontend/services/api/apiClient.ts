@@ -97,7 +97,17 @@ export async function apiCall<T>(key: EndpointKey, opts: CallOptions = {}): Prom
   }
 }
 
-/** Generate an idempotency key (UUID-ish; replace with crypto.randomUUID in app). */
+/**
+ * Generate an RFC4122 v4 UUID for idempotency keys (required by the Stripe
+ * contract). Web crypto when available; non-crypto v4-shaped fallback for
+ * environments without it (same convention as checkoutIntentService).
+ */
 export function newIdempotencyKey(): string {
-  return `idem_${Math.random().toString(36).slice(2)}_${Date.now()}`;
+  const g = globalThis as { crypto?: { randomUUID?: () => string } };
+  if (g.crypto?.randomUUID) return g.crypto.randomUUID();
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 }
