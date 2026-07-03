@@ -1,12 +1,12 @@
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "echo_api.settings.test"
 python_files = ["test_*.py"]
-testpaths = ["core", "identity", "audit"]
+testpaths = ["core", "identity", "audit", "events"]
 
 [tool.ruff]
 line-length = 110
 target-version = "py313"
-extend-exclude = [".venv", "core/migrations", "identity/migrations", "audit/migrations"]
+extend-exclude = [".venv", "core/migrations", "identity/migrations", "audit/migrations", "events/migrations"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "DJ"]

@@ -11,20 +11,27 @@ import { CONFIG } from '../constants/config';
 import { configureApiClient } from '../services/api/apiClient';
 import { bindPorts } from '../services/api/ports';
 import { mockPorts } from '../services/api/mockAdapters';
+import { httpDiscoveryPort } from '../services/api/httpAdapters';
 import { refreshSession } from '../services/auth/authService';
 import { getAccessTokenSync } from '../services/auth/tokenStorage';
 
-// Bind the API seam before any screen renders. Mock adapters today; http
-// adapters replace them domain-by-domain as backend phases land (the swap is
-// this one binding — no screen edits). Phase 1: the auth domain rides the
-// bearer + single-flight refresh hooks (tokenStorage/authService); every
-// other domain still resolves through mockPorts.
+// Bind the API seam before any screen renders. Http adapters replace mock
+// domain-by-domain as backend phases land (the swap is this one binding — no
+// screen edits). Phase 1: the auth domain rides the bearer + single-flight
+// refresh hooks (tokenStorage/authService). Phase 2: discovery rides the S-03
+// http port behind EXPO_PUBLIC_ECHO_DISCOVERY_MODE (mock default until the
+// operator smokes staging). Every other domain still resolves through
+// mockPorts.
 configureApiClient({
   baseUrl: CONFIG.API_BASE_URL,
   getAuthToken: getAccessTokenSync,
   refreshAuthToken: refreshSession,
 });
-bindPorts(mockPorts);
+bindPorts(
+  CONFIG.DISCOVERY_MODE === 'live'
+    ? { ...mockPorts, discovery: httpDiscoveryPort }
+    : mockPorts,
+);
 
 function RootInner() {
   const [ready, setReady] = useState(false);

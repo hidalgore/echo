@@ -41,15 +41,58 @@ export type SessionDTO = {
   is_new_user?: boolean; // login endpoints only
 };
 
+// ─── S-03 events / discovery (Phase 2) ───────────────────────────────────────
+// ── Phase 2 AMENDMENT (flagged, needs registry lock sign-off) ────────────────
+// v1.0 locked EventDTO at 7 fields; the locked discovery/detail UI renders
+// description, category, image, venue address, end time, host identity,
+// status, and per-tier name/price/availability (the tier picker). The
+// DiscoveryPort swap is unimplementable against the 7-field shape, so it is
+// extended here — same mechanism as the Phase 1 auth refresh/logout amendment.
+// Social Energy doctrine held: label + 0..1 intensity only; capacity and sold
+// counts are never wired.
+
+/** Publish lifecycle as served. `draft` exists server-side but is never served. */
+export type EventStatusDTO = 'scheduled' | 'on_sale' | 'live' | 'ended';
+
+export type TicketTierDTO = {
+  echo_id: EchoId;
+  name: string;
+  description: string;
+  price_cents: number;
+  /**
+   * Tickets still purchasable — exact remaining count (the locked tier picker
+   * renders "N remaining"). Tier capacity and sold totals are never exposed.
+   */
+  available: number;
+};
+
 export type EventDTO = {
   echo_id: EchoId;
   public_id: PublicId;
   title: string;
+  description: string;
+  category: string;
+  status: EventStatusDTO;
   venue_name: string;
+  venue_address: string;
   starts_at: string; // ISO
+  ends_at: string; // ISO
+  image_url: string;
+  is_featured: boolean;
+  host_name: string;
+  host_verified: boolean;
   age_badge: AgeBadgeDTO;
-  // Social Energy doctrine: never expose raw counts; public floor only.
+  // Social Energy doctrine: never expose raw counts; label + intensity only.
   atmosphere_label: string;
+  /** 0..1 — drives glow/waveform amplitude. Never displayed as a number. */
+  atmosphere_intensity: number;
+  tiers: TicketTierDTO[];
+};
+
+/** GET /v1/events/:eventId/inventory — fresh availability for the tier picker. */
+export type EventInventoryDTO = {
+  event_id: EchoId;
+  tiers: TicketTierDTO[];
 };
 
 export type TicketDTO = {

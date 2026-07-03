@@ -11,14 +11,19 @@
 
 import type { ApiResult, Paged, PageParams } from '../../types/api/shared';
 import type {
-  EventDTO, TicketDTO, CredentialDTO, CheckoutIntentDTO,
+  EventDTO, EventInventoryDTO, TicketDTO, CredentialDTO, CheckoutIntentDTO,
   DoorScanRequestDTO, DoorScanResultDTO, CircleDTO, RiskDecisionDTO,
 } from '../../types/api/dto';
 
 export type DiscoveryPort = {
   listEvents(params: PageParams & { city?: string }): Promise<ApiResult<Paged<EventDTO>>>;
   getEvent(eventId: string): Promise<ApiResult<EventDTO>>;
+  /** Fresh per-tier availability for the tier picker (S-03 eventInventory). */
+  getInventory(eventId: string): Promise<ApiResult<EventInventoryDTO>>;
   saveEvent(eventId: string): Promise<ApiResult<{ ok: true }>>;
+  unsaveEvent(eventId: string): Promise<ApiResult<{ ok: true }>>;
+  /** Phase 2 registry amendment (flagged in endpoints.ts). */
+  listSavedEvents(params: PageParams): Promise<ApiResult<Paged<EventDTO>>>;
 };
 
 export type CheckoutPort = {

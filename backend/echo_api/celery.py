@@ -13,4 +13,8 @@ app.conf.beat_schedule = {
         "task": "core.tasks.purge_expired_idempotency_records",
         "schedule": 60 * 60,  # hourly
     },
+    "advance-event-lifecycle": {
+        "task": "events.tasks.advance_event_lifecycle",
+        "schedule": 60,  # every minute; idempotent, only ever advances
+    },
 }

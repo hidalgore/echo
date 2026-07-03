@@ -16,7 +16,7 @@ import { API_STATUS } from '../../types/api/shared';
 import type { ApiResult, Paged, PageParams } from '../../types/api/shared';
 import type {
   CheckoutIntentDTO, CircleDTO, CredentialDTO, DoorScanRequestDTO,
-  DoorScanResultDTO, EventDTO, RiskDecisionDTO, TicketDTO,
+  DoorScanResultDTO, EventDTO, EventInventoryDTO, RiskDecisionDTO, TicketDTO, TicketTierDTO,
 } from '../../types/api/dto';
 import type { EchoPorts } from './ports';
 import { toAgeBadge, toTicketStatus } from './mappers';
@@ -74,17 +74,41 @@ function eventAgeBadge(event: Event | undefined) {
   return toAgeBadge({ age18Plus: restriction >= 18, age21Plus: restriction >= 21 });
 }
 
+function toTicketTierDTO(tier: Event['ticket_types'][number]): TicketTierDTO {
+  return {
+    echo_id: tier.id,
+    name: tier.name,
+    description: tier.description ?? '',
+    // Domain prices are dollars; the wire is cents (locked rule).
+    price_cents: Math.round(tier.price * 100),
+    available: tier.available,
+  };
+}
+
 function toEventDTO(event: Event): EventDTO {
+  const energy = getSocialEnergy(event);
   return {
     echo_id: event.id,
     // Real public_id (Crockford Base32 + checksum) is minted server-side in Phase 2.
     public_id: event.id,
     title: event.title,
+    description: event.description,
+    category: event.category,
+    // The wire never serves drafts; a mock draft reads as announced.
+    status: event.status && event.status !== 'draft' ? event.status : 'scheduled',
     venue_name: event.venue_name,
+    venue_address: event.venue_address,
     starts_at: event.start_time,
+    ends_at: event.end_time,
+    image_url: event.image_url ?? '',
+    is_featured: event.is_featured ?? false,
+    host_name: event.host_name ?? '',
+    host_verified: event.host_verified ?? false,
     age_badge: eventAgeBadge(event),
-    // Social Energy doctrine: label only, never raw counts.
-    atmosphere_label: ENERGY_STATE_LABEL[getSocialEnergy(event).state],
+    // Social Energy doctrine: label + 0..1 intensity only, never raw counts.
+    atmosphere_label: ENERGY_STATE_LABEL[energy.state],
+    atmosphere_intensity: energy.intensity,
+    tiers: event.ticket_types.map(toTicketTierDTO),
   };
 }
 
@@ -221,10 +245,27 @@ export const mockPorts: EchoPorts = {
       return ok(toEventDTO(event));
     },
 
+    async getInventory(eventId) {
+      const event = await findEvent(eventId);
+      if (!event) return notFound<EventInventoryDTO>('event', eventId);
+      return ok({ event_id: event.id, tiers: event.ticket_types.map(toTicketTierDTO) });
+    },
+
     async saveEvent(eventId) {
       const store = useEventStore.getState();
       if (!store.isSaved(eventId)) store.toggleSaved(eventId);
       return ok({ ok: true as const });
+    },
+
+    async unsaveEvent(eventId) {
+      const store = useEventStore.getState();
+      if (store.isSaved(eventId)) store.toggleSaved(eventId);
+      return ok({ ok: true as const });
+    },
+
+    async listSavedEvents(params) {
+      const page = paginate(useEventStore.getState().getSavedEvents(), params);
+      return ok({ items: page.items.map(toEventDTO), nextCursor: page.nextCursor });
     },
   },
 

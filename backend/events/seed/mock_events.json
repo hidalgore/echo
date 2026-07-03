@@ -1,0 +1,4363 @@
+{
+  "event_count": 158,
+  "events": [
+    {
+      "id": "evt_001",
+      "title": "Nightfall Festival",
+      "description": "An elevated electronic night with immersive visuals, trusted entry, and premium group arrival flow.",
+      "category": "music",
+      "venue_name": "The Warehouse",
+      "venue_address": "123 Industrial Ave, Seattle, WA",
+      "start_offset_minutes": -226,
+      "end_offset_minutes": 134,
+      "image_url": "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3",
+      "is_featured": true,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "tkt_001",
+          "name": "General Admission",
+          "description": "",
+          "price_cents": 7500,
+          "available": 250
+        },
+        {
+          "id": "tkt_002",
+          "name": "VIP Access",
+          "description": "",
+          "price_cents": 15000,
+          "available": 50
+        }
+      ]
+    },
+    {
+      "id": "evt_002",
+      "title": "Jazz in the Garden",
+      "description": "Smooth jazz outdoors with lounge seating, curated food, and refined pacing from arrival through closeout.",
+      "category": "music",
+      "venue_name": "Botanical Gardens",
+      "venue_address": "456 Park Lane, Seattle, WA",
+      "start_offset_minutes": -346,
+      "end_offset_minutes": -106,
+      "image_url": "https://images.unsplash.com/photo-1511192336575-5a79af67a629",
+      "is_featured": false,
+      "host_name": "Abbe Collective",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "tkt_003",
+          "name": "Lawn Seating",
+          "description": "",
+          "price_cents": 3500,
+          "available": 500
+        },
+        {
+          "id": "tkt_004",
+          "name": "Table Service",
+          "description": "",
+          "price_cents": 12000,
+          "available": 20
+        }
+      ]
+    },
+    {
+      "id": "evt_003",
+      "title": "Art & Soul Exhibition",
+      "description": "Contemporary gallery experience with timed access and a calm, high-trust check-in flow.",
+      "category": "art",
+      "venue_name": "Modern Art Museum",
+      "venue_address": "789 Culture Blvd, Seattle, WA",
+      "start_offset_minutes": 614,
+      "end_offset_minutes": 1214,
+      "image_url": "https://images.unsplash.com/photo-1531243269054-5ebf6f34081e",
+      "is_featured": false,
+      "host_name": "Seattle Modern",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "tkt_005",
+          "name": "General Entry",
+          "description": "",
+          "price_cents": 2500,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_004",
+      "title": "Comedy Night Live",
+      "description": "Fast-paced stand-up with premium seating tiers and instant wallet delivery.",
+      "category": "comedy",
+      "venue_name": "The Laugh Factory",
+      "venue_address": "321 Humor St, Seattle, WA",
+      "start_offset_minutes": -166,
+      "end_offset_minutes": -46,
+      "image_url": "https://images.unsplash.com/photo-1585699324551-f6c309eedeca",
+      "is_featured": false,
+      "host_name": "Live Laugh Events",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "tkt_006",
+          "name": "Standard",
+          "description": "",
+          "price_cents": 3000,
+          "available": 100
+        }
+      ]
+    },
+    {
+      "id": "evt_005",
+      "title": "Tech Innovators Summit",
+      "description": "A polished conference experience with verified hosts, role-based access, and enterprise-grade entry.",
+      "category": "tech",
+      "venue_name": "Convention Center",
+      "venue_address": "555 Tech Drive, Seattle, WA",
+      "start_offset_minutes": 1994,
+      "end_offset_minutes": 2534,
+      "image_url": "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
+      "is_featured": true,
+      "host_name": "Future Systems",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "tkt_007",
+          "name": "Day Pass",
+          "description": "",
+          "price_cents": 19900,
+          "available": 500
+        },
+        {
+          "id": "tkt_008",
+          "name": "Full Conference",
+          "description": "",
+          "price_cents": 49900,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_006",
+      "title": "Food & Wine Festival",
+      "description": "Signature tasting event with premium partner hosts and an elevated guest journey.",
+      "category": "food",
+      "venue_name": "Waterfront Plaza",
+      "venue_address": "888 Harbor View, Seattle, WA",
+      "start_offset_minutes": 6494,
+      "end_offset_minutes": 7094,
+      "image_url": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1",
+      "is_featured": false,
+      "host_name": "Waterfront Social",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "tkt_009",
+          "name": "Tasting Pass",
+          "description": "",
+          "price_cents": 8500,
+          "available": 300
+        },
+        {
+          "id": "tkt_010",
+          "name": "Premium Experience",
+          "description": "",
+          "price_cents": 17500,
+          "available": 75
+        }
+      ]
+    },
+    {
+      "id": "evt_007",
+      "title": "Sunset Yoga Session",
+      "description": "A restorative community rooftop session with frictionless free entry and calm arrival flow.",
+      "category": "community",
+      "venue_name": "Rooftop Garden",
+      "venue_address": "100 Sky High Ave, Seattle, WA",
+      "start_offset_minutes": -406,
+      "end_offset_minutes": -286,
+      "image_url": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b",
+      "is_featured": false,
+      "host_name": "Elevate Wellness",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "tkt_011",
+          "name": "Drop-in",
+          "description": "",
+          "price_cents": 0,
+          "available": 30
+        }
+      ]
+    },
+    {
+      "id": "evt_008",
+      "title": "Indie Film Premiere",
+      "description": "A premiere-night experience designed for premium discovery, save, and share behavior.",
+      "category": "film",
+      "venue_name": "Paramount Theatre",
+      "venue_address": "200 Cinema Lane, Seattle, WA",
+      "start_offset_minutes": 1154,
+      "end_offset_minutes": 1334,
+      "image_url": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba",
+      "is_featured": false,
+      "host_name": "Cinema House",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "tkt_012",
+          "name": "General Admission",
+          "description": "",
+          "price_cents": 1800,
+          "available": 400
+        }
+      ]
+    },
+    {
+      "id": "evt_demo_host_live_001",
+      "title": "ECHO Live: Midnight Pulse",
+      "description": "A live 21+ nightlife event seeded for Door Mode scans, live check-in, social promotion, wallet discovery, and host analytics testing.",
+      "category": "music",
+      "venue_name": "Nova Rooftop",
+      "venue_address": "1201 First Ave, Seattle, WA",
+      "start_offset_minutes": -45,
+      "end_offset_minutes": 180,
+      "image_url": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
+      "is_featured": true,
+      "host_name": "Demo User",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_demo_host_live_001_tier_1",
+          "name": "General Admission",
+          "description": "",
+          "price_cents": 3500,
+          "available": 180
+        },
+        {
+          "id": "evt_demo_host_live_001_tier_2",
+          "name": "VIP Access",
+          "description": "",
+          "price_cents": 8500,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "evt_demo_host_ready_002",
+      "title": "Golden Hour Mixer",
+      "description": "Starts inside the two-hour Door Mode window so hosts can test entry readiness, passcode preflight, and locked/unlocked door states.",
+      "category": "social",
+      "venue_name": "Tacoma Social Hall",
+      "venue_address": "742 Pacific Ave, Tacoma, WA",
+      "start_offset_minutes": 90,
+      "end_offset_minutes": 330,
+      "image_url": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622",
+      "is_featured": false,
+      "host_name": "Demo User",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_demo_host_ready_002_tier_1",
+          "name": "Early Entry",
+          "description": "",
+          "price_cents": 2000,
+          "available": 60
+        },
+        {
+          "id": "evt_demo_host_ready_002_tier_2",
+          "name": "General Admission",
+          "description": "",
+          "price_cents": 3000,
+          "available": 100
+        }
+      ]
+    },
+    {
+      "id": "evt_demo_host_locked_003",
+      "title": "Capitol Hill Afrobeats Lounge",
+      "description": "Starts more than two hours from now so hosts can verify Door Mode remains intentionally inaccessible until it is operationally needed.",
+      "category": "music",
+      "venue_name": "Midnight Loft",
+      "venue_address": "915 E Pine St, Seattle, WA",
+      "start_offset_minutes": 390,
+      "end_offset_minutes": 690,
+      "image_url": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a",
+      "is_featured": false,
+      "host_name": "Demo User",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_demo_host_locked_003_tier_1",
+          "name": "General Admission",
+          "description": "",
+          "price_cents": 2800,
+          "available": 180
+        },
+        {
+          "id": "evt_demo_host_locked_003_tier_2",
+          "name": "Table Hold",
+          "description": "",
+          "price_cents": 12000,
+          "available": 20
+        }
+      ]
+    },
+    {
+      "id": "evt_demo_host_nonprofit_004",
+      "title": "Golden Futures Scholarship Night",
+      "description": "A nonprofit-focused event for testing donation-friendly positioning, fee transparency, report exports, and community impact language.",
+      "category": "nonprofit",
+      "venue_name": "Tacoma Civic Center",
+      "venue_address": "1500 Commerce St, Tacoma, WA",
+      "start_offset_minutes": 1124,
+      "end_offset_minutes": 1334,
+      "image_url": "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6",
+      "is_featured": true,
+      "host_name": "Demo User",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_demo_host_nonprofit_004_tier_1",
+          "name": "Community Entry",
+          "description": "",
+          "price_cents": 0,
+          "available": 100
+        },
+        {
+          "id": "evt_demo_host_nonprofit_004_tier_2",
+          "name": "Supporter Ticket",
+          "description": "",
+          "price_cents": 5000,
+          "available": 80
+        },
+        {
+          "id": "evt_demo_host_nonprofit_004_tier_3",
+          "name": "Sponsor Table",
+          "description": "",
+          "price_cents": 25000,
+          "available": 20
+        }
+      ]
+    },
+    {
+      "id": "evt_demo_host_circle_005",
+      "title": "R&B Dinner Party",
+      "description": "A polished social event for testing ECHO Circle prompts, grouped tickets, invite language, wallet priority, and promotion copy.",
+      "category": "music",
+      "venue_name": "The Listening Room",
+      "venue_address": "88 Western Ave, Seattle, WA",
+      "start_offset_minutes": 2654,
+      "end_offset_minutes": 2924,
+      "image_url": "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b",
+      "is_featured": false,
+      "host_name": "Demo User",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_demo_host_circle_005_tier_1",
+          "name": "Dinner + Entry",
+          "description": "",
+          "price_cents": 6500,
+          "available": 120
+        },
+        {
+          "id": "evt_demo_host_circle_005_tier_2",
+          "name": "Circle Table",
+          "description": "",
+          "price_cents": 9500,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "evt_demo_host_soldout_006",
+      "title": "Skyline VIP Tasting",
+      "description": "A high-demand near-sellout event for testing urgency, sold-through analytics, payout projections, and waitlist-ready promotion posture.",
+      "category": "food",
+      "venue_name": "Skyline Room",
+      "venue_address": "400 Broad St, Seattle, WA",
+      "start_offset_minutes": 4034,
+      "end_offset_minutes": 4274,
+      "image_url": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0",
+      "is_featured": false,
+      "host_name": "Demo User",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_demo_host_soldout_006_tier_1",
+          "name": "Tasting Pass",
+          "description": "",
+          "price_cents": 9500,
+          "available": 70
+        },
+        {
+          "id": "evt_demo_host_soldout_006_tier_2",
+          "name": "VIP Pairing",
+          "description": "",
+          "price_cents": 17500,
+          "available": 30
+        }
+      ]
+    },
+    {
+      "id": "evt_demo_host_lowsales_007",
+      "title": "Community Arts Market",
+      "description": "A lower-velocity event for testing AI promotion recommendations, market pulse opportunities, and host action prompts.",
+      "category": "art",
+      "venue_name": "Pierce County Arts Center",
+      "venue_address": "930 Broadway, Tacoma, WA",
+      "start_offset_minutes": 5114,
+      "end_offset_minutes": 5414,
+      "image_url": "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b",
+      "is_featured": false,
+      "host_name": "Demo User",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_demo_host_lowsales_007_tier_1",
+          "name": "Market Entry",
+          "description": "",
+          "price_cents": 1200,
+          "available": 220
+        },
+        {
+          "id": "evt_demo_host_lowsales_007_tier_2",
+          "name": "Workshop Add-on",
+          "description": "",
+          "price_cents": 3500,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "evt_demo_host_conference_008",
+      "title": "Access Tech Forum",
+      "description": "A professional event for testing tiered tickets, host dashboard finance rows, event discovery, and enterprise-style promotion copy.",
+      "category": "tech",
+      "venue_name": "Seattle Convention Center",
+      "venue_address": "705 Pike St, Seattle, WA",
+      "start_offset_minutes": 7754,
+      "end_offset_minutes": 8264,
+      "image_url": "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
+      "is_featured": false,
+      "host_name": "Demo User",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_demo_host_conference_008_tier_1",
+          "name": "Day Pass",
+          "description": "",
+          "price_cents": 14900,
+          "available": 260
+        },
+        {
+          "id": "evt_demo_host_conference_008_tier_2",
+          "name": "Founder Pass",
+          "description": "",
+          "price_cents": 39900,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "evt_demo_host_past_report_009",
+      "title": "Completed: Jazz Garden Social",
+      "description": "A completed event with seeded real closeout data for testing Closeout Report labels, downloads, attendance metrics, and report state.",
+      "category": "music",
+      "venue_name": "Botanical Garden Pavilion",
+      "venue_address": "2300 Arboretum Dr E, Seattle, WA",
+      "start_offset_minutes": -10426,
+      "end_offset_minutes": -10186,
+      "image_url": "https://images.unsplash.com/photo-1511192336575-5a79af67a629",
+      "is_featured": false,
+      "host_name": "Demo User",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_demo_host_past_report_009_tier_1",
+          "name": "Garden Entry",
+          "description": "",
+          "price_cents": 3500,
+          "available": 160
+        },
+        {
+          "id": "evt_demo_host_past_report_009_tier_2",
+          "name": "Reserved Table",
+          "description": "",
+          "price_cents": 12000,
+          "available": 24
+        }
+      ]
+    },
+    {
+      "id": "evt_demo_host_past_preview_010",
+      "title": "Completed: Volunteer Appreciation Night",
+      "description": "A completed event without a seeded closeout report so hosts can test the Report Preview fallback and download pill behavior.",
+      "category": "nonprofit",
+      "venue_name": "Waterfront Hall",
+      "venue_address": "1101 Dock St, Tacoma, WA",
+      "start_offset_minutes": -20536,
+      "end_offset_minutes": -20296,
+      "image_url": "https://images.unsplash.com/photo-1528605248644-14dd04022da1",
+      "is_featured": false,
+      "host_name": "Demo User",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_demo_host_past_preview_010_tier_1",
+          "name": "General Entry",
+          "description": "",
+          "price_cents": 0,
+          "available": 140
+        },
+        {
+          "id": "evt_demo_host_past_preview_010_tier_2",
+          "name": "Donation Supporter",
+          "description": "",
+          "price_cents": 2500,
+          "available": 60
+        }
+      ]
+    },
+    {
+      "id": "evt_m01",
+      "title": "Nightfall Festival",
+      "description": "Immersive electronic night with premium visuals and trusted entry.",
+      "category": "music",
+      "venue_name": "The Warehouse",
+      "venue_address": "123 Industrial Ave, Seattle, WA",
+      "start_offset_minutes": -226,
+      "end_offset_minutes": 14,
+      "image_url": "https://picsum.photos/seed/nightfall/800/500",
+      "is_featured": true,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m01_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 7500,
+          "available": 250
+        },
+        {
+          "id": "evt_m01_t2",
+          "name": "VIP",
+          "description": "",
+          "price_cents": 15000,
+          "available": 50
+        }
+      ]
+    },
+    {
+      "id": "evt_m02",
+      "title": "Jazz in the Garden",
+      "description": "Smooth jazz outdoors with lounge seating and curated food.",
+      "category": "music",
+      "venue_name": "Botanical Gardens",
+      "venue_address": "456 Park Lane, Seattle, WA",
+      "start_offset_minutes": 1094,
+      "end_offset_minutes": 1334,
+      "image_url": "https://picsum.photos/seed/jazz-garden/800/500",
+      "is_featured": false,
+      "host_name": "Abbe Collective",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m02_t1",
+          "name": "Lawn",
+          "description": "",
+          "price_cents": 3500,
+          "available": 500
+        },
+        {
+          "id": "evt_m02_t2",
+          "name": "Table",
+          "description": "",
+          "price_cents": 12000,
+          "available": 20
+        }
+      ]
+    },
+    {
+      "id": "evt_m03",
+      "title": "Sunset Rooftop Sessions",
+      "description": "Golden hour DJ sets above the city skyline.",
+      "category": "music",
+      "venue_name": "Rooftop @ Thompson",
+      "venue_address": "110 Stewart St, Seattle, WA",
+      "start_offset_minutes": 3914,
+      "end_offset_minutes": 4214,
+      "image_url": "https://picsum.photos/seed/rooftop-sunset/800/500",
+      "is_featured": false,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m03_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 4500,
+          "available": 150
+        }
+      ]
+    },
+    {
+      "id": "evt_m04",
+      "title": "Indie Rock Revival",
+      "description": "Three bands, one stage, pure raw energy.",
+      "category": "music",
+      "venue_name": "The Crocodile",
+      "venue_address": "2505 1st Ave, Seattle, WA",
+      "start_offset_minutes": 6974,
+      "end_offset_minutes": 7214,
+      "image_url": "https://picsum.photos/seed/indie-rock/800/500",
+      "is_featured": false,
+      "host_name": "Soulful Sounds",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m04_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2500,
+          "available": 400
+        },
+        {
+          "id": "evt_m04_t2",
+          "name": "Backstage",
+          "description": "",
+          "price_cents": 8000,
+          "available": 30
+        }
+      ]
+    },
+    {
+      "id": "evt_m05",
+      "title": "Symphony Under Stars",
+      "description": "Seattle Symphony performs Beethoven and Dvořák outdoors.",
+      "category": "music",
+      "venue_name": "Benaroya Hall",
+      "venue_address": "200 University St, Seattle, WA",
+      "start_offset_minutes": 9824,
+      "end_offset_minutes": 9974,
+      "image_url": "https://picsum.photos/seed/symphony/800/500",
+      "is_featured": false,
+      "host_name": "Abbe Collective",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m05_t1",
+          "name": "Orchestra",
+          "description": "",
+          "price_cents": 6500,
+          "available": 200
+        },
+        {
+          "id": "evt_m05_t2",
+          "name": "Balcony",
+          "description": "",
+          "price_cents": 4000,
+          "available": 300
+        }
+      ]
+    },
+    {
+      "id": "evt_m06",
+      "title": "Latin Heat Night",
+      "description": "Salsa, reggaeton, and bachata with live band.",
+      "category": "music",
+      "venue_name": "Century Ballroom",
+      "venue_address": "915 E Pine St, Seattle, WA",
+      "start_offset_minutes": 2714,
+      "end_offset_minutes": 3014,
+      "image_url": "https://picsum.photos/seed/latin-heat/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m06_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3000,
+          "available": 300
+        }
+      ]
+    },
+    {
+      "id": "evt_m07",
+      "title": "Acoustic Unplugged",
+      "description": "Intimate singer-songwriter showcase in candlelit venue.",
+      "category": "music",
+      "venue_name": "The Cloud Room",
+      "venue_address": "1424 11th Ave, Seattle, WA",
+      "start_offset_minutes": 14114,
+      "end_offset_minutes": 14294,
+      "image_url": "https://picsum.photos/seed/acoustic/800/500",
+      "is_featured": false,
+      "host_name": "Soulful Sounds",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m07_t1",
+          "name": "Seated",
+          "description": "",
+          "price_cents": 4000,
+          "available": 80
+        }
+      ]
+    },
+    {
+      "id": "evt_m08",
+      "title": "Hip Hop Block Party",
+      "description": "Street-level beats, food trucks, and community energy.",
+      "category": "music",
+      "venue_name": "Capitol Hill Block",
+      "venue_address": "1600 Broadway, Seattle, WA",
+      "start_offset_minutes": 19694,
+      "end_offset_minutes": 20054,
+      "image_url": "https://picsum.photos/seed/hiphop-block/800/500",
+      "is_featured": false,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m08_t1",
+          "name": "Free Entry",
+          "description": "",
+          "price_cents": 0,
+          "available": 1000
+        }
+      ]
+    },
+    {
+      "id": "evt_m09",
+      "title": "Country Roads Festival",
+      "description": "Two-day country music celebration with camping.",
+      "category": "music",
+      "venue_name": "Gas Works Park",
+      "venue_address": "2101 N Northlake Way, Seattle, WA",
+      "start_offset_minutes": 29534,
+      "end_offset_minutes": 31574,
+      "image_url": "https://picsum.photos/seed/country/800/500",
+      "is_featured": false,
+      "host_name": "West Coast Events",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m09_t1",
+          "name": "Day Pass",
+          "description": "",
+          "price_cents": 5500,
+          "available": 500
+        },
+        {
+          "id": "evt_m09_t2",
+          "name": "Weekend",
+          "description": "",
+          "price_cents": 12000,
+          "available": 200
+        },
+        {
+          "id": "evt_m09_t3",
+          "name": "VIP Weekend",
+          "description": "",
+          "price_cents": 25000,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "evt_m10",
+      "title": "Reggae Vibes",
+      "description": "Island rhythms and positive energy all night.",
+      "category": "music",
+      "venue_name": "Neumos",
+      "venue_address": "925 E Pike St, Seattle, WA",
+      "start_offset_minutes": 5534,
+      "end_offset_minutes": 5834,
+      "image_url": "https://picsum.photos/seed/reggae/800/500",
+      "is_featured": false,
+      "host_name": "Soulful Sounds",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m10_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2000,
+          "available": 350
+        }
+      ]
+    },
+    {
+      "id": "evt_m11",
+      "title": "Piano Noir",
+      "description": "Classical piano meets jazz improvisation in a dark lounge.",
+      "category": "music",
+      "venue_name": "The Cloud Room",
+      "venue_address": "1424 11th Ave, Seattle, WA",
+      "start_offset_minutes": 11294,
+      "end_offset_minutes": 11474,
+      "image_url": "https://picsum.photos/seed/piano-noir/800/500",
+      "is_featured": false,
+      "host_name": "Abbe Collective",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m11_t1",
+          "name": "Lounge",
+          "description": "",
+          "price_cents": 5500,
+          "available": 60
+        }
+      ]
+    },
+    {
+      "id": "evt_m12",
+      "title": "EDM Warehouse Rave",
+      "description": "Underground bass music with world-class sound system.",
+      "category": "music",
+      "venue_name": "SoDo Pop-Up",
+      "venue_address": "3801 1st Ave S, Seattle, WA",
+      "start_offset_minutes": 8534,
+      "end_offset_minutes": 9014,
+      "image_url": "https://picsum.photos/seed/edm-rave/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m12_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 4000,
+          "available": 600
+        },
+        {
+          "id": "evt_m12_t2",
+          "name": "VIP",
+          "description": "",
+          "price_cents": 10000,
+          "available": 80
+        }
+      ]
+    },
+    {
+      "id": "evt_m13",
+      "title": "Blues & Brews",
+      "description": "Live blues with craft beer pairings.",
+      "category": "music",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": 16874,
+      "end_offset_minutes": 17174,
+      "image_url": "https://picsum.photos/seed/blues-brews/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m13_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3500,
+          "available": 200
+        },
+        {
+          "id": "evt_m13_t2",
+          "name": "Beer Flight Add-on",
+          "description": "",
+          "price_cents": 5500,
+          "available": 100
+        }
+      ]
+    },
+    {
+      "id": "evt_m14",
+      "title": "K-Pop Dance Night",
+      "description": "Cover dance performances and K-pop DJ sets.",
+      "category": "music",
+      "venue_name": "The Showbox",
+      "venue_address": "1426 1st Ave, Seattle, WA",
+      "start_offset_minutes": 12674,
+      "end_offset_minutes": 12974,
+      "image_url": "https://picsum.photos/seed/kpop/800/500",
+      "is_featured": false,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m14_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2500,
+          "available": 450
+        }
+      ]
+    },
+    {
+      "id": "evt_m15",
+      "title": "Afrobeats Summer Jam",
+      "description": "Afrobeats, amapiano, and dancehall all night.",
+      "category": "music",
+      "venue_name": "Emerald Ballroom",
+      "venue_address": "222 Grand Ave, Seattle, WA",
+      "start_offset_minutes": 22874,
+      "end_offset_minutes": 23174,
+      "image_url": "https://picsum.photos/seed/afrobeats/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m15_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3500,
+          "available": 400
+        },
+        {
+          "id": "evt_m15_t2",
+          "name": "VIP Table",
+          "description": "",
+          "price_cents": 20000,
+          "available": 15
+        }
+      ]
+    },
+    {
+      "id": "evt_m16",
+      "title": "New Year's Eve Gala",
+      "description": "Ring in the new year with live orchestra.",
+      "category": "music",
+      "venue_name": "Benaroya Hall",
+      "venue_address": "200 University St, Seattle, WA",
+      "start_offset_minutes": -40486,
+      "end_offset_minutes": -40186,
+      "image_url": "https://picsum.photos/seed/nye-gala/800/500",
+      "is_featured": false,
+      "host_name": "Abbe Collective",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m16_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 9500,
+          "available": 0
+        }
+      ]
+    },
+    {
+      "id": "evt_m17",
+      "title": "R&B Slow Jams",
+      "description": "Throwback R&B with live vocalists.",
+      "category": "music",
+      "venue_name": "Century Ballroom",
+      "venue_address": "915 E Pine St, Seattle, WA",
+      "start_offset_minutes": -20386,
+      "end_offset_minutes": -20146,
+      "image_url": "https://picsum.photos/seed/rnb/800/500",
+      "is_featured": false,
+      "host_name": "Soulful Sounds",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m17_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3000,
+          "available": 0
+        }
+      ]
+    },
+    {
+      "id": "evt_m18",
+      "title": "Spring Concert Series",
+      "description": "Weekly emerging artist showcase.",
+      "category": "music",
+      "venue_name": "The Neptune Theatre",
+      "venue_address": "1303 NE 45th St, Seattle, WA",
+      "start_offset_minutes": -10366,
+      "end_offset_minutes": -10186,
+      "image_url": "https://picsum.photos/seed/spring-concert/800/500",
+      "is_featured": false,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m18_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 1500,
+          "available": 0
+        }
+      ]
+    },
+    {
+      "id": "evt_m19",
+      "title": "Drum Circle Gathering",
+      "description": "Community drum circle on the waterfront.",
+      "category": "music",
+      "venue_name": "Gas Works Park",
+      "venue_address": "2101 N Northlake Way, Seattle, WA",
+      "start_offset_minutes": 35534,
+      "end_offset_minutes": 35714,
+      "image_url": "https://picsum.photos/seed/drums/800/500",
+      "is_featured": false,
+      "host_name": "Soulful Sounds",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m19_t1",
+          "name": "Free Entry",
+          "description": "",
+          "price_cents": 0,
+          "available": 300
+        }
+      ]
+    },
+    {
+      "id": "evt_m20",
+      "title": "Metal Mayhem",
+      "description": "Heavy metal double-header with local openers.",
+      "category": "music",
+      "venue_name": "The Crocodile",
+      "venue_address": "2505 1st Ave, Seattle, WA",
+      "start_offset_minutes": 25694,
+      "end_offset_minutes": 25994,
+      "image_url": "https://picsum.photos/seed/metal/800/500",
+      "is_featured": false,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m20_t1",
+          "name": "Pit",
+          "description": "",
+          "price_cents": 3000,
+          "available": 200
+        },
+        {
+          "id": "evt_m20_t2",
+          "name": "Balcony",
+          "description": "",
+          "price_cents": 2000,
+          "available": 150
+        }
+      ]
+    },
+    {
+      "id": "evt_m21",
+      "title": "Vinyl & Vino",
+      "description": "Rare vinyl listening party with wine pairings.",
+      "category": "music",
+      "venue_name": "The Cloud Room",
+      "venue_address": "1424 11th Ave, Seattle, WA",
+      "start_offset_minutes": 42914,
+      "end_offset_minutes": 43094,
+      "image_url": "https://picsum.photos/seed/vinyl-vino/800/500",
+      "is_featured": false,
+      "host_name": "Abbe Collective",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m21_t1",
+          "name": "Seated",
+          "description": "",
+          "price_cents": 4500,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "evt_m22",
+      "title": "Gospel Brunch",
+      "description": "Sunday gospel with soul food brunch buffet.",
+      "category": "music",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": 15074,
+      "end_offset_minutes": 15254,
+      "image_url": "https://picsum.photos/seed/gospel/800/500",
+      "is_featured": false,
+      "host_name": "Soulful Sounds",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m22_t1",
+          "name": "Brunch + Show",
+          "description": "",
+          "price_cents": 5000,
+          "available": 120
+        }
+      ]
+    },
+    {
+      "id": "evt_m23",
+      "title": "Techno Therapy",
+      "description": "Deep techno and minimal house until dawn.",
+      "category": "music",
+      "venue_name": "SoDo Pop-Up",
+      "venue_address": "3801 1st Ave S, Seattle, WA",
+      "start_offset_minutes": 18674,
+      "end_offset_minutes": 19094,
+      "image_url": "https://picsum.photos/seed/techno/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m23_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3500,
+          "available": 500
+        }
+      ]
+    },
+    {
+      "id": "evt_m24",
+      "title": "Singer-Songwriter Open Mic",
+      "description": "Open mic night — sign up at the door.",
+      "category": "music",
+      "venue_name": "Neumos",
+      "venue_address": "925 E Pike St, Seattle, WA",
+      "start_offset_minutes": 21314,
+      "end_offset_minutes": 21494,
+      "image_url": "https://picsum.photos/seed/open-mic/800/500",
+      "is_featured": false,
+      "host_name": "Soulful Sounds",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m24_t1",
+          "name": "Free",
+          "description": "",
+          "price_cents": 0,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_m25",
+      "title": "Funk & Soul Revival",
+      "description": "Funk classics with a 10-piece live band.",
+      "category": "music",
+      "venue_name": "The Showbox",
+      "venue_address": "1426 1st Ave, Seattle, WA",
+      "start_offset_minutes": 28574,
+      "end_offset_minutes": 28814,
+      "image_url": "https://picsum.photos/seed/funk-soul/800/500",
+      "is_featured": false,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_m25_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3000,
+          "available": 350
+        },
+        {
+          "id": "evt_m25_t2",
+          "name": "VIP",
+          "description": "",
+          "price_cents": 7500,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "evt_n01",
+      "title": "Midnight Masquerade",
+      "description": "Upscale masquerade ball with champagne and live DJ.",
+      "category": "nightlife",
+      "venue_name": "Emerald Ballroom",
+      "venue_address": "222 Grand Ave, Seattle, WA",
+      "start_offset_minutes": 2774,
+      "end_offset_minutes": 3134,
+      "image_url": "https://picsum.photos/seed/masquerade/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n01_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 6000,
+          "available": 300
+        },
+        {
+          "id": "evt_n01_t2",
+          "name": "VIP Table",
+          "description": "",
+          "price_cents": 25000,
+          "available": 20
+        }
+      ]
+    },
+    {
+      "id": "evt_n02",
+      "title": "Neon Nights",
+      "description": "UV paint party with glow-in-the-dark everything.",
+      "category": "nightlife",
+      "venue_name": "The Warehouse",
+      "venue_address": "123 Industrial Ave, Seattle, WA",
+      "start_offset_minutes": 5654,
+      "end_offset_minutes": 6014,
+      "image_url": "https://picsum.photos/seed/neon-nights/800/500",
+      "is_featured": false,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n02_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3500,
+          "available": 500
+        }
+      ]
+    },
+    {
+      "id": "evt_n03",
+      "title": "Prohibition Lounge",
+      "description": "Speakeasy cocktail experience with secret password entry.",
+      "category": "nightlife",
+      "venue_name": "The Cloud Room",
+      "venue_address": "1424 11th Ave, Seattle, WA",
+      "start_offset_minutes": 8474,
+      "end_offset_minutes": 8894,
+      "image_url": "https://picsum.photos/seed/speakeasy/800/500",
+      "is_featured": false,
+      "host_name": "Abbe Collective",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n03_t1",
+          "name": "Entry + 2 Cocktails",
+          "description": "",
+          "price_cents": 5500,
+          "available": 80
+        }
+      ]
+    },
+    {
+      "id": "evt_n04",
+      "title": "Rooftop Disco",
+      "description": "Disco classics 40 floors above the city.",
+      "category": "nightlife",
+      "venue_name": "Rooftop @ Thompson",
+      "venue_address": "110 Stewart St, Seattle, WA",
+      "start_offset_minutes": 11354,
+      "end_offset_minutes": 11774,
+      "image_url": "https://picsum.photos/seed/rooftop-disco/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n04_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 4000,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_n05",
+      "title": "Foam Party",
+      "description": "Summer foam cannon party with tropical drinks.",
+      "category": "nightlife",
+      "venue_name": "Alki Beach Club",
+      "venue_address": "2700 Alki Ave SW, Seattle, WA",
+      "start_offset_minutes": 21014,
+      "end_offset_minutes": 21374,
+      "image_url": "https://picsum.photos/seed/foam-party/800/500",
+      "is_featured": false,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n05_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2500,
+          "available": 600
+        }
+      ]
+    },
+    {
+      "id": "evt_n06",
+      "title": "Drag Brunch Spectacular",
+      "description": "Brunch, mimosas, and stunning drag performances.",
+      "category": "nightlife",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": 3554,
+      "end_offset_minutes": 3734,
+      "image_url": "https://picsum.photos/seed/drag-brunch/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n06_t1",
+          "name": "Brunch + Show",
+          "description": "",
+          "price_cents": 4500,
+          "available": 150
+        }
+      ]
+    },
+    {
+      "id": "evt_n07",
+      "title": "Silent Disco",
+      "description": "Three DJ channels, wireless headphones, choose your vibe.",
+      "category": "nightlife",
+      "venue_name": "Gas Works Park",
+      "venue_address": "2101 N Northlake Way, Seattle, WA",
+      "start_offset_minutes": 14174,
+      "end_offset_minutes": 14414,
+      "image_url": "https://picsum.photos/seed/silent-disco/800/500",
+      "is_featured": false,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n07_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3000,
+          "available": 400
+        }
+      ]
+    },
+    {
+      "id": "evt_n08",
+      "title": "Karaoke Royale",
+      "description": "Competitive karaoke with prizes and premium sound.",
+      "category": "nightlife",
+      "venue_name": "Neumos",
+      "venue_address": "925 E Pike St, Seattle, WA",
+      "start_offset_minutes": 6974,
+      "end_offset_minutes": 7214,
+      "image_url": "https://picsum.photos/seed/karaoke/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n08_t1",
+          "name": "Entry",
+          "description": "",
+          "price_cents": 1500,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_n09",
+      "title": "Pool Party Takeover",
+      "description": "Daytime pool party with DJs and cabanas.",
+      "category": "nightlife",
+      "venue_name": "Alki Beach Club",
+      "venue_address": "2700 Alki Ave SW, Seattle, WA",
+      "start_offset_minutes": 30974,
+      "end_offset_minutes": 31454,
+      "image_url": "https://picsum.photos/seed/pool-party/800/500",
+      "is_featured": false,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n09_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3500,
+          "available": 400
+        },
+        {
+          "id": "evt_n09_t2",
+          "name": "Cabana",
+          "description": "",
+          "price_cents": 20000,
+          "available": 10
+        }
+      ]
+    },
+    {
+      "id": "evt_n10",
+      "title": "Yacht Party",
+      "description": "Sunset cruise with open bar and DJ.",
+      "category": "nightlife",
+      "venue_name": "Seattle Waterfront Pier 66",
+      "venue_address": "Pier 66, Seattle, WA",
+      "start_offset_minutes": 39974,
+      "end_offset_minutes": 40214,
+      "image_url": "https://picsum.photos/seed/yacht/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n10_t1",
+          "name": "Deck",
+          "description": "",
+          "price_cents": 8500,
+          "available": 150
+        },
+        {
+          "id": "evt_n10_t2",
+          "name": "Captain's Table",
+          "description": "",
+          "price_cents": 20000,
+          "available": 10
+        }
+      ]
+    },
+    {
+      "id": "evt_n11",
+      "title": "Valentine's Glow Party",
+      "description": "Valentine's themed glow event.",
+      "category": "nightlife",
+      "venue_name": "Emerald Ballroom",
+      "venue_address": "222 Grand Ave, Seattle, WA",
+      "start_offset_minutes": -30406,
+      "end_offset_minutes": -30106,
+      "image_url": "https://picsum.photos/seed/valentines/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n11_t1",
+          "name": "Couple",
+          "description": "",
+          "price_cents": 8000,
+          "available": 0
+        }
+      ]
+    },
+    {
+      "id": "evt_n12",
+      "title": "Casino Night Fundraiser",
+      "description": "Blackjack, roulette, and poker for charity.",
+      "category": "nightlife",
+      "venue_name": "Emerald Ballroom",
+      "venue_address": "222 Grand Ave, Seattle, WA",
+      "start_offset_minutes": -14686,
+      "end_offset_minutes": -14386,
+      "image_url": "https://picsum.photos/seed/casino/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n12_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 5000,
+          "available": 0
+        }
+      ]
+    },
+    {
+      "id": "evt_n13",
+      "title": "Glow Yoga After Dark",
+      "description": "Nighttime yoga with blacklights and chill music.",
+      "category": "nightlife",
+      "venue_name": "Century Ballroom",
+      "venue_address": "915 E Pine St, Seattle, WA",
+      "start_offset_minutes": 50174,
+      "end_offset_minutes": 50294,
+      "image_url": "https://picsum.photos/seed/glow-yoga/800/500",
+      "is_featured": false,
+      "host_name": "Zen Wellness",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n13_t1",
+          "name": "Mat Spot",
+          "description": "",
+          "price_cents": 2500,
+          "available": 60
+        }
+      ]
+    },
+    {
+      "id": "evt_n14",
+      "title": "Salsa Social",
+      "description": "Beginner lesson + open dance floor.",
+      "category": "nightlife",
+      "venue_name": "Century Ballroom",
+      "venue_address": "915 E Pine St, Seattle, WA",
+      "start_offset_minutes": 15614,
+      "end_offset_minutes": 15854,
+      "image_url": "https://picsum.photos/seed/salsa/800/500",
+      "is_featured": false,
+      "host_name": "Abbe Collective",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n14_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 1500,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_n15",
+      "title": "After Hours Lounge",
+      "description": "Late night cocktails and deep house.",
+      "category": "nightlife",
+      "venue_name": "The Cloud Room",
+      "venue_address": "1424 11th Ave, Seattle, WA",
+      "start_offset_minutes": 24434,
+      "end_offset_minutes": 24734,
+      "image_url": "https://picsum.photos/seed/after-hours/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n15_t1",
+          "name": "Entry",
+          "description": "",
+          "price_cents": 2000,
+          "available": 100
+        }
+      ]
+    },
+    {
+      "id": "evt_n16",
+      "title": "Throwback Thursday",
+      "description": "90s and 2000s hits all night.",
+      "category": "nightlife",
+      "venue_name": "The Showbox",
+      "venue_address": "1426 1st Ave, Seattle, WA",
+      "start_offset_minutes": 27194,
+      "end_offset_minutes": 27434,
+      "image_url": "https://picsum.photos/seed/throwback/800/500",
+      "is_featured": false,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n16_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2000,
+          "available": 350
+        }
+      ]
+    },
+    {
+      "id": "evt_n17",
+      "title": "House Music Sundays",
+      "description": "Deep house and disco edits. Every Sunday.",
+      "category": "nightlife",
+      "venue_name": "Neumos",
+      "venue_address": "925 E Pike St, Seattle, WA",
+      "start_offset_minutes": 34094,
+      "end_offset_minutes": 34454,
+      "image_url": "https://picsum.photos/seed/house-sundays/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n17_t1",
+          "name": "Free",
+          "description": "",
+          "price_cents": 0,
+          "available": 300
+        }
+      ]
+    },
+    {
+      "id": "evt_n18",
+      "title": "Burlesque Revue",
+      "description": "Elegant burlesque with live jazz band.",
+      "category": "nightlife",
+      "venue_name": "Emerald Ballroom",
+      "venue_address": "222 Grand Ave, Seattle, WA",
+      "start_offset_minutes": 47294,
+      "end_offset_minutes": 47474,
+      "image_url": "https://picsum.photos/seed/burlesque/800/500",
+      "is_featured": false,
+      "host_name": "Night Owl Productions",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n18_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 4000,
+          "available": 200
+        },
+        {
+          "id": "evt_n18_t2",
+          "name": "Front Row",
+          "description": "",
+          "price_cents": 7500,
+          "available": 30
+        }
+      ]
+    },
+    {
+      "id": "evt_n19",
+      "title": "Warehouse Rave: Chapter II",
+      "description": "Underground dance music in converted warehouse.",
+      "category": "nightlife",
+      "venue_name": "SoDo Pop-Up",
+      "venue_address": "3801 1st Ave S, Seattle, WA",
+      "start_offset_minutes": 57494,
+      "end_offset_minutes": 57974,
+      "image_url": "https://picsum.photos/seed/warehouse-2/800/500",
+      "is_featured": false,
+      "host_name": "Electric Vibes",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n19_t1",
+          "name": "Early Bird",
+          "description": "",
+          "price_cents": 2500,
+          "available": 200
+        },
+        {
+          "id": "evt_n19_t2",
+          "name": "GA",
+          "description": "",
+          "price_cents": 4000,
+          "available": 400
+        }
+      ]
+    },
+    {
+      "id": "evt_n20",
+      "title": "Champagne & Caviar Soirée",
+      "description": "Black-tie evening with premium champagne tasting.",
+      "category": "nightlife",
+      "venue_name": "Emerald Ballroom",
+      "venue_address": "222 Grand Ave, Seattle, WA",
+      "start_offset_minutes": 64514,
+      "end_offset_minutes": 64754,
+      "image_url": "https://picsum.photos/seed/champagne/800/500",
+      "is_featured": false,
+      "host_name": "Abbe Collective",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_n20_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 12000,
+          "available": 100
+        },
+        {
+          "id": "evt_n20_t2",
+          "name": "Platinum",
+          "description": "",
+          "price_cents": 30000,
+          "available": 20
+        }
+      ]
+    },
+    {
+      "id": "evt_f01",
+      "title": "Night Market",
+      "description": "Asian street food vendors under string lights.",
+      "category": "food",
+      "venue_name": "Pike Place Atrium",
+      "venue_address": "85 Pike St, Seattle, WA",
+      "start_offset_minutes": 1034,
+      "end_offset_minutes": 1334,
+      "image_url": "https://picsum.photos/seed/night-market/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f01_t1",
+          "name": "Entry",
+          "description": "",
+          "price_cents": 1000,
+          "available": 800
+        }
+      ]
+    },
+    {
+      "id": "evt_f02",
+      "title": "Taco Festival",
+      "description": "30+ taco vendors competing for Best Taco title.",
+      "category": "food",
+      "venue_name": "Gas Works Park",
+      "venue_address": "2101 N Northlake Way, Seattle, WA",
+      "start_offset_minutes": 9314,
+      "end_offset_minutes": 9734,
+      "image_url": "https://picsum.photos/seed/taco-fest/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f02_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 1500,
+          "available": 1000
+        },
+        {
+          "id": "evt_f02_t2",
+          "name": "VIP Taste Pass",
+          "description": "",
+          "price_cents": 5000,
+          "available": 100
+        }
+      ]
+    },
+    {
+      "id": "evt_f03",
+      "title": "Wine & Cheese Pairing",
+      "description": "Sommelier-led tasting with artisan cheeses.",
+      "category": "food",
+      "venue_name": "Pike Place Atrium",
+      "venue_address": "85 Pike St, Seattle, WA",
+      "start_offset_minutes": 12614,
+      "end_offset_minutes": 12794,
+      "image_url": "https://picsum.photos/seed/wine-cheese/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f03_t1",
+          "name": "Tasting",
+          "description": "",
+          "price_cents": 6500,
+          "available": 50
+        }
+      ]
+    },
+    {
+      "id": "evt_f04",
+      "title": "Ramen Pop-Up",
+      "description": "Tokyo-style ramen from guest chef.",
+      "category": "food",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": 3914,
+      "end_offset_minutes": 4154,
+      "image_url": "https://picsum.photos/seed/ramen/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f04_t1",
+          "name": "Seating",
+          "description": "",
+          "price_cents": 3500,
+          "available": 60
+        }
+      ]
+    },
+    {
+      "id": "evt_f05",
+      "title": "BBQ Championship",
+      "description": "Competitive BBQ with live music and cold beer.",
+      "category": "food",
+      "venue_name": "Gas Works Park",
+      "venue_address": "2101 N Northlake Way, Seattle, WA",
+      "start_offset_minutes": 19454,
+      "end_offset_minutes": 19934,
+      "image_url": "https://picsum.photos/seed/bbq/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f05_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2000,
+          "available": 500
+        },
+        {
+          "id": "evt_f05_t2",
+          "name": "Pitmaster VIP",
+          "description": "",
+          "price_cents": 7500,
+          "available": 50
+        }
+      ]
+    },
+    {
+      "id": "evt_f06",
+      "title": "Pasta Making Class",
+      "description": "Hands-on pasta from scratch with Italian chef.",
+      "category": "food",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": 8294,
+      "end_offset_minutes": 8474,
+      "image_url": "https://picsum.photos/seed/pasta/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f06_t1",
+          "name": "Workshop",
+          "description": "",
+          "price_cents": 8000,
+          "available": 20
+        }
+      ]
+    },
+    {
+      "id": "evt_f07",
+      "title": "Whiskey Tasting Experience",
+      "description": "Single malt flight with expert guidance.",
+      "category": "food",
+      "venue_name": "The Cloud Room",
+      "venue_address": "1424 11th Ave, Seattle, WA",
+      "start_offset_minutes": 16994,
+      "end_offset_minutes": 17114,
+      "image_url": "https://picsum.photos/seed/whiskey/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f07_t1",
+          "name": "Tasting",
+          "description": "",
+          "price_cents": 5500,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "evt_f08",
+      "title": "Vegan Street Fair",
+      "description": "Plant-based vendors and cooking demos.",
+      "category": "food",
+      "venue_name": "Capitol Hill Block",
+      "venue_address": "1600 Broadway, Seattle, WA",
+      "start_offset_minutes": 23714,
+      "end_offset_minutes": 24074,
+      "image_url": "https://picsum.photos/seed/vegan/800/500",
+      "is_featured": false,
+      "host_name": "Urban Harvest Co.",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f08_t1",
+          "name": "Free",
+          "description": "",
+          "price_cents": 0,
+          "available": 600
+        }
+      ]
+    },
+    {
+      "id": "evt_f09",
+      "title": "Seafood Fest",
+      "description": "PNW oysters, crab, and salmon celebration.",
+      "category": "food",
+      "venue_name": "Alki Beach Club",
+      "venue_address": "2700 Alki Ave SW, Seattle, WA",
+      "start_offset_minutes": 29534,
+      "end_offset_minutes": 29954,
+      "image_url": "https://picsum.photos/seed/seafood/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f09_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2500,
+          "available": 400
+        }
+      ]
+    },
+    {
+      "id": "evt_f10",
+      "title": "Chocolate & Wine Gala",
+      "description": "Artisan chocolate paired with Pacific NW wines.",
+      "category": "food",
+      "venue_name": "Emerald Ballroom",
+      "venue_address": "222 Grand Ave, Seattle, WA",
+      "start_offset_minutes": 37154,
+      "end_offset_minutes": 37334,
+      "image_url": "https://picsum.photos/seed/chocolate-wine/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f10_t1",
+          "name": "Tasting",
+          "description": "",
+          "price_cents": 7500,
+          "available": 80
+        }
+      ]
+    },
+    {
+      "id": "evt_f11",
+      "title": "Dumpling Festival",
+      "description": "Asian dumpling competition.",
+      "category": "food",
+      "venue_name": "Pike Place Atrium",
+      "venue_address": "85 Pike St, Seattle, WA",
+      "start_offset_minutes": -26686,
+      "end_offset_minutes": -26326,
+      "image_url": "https://picsum.photos/seed/dumplings/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f11_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 1200,
+          "available": 0
+        }
+      ]
+    },
+    {
+      "id": "evt_f12",
+      "title": "Coffee Expo",
+      "description": "Specialty coffee roasters and latte art.",
+      "category": "food",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": -8086,
+      "end_offset_minutes": -7606,
+      "image_url": "https://picsum.photos/seed/coffee/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f12_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2000,
+          "available": 0
+        }
+      ]
+    },
+    {
+      "id": "evt_f13",
+      "title": "Brunch Battle",
+      "description": "Chefs compete for best brunch dish.",
+      "category": "food",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": 45254,
+      "end_offset_minutes": 45494,
+      "image_url": "https://picsum.photos/seed/brunch/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f13_t1",
+          "name": "GA + Tasting",
+          "description": "",
+          "price_cents": 4000,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_f14",
+      "title": "Craft Beer Festival",
+      "description": "40+ local breweries pouring their finest.",
+      "category": "food",
+      "venue_name": "Gas Works Park",
+      "venue_address": "2101 N Northlake Way, Seattle, WA",
+      "start_offset_minutes": 54134,
+      "end_offset_minutes": 54494,
+      "image_url": "https://picsum.photos/seed/beer-fest/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f14_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3000,
+          "available": 600
+        },
+        {
+          "id": "evt_f14_t2",
+          "name": "VIP Early",
+          "description": "",
+          "price_cents": 6000,
+          "available": 100
+        }
+      ]
+    },
+    {
+      "id": "evt_f15",
+      "title": "Sushi Masterclass",
+      "description": "Learn to roll with a master sushi chef.",
+      "category": "food",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": 71654,
+      "end_offset_minutes": 71774,
+      "image_url": "https://picsum.photos/seed/sushi/800/500",
+      "is_featured": false,
+      "host_name": "Flavor District",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_f15_t1",
+          "name": "Class",
+          "description": "",
+          "price_cents": 9500,
+          "available": 16
+        }
+      ]
+    },
+    {
+      "id": "evt_a01",
+      "title": "Art & Soul Exhibition",
+      "description": "Contemporary gallery with timed access.",
+      "category": "art",
+      "venue_name": "Modern Art Museum",
+      "venue_address": "789 Culture Blvd, Seattle, WA",
+      "start_offset_minutes": 614,
+      "end_offset_minutes": 1214,
+      "image_url": "https://picsum.photos/seed/art-soul/800/500",
+      "is_featured": false,
+      "host_name": "Canvas & Cork",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_a01_t1",
+          "name": "Timed Entry",
+          "description": "",
+          "price_cents": 1800,
+          "available": 300
+        }
+      ]
+    },
+    {
+      "id": "evt_a02",
+      "title": "Mural Walk",
+      "description": "Guided tour of Capitol Hill street art.",
+      "category": "art",
+      "venue_name": "Capitol Hill Block",
+      "venue_address": "1600 Broadway, Seattle, WA",
+      "start_offset_minutes": 6614,
+      "end_offset_minutes": 6734,
+      "image_url": "https://picsum.photos/seed/mural/800/500",
+      "is_featured": false,
+      "host_name": "Canvas & Cork",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_a02_t1",
+          "name": "Tour",
+          "description": "",
+          "price_cents": 1200,
+          "available": 30
+        }
+      ]
+    },
+    {
+      "id": "evt_a03",
+      "title": "Pottery Workshop",
+      "description": "Wheel-throwing class for beginners.",
+      "category": "art",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": 10874,
+      "end_offset_minutes": 11054,
+      "image_url": "https://picsum.photos/seed/pottery/800/500",
+      "is_featured": false,
+      "host_name": "Canvas & Cork",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_a03_t1",
+          "name": "Workshop",
+          "description": "",
+          "price_cents": 4500,
+          "available": 12
+        }
+      ]
+    },
+    {
+      "id": "evt_a04",
+      "title": "Photography Night",
+      "description": "Photo walk and critique with pro photographer.",
+      "category": "art",
+      "venue_name": "Pike Place Atrium",
+      "venue_address": "85 Pike St, Seattle, WA",
+      "start_offset_minutes": 14054,
+      "end_offset_minutes": 14234,
+      "image_url": "https://picsum.photos/seed/photo-walk/800/500",
+      "is_featured": false,
+      "host_name": "Canvas & Cork",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_a04_t1",
+          "name": "Walk + Critique",
+          "description": "",
+          "price_cents": 2500,
+          "available": 20
+        }
+      ]
+    },
+    {
+      "id": "evt_a05",
+      "title": "Digital Art Showcase",
+      "description": "Projection art and interactive installations.",
+      "category": "art",
+      "venue_name": "Modern Art Museum",
+      "venue_address": "789 Culture Blvd, Seattle, WA",
+      "start_offset_minutes": 21254,
+      "end_offset_minutes": 21494,
+      "image_url": "https://picsum.photos/seed/digital-art/800/500",
+      "is_featured": false,
+      "host_name": "Canvas & Cork",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_a05_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2200,
+          "available": 250
+        }
+      ]
+    },
+    {
+      "id": "evt_a06",
+      "title": "Paint & Sip",
+      "description": "Painting class with wine — no experience needed.",
+      "category": "art",
+      "venue_name": "The Cloud Room",
+      "venue_address": "1424 11th Ave, Seattle, WA",
+      "start_offset_minutes": 5414,
+      "end_offset_minutes": 5594,
+      "image_url": "https://picsum.photos/seed/paint-sip/800/500",
+      "is_featured": false,
+      "host_name": "Canvas & Cork",
+      "host_verified": false,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_a06_t1",
+          "name": "Canvas + Wine",
+          "description": "",
+          "price_cents": 4000,
+          "available": 30
+        }
+      ]
+    },
+    {
+      "id": "evt_a07",
+      "title": "Sculpture Garden Opening",
+      "description": "New outdoor sculpture exhibition opening night.",
+      "category": "art",
+      "venue_name": "Botanical Gardens",
+      "venue_address": "456 Park Lane, Seattle, WA",
+      "start_offset_minutes": 28394,
+      "end_offset_minutes": 28574,
+      "image_url": "https://picsum.photos/seed/sculpture/800/500",
+      "is_featured": false,
+      "host_name": "Canvas & Cork",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_a07_t1",
+          "name": "Free",
+          "description": "",
+          "price_cents": 0,
+          "available": 500
+        }
+      ]
+    },
+    {
+      "id": "evt_a08",
+      "title": "Watercolor Workshop",
+      "description": "Landscape watercolors with local artist.",
+      "category": "art",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": 35174,
+      "end_offset_minutes": 35354,
+      "image_url": "https://picsum.photos/seed/watercolor/800/500",
+      "is_featured": false,
+      "host_name": "Canvas & Cork",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_a08_t1",
+          "name": "Class",
+          "description": "",
+          "price_cents": 3500,
+          "available": 15
+        }
+      ]
+    },
+    {
+      "id": "evt_a09",
+      "title": "Graffiti Jam",
+      "description": "Live graffiti art with DJs.",
+      "category": "art",
+      "venue_name": "SoDo Pop-Up",
+      "venue_address": "3801 1st Ave S, Seattle, WA",
+      "start_offset_minutes": -17866,
+      "end_offset_minutes": -17566,
+      "image_url": "https://picsum.photos/seed/graffiti/800/500",
+      "is_featured": false,
+      "host_name": "Canvas & Cork",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_a09_t1",
+          "name": "Free",
+          "description": "",
+          "price_cents": 0,
+          "available": 0
+        }
+      ]
+    },
+    {
+      "id": "evt_a10",
+      "title": "Glass Blowing Demo",
+      "description": "Watch master glassblower create live.",
+      "category": "art",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": 42434,
+      "end_offset_minutes": 42614,
+      "image_url": "https://picsum.photos/seed/glass/800/500",
+      "is_featured": false,
+      "host_name": "Canvas & Cork",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_a10_t1",
+          "name": "Viewing",
+          "description": "",
+          "price_cents": 1500,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "evt_a11",
+      "title": "Zine Fair",
+      "description": "Independent publishers and zine makers.",
+      "category": "art",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": 49634,
+      "end_offset_minutes": 49994,
+      "image_url": "https://picsum.photos/seed/zine/800/500",
+      "is_featured": false,
+      "host_name": "Canvas & Cork",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_a11_t1",
+          "name": "Free",
+          "description": "",
+          "price_cents": 0,
+          "available": 300
+        }
+      ]
+    },
+    {
+      "id": "evt_a12",
+      "title": "Life Drawing Session",
+      "description": "Drop-in figure drawing with live model.",
+      "category": "art",
+      "venue_name": "Modern Art Museum",
+      "venue_address": "789 Culture Blvd, Seattle, WA",
+      "start_offset_minutes": 60134,
+      "end_offset_minutes": 60314,
+      "image_url": "https://picsum.photos/seed/life-draw/800/500",
+      "is_featured": false,
+      "host_name": "Canvas & Cork",
+      "host_verified": false,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_a12_t1",
+          "name": "Drop-in",
+          "description": "",
+          "price_cents": 2000,
+          "available": 25
+        }
+      ]
+    },
+    {
+      "id": "evt_s01",
+      "title": "5K Glow Run",
+      "description": "Night run with glow gear and after-party.",
+      "category": "sports",
+      "venue_name": "Gas Works Park",
+      "venue_address": "2101 N Northlake Way, Seattle, WA",
+      "start_offset_minutes": 8354,
+      "end_offset_minutes": 8534,
+      "image_url": "https://picsum.photos/seed/glow-run/800/500",
+      "is_featured": false,
+      "host_name": "Pacific Sports Group",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_s01_t1",
+          "name": "Runner",
+          "description": "",
+          "price_cents": 3500,
+          "available": 500
+        }
+      ]
+    },
+    {
+      "id": "evt_s02",
+      "title": "Pickup Basketball Tournament",
+      "description": "3-on-3 double elimination bracket.",
+      "category": "sports",
+      "venue_name": "Pacific Stadium",
+      "venue_address": "100 Stadium Way, Seattle, WA",
+      "start_offset_minutes": 12134,
+      "end_offset_minutes": 12614,
+      "image_url": "https://picsum.photos/seed/basketball/800/500",
+      "is_featured": false,
+      "host_name": "Pacific Sports Group",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_s02_t1",
+          "name": "Team Entry",
+          "description": "",
+          "price_cents": 6000,
+          "available": 32
+        },
+        {
+          "id": "evt_s02_t2",
+          "name": "Spectator",
+          "description": "",
+          "price_cents": 1000,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_s03",
+      "title": "Boxing Night",
+      "description": "Amateur boxing card with 8 bouts.",
+      "category": "sports",
+      "venue_name": "The Warehouse",
+      "venue_address": "123 Industrial Ave, Seattle, WA",
+      "start_offset_minutes": 18434,
+      "end_offset_minutes": 18674,
+      "image_url": "https://picsum.photos/seed/boxing/800/500",
+      "is_featured": false,
+      "host_name": "Stadium Live",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_s03_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 4000,
+          "available": 300
+        },
+        {
+          "id": "evt_s03_t2",
+          "name": "Ringside",
+          "description": "",
+          "price_cents": 10000,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "evt_s04",
+      "title": "Yoga in the Park",
+      "description": "Free community yoga every Saturday.",
+      "category": "sports",
+      "venue_name": "Botanical Gardens",
+      "venue_address": "456 Park Lane, Seattle, WA",
+      "start_offset_minutes": 1994,
+      "end_offset_minutes": 2054,
+      "image_url": "https://picsum.photos/seed/yoga-park/800/500",
+      "is_featured": false,
+      "host_name": "Zen Wellness",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_s04_t1",
+          "name": "Free",
+          "description": "",
+          "price_cents": 0,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_s05",
+      "title": "Kickball League Opener",
+      "description": "Adult kickball league opening night.",
+      "category": "sports",
+      "venue_name": "Gas Works Park",
+      "venue_address": "2101 N Northlake Way, Seattle, WA",
+      "start_offset_minutes": 22694,
+      "end_offset_minutes": 22874,
+      "image_url": "https://picsum.photos/seed/kickball/800/500",
+      "is_featured": false,
+      "host_name": "Pacific Sports Group",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_s05_t1",
+          "name": "Player",
+          "description": "",
+          "price_cents": 2500,
+          "available": 100
+        }
+      ]
+    },
+    {
+      "id": "evt_s06",
+      "title": "Volleyball Beach Day",
+      "description": "Beach volleyball tournament + BBQ.",
+      "category": "sports",
+      "venue_name": "Alki Beach Club",
+      "venue_address": "2700 Alki Ave SW, Seattle, WA",
+      "start_offset_minutes": 32294,
+      "end_offset_minutes": 32774,
+      "image_url": "https://picsum.photos/seed/volleyball/800/500",
+      "is_featured": false,
+      "host_name": "Pacific Sports Group",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_s06_t1",
+          "name": "Team",
+          "description": "",
+          "price_cents": 4000,
+          "available": 24
+        },
+        {
+          "id": "evt_s06_t2",
+          "name": "Spectator",
+          "description": "",
+          "price_cents": 0,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_s07",
+      "title": "Marathon Training Run",
+      "description": "Group training for Seattle Marathon.",
+      "category": "sports",
+      "venue_name": "Gas Works Park",
+      "venue_address": "2101 N Northlake Way, Seattle, WA",
+      "start_offset_minutes": 40754,
+      "end_offset_minutes": 40934,
+      "image_url": "https://picsum.photos/seed/marathon/800/500",
+      "is_featured": false,
+      "host_name": "Pacific Sports Group",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_s07_t1",
+          "name": "Free",
+          "description": "",
+          "price_cents": 0,
+          "available": 300
+        }
+      ]
+    },
+    {
+      "id": "evt_s08",
+      "title": "Spartan Race",
+      "description": "Obstacle course race.",
+      "category": "sports",
+      "venue_name": "Pacific Stadium",
+      "venue_address": "100 Stadium Way, Seattle, WA",
+      "start_offset_minutes": -29746,
+      "end_offset_minutes": -29386,
+      "image_url": "https://picsum.photos/seed/spartan/800/500",
+      "is_featured": false,
+      "host_name": "Pacific Sports Group",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_s08_t1",
+          "name": "Runner",
+          "description": "",
+          "price_cents": 7500,
+          "available": 0
+        }
+      ]
+    },
+    {
+      "id": "evt_s09",
+      "title": "Dodgeball Tournament",
+      "description": "Adults-only dodgeball with prizes.",
+      "category": "sports",
+      "venue_name": "Pacific Stadium",
+      "venue_address": "100 Stadium Way, Seattle, WA",
+      "start_offset_minutes": 57014,
+      "end_offset_minutes": 57254,
+      "image_url": "https://picsum.photos/seed/dodgeball/800/500",
+      "is_featured": false,
+      "host_name": "Pacific Sports Group",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_s09_t1",
+          "name": "Team",
+          "description": "",
+          "price_cents": 5000,
+          "available": 16
+        }
+      ]
+    },
+    {
+      "id": "evt_s10",
+      "title": "Rock Climbing Social",
+      "description": "Indoor climbing gym meetup for all levels.",
+      "category": "sports",
+      "venue_name": "Seattle Bouldering Project",
+      "venue_address": "900 Poplar Pl S, Seattle, WA",
+      "start_offset_minutes": 51494,
+      "end_offset_minutes": 51674,
+      "image_url": "https://picsum.photos/seed/climbing/800/500",
+      "is_featured": false,
+      "host_name": "Pacific Sports Group",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_s10_t1",
+          "name": "Entry + Gear",
+          "description": "",
+          "price_cents": 2000,
+          "available": 50
+        }
+      ]
+    },
+    {
+      "id": "evt_c01",
+      "title": "Stand-Up Showcase",
+      "description": "Five comedians, one stage, no filter.",
+      "category": "comedy",
+      "venue_name": "The Neptune Theatre",
+      "venue_address": "1303 NE 45th St, Seattle, WA",
+      "start_offset_minutes": 4094,
+      "end_offset_minutes": 4214,
+      "image_url": "https://picsum.photos/seed/standup/800/500",
+      "is_featured": false,
+      "host_name": "The Comedy Collective",
+      "host_verified": false,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_c01_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2000,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_c02",
+      "title": "Improv Night",
+      "description": "Unscripted comedy with audience suggestions.",
+      "category": "comedy",
+      "venue_name": "The Neptune Theatre",
+      "venue_address": "1303 NE 45th St, Seattle, WA",
+      "start_offset_minutes": 9854,
+      "end_offset_minutes": 9974,
+      "image_url": "https://picsum.photos/seed/improv/800/500",
+      "is_featured": false,
+      "host_name": "The Comedy Collective",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_c02_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 1500,
+          "available": 150
+        }
+      ]
+    },
+    {
+      "id": "evt_c03",
+      "title": "Roast Battle",
+      "description": "Comedians roast each other — audience votes.",
+      "category": "comedy",
+      "venue_name": "Neumos",
+      "venue_address": "925 E Pike St, Seattle, WA",
+      "start_offset_minutes": 15674,
+      "end_offset_minutes": 15794,
+      "image_url": "https://picsum.photos/seed/roast/800/500",
+      "is_featured": false,
+      "host_name": "The Comedy Collective",
+      "host_verified": false,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_c03_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 1800,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_c04",
+      "title": "Open Mic Comedy",
+      "description": "Try your five minutes — sign up at door.",
+      "category": "comedy",
+      "venue_name": "Neumos",
+      "venue_address": "925 E Pike St, Seattle, WA",
+      "start_offset_minutes": 6914,
+      "end_offset_minutes": 7094,
+      "image_url": "https://picsum.photos/seed/open-mic-comedy/800/500",
+      "is_featured": false,
+      "host_name": "Laugh Factory NW",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_c04_t1",
+          "name": "Free",
+          "description": "",
+          "price_cents": 0,
+          "available": 100
+        }
+      ]
+    },
+    {
+      "id": "evt_c05",
+      "title": "Comedy & Cocktails",
+      "description": "Headliner set with craft cocktail menu.",
+      "category": "comedy",
+      "venue_name": "The Cloud Room",
+      "venue_address": "1424 11th Ave, Seattle, WA",
+      "start_offset_minutes": 25694,
+      "end_offset_minutes": 25814,
+      "image_url": "https://picsum.photos/seed/comedy-cocktails/800/500",
+      "is_featured": false,
+      "host_name": "The Comedy Collective",
+      "host_verified": false,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_c05_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2500,
+          "available": 80
+        }
+      ]
+    },
+    {
+      "id": "evt_c06",
+      "title": "Sketch Comedy Review",
+      "description": "Original sketch comedy from local troupe.",
+      "category": "comedy",
+      "venue_name": "The Neptune Theatre",
+      "venue_address": "1303 NE 45th St, Seattle, WA",
+      "start_offset_minutes": 35714,
+      "end_offset_minutes": 35834,
+      "image_url": "https://picsum.photos/seed/sketch/800/500",
+      "is_featured": false,
+      "host_name": "The Comedy Collective",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_c06_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 1500,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_c07",
+      "title": "New Year Comedy Bash",
+      "description": "NYE comedy and champagne toast.",
+      "category": "comedy",
+      "venue_name": "The Neptune Theatre",
+      "venue_address": "1303 NE 45th St, Seattle, WA",
+      "start_offset_minutes": -36226,
+      "end_offset_minutes": -36046,
+      "image_url": "https://picsum.photos/seed/nye-comedy/800/500",
+      "is_featured": false,
+      "host_name": "The Comedy Collective",
+      "host_verified": false,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_c07_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3500,
+          "available": 0
+        }
+      ]
+    },
+    {
+      "id": "evt_c08",
+      "title": "Dark Humor Night",
+      "description": "Nothing is off limits. You've been warned.",
+      "category": "comedy",
+      "venue_name": "Neumos",
+      "venue_address": "925 E Pike St, Seattle, WA",
+      "start_offset_minutes": 68954,
+      "end_offset_minutes": 69074,
+      "image_url": "https://picsum.photos/seed/dark-humor/800/500",
+      "is_featured": false,
+      "host_name": "Laugh Factory NW",
+      "host_verified": false,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_c08_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2000,
+          "available": 150
+        }
+      ]
+    },
+    {
+      "id": "evt_t01",
+      "title": "AI & Design Summit",
+      "description": "How AI is reshaping product design.",
+      "category": "tech",
+      "venue_name": "Modern Art Museum",
+      "venue_address": "789 Culture Blvd, Seattle, WA",
+      "start_offset_minutes": 16394,
+      "end_offset_minutes": 16874,
+      "image_url": "https://picsum.photos/seed/ai-summit/800/500",
+      "is_featured": false,
+      "host_name": "TechConnect Seattle",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_t01_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 5000,
+          "available": 300
+        },
+        {
+          "id": "evt_t01_t2",
+          "name": "Workshop Pass",
+          "description": "",
+          "price_cents": 15000,
+          "available": 50
+        }
+      ]
+    },
+    {
+      "id": "evt_t02",
+      "title": "Startup Demo Day",
+      "description": "12 startups pitch to investors and public.",
+      "category": "tech",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": 26774,
+      "end_offset_minutes": 27014,
+      "image_url": "https://picsum.photos/seed/demo-day/800/500",
+      "is_featured": false,
+      "host_name": "TechConnect Seattle",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_t02_t1",
+          "name": "Free",
+          "description": "",
+          "price_cents": 0,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "evt_t03",
+      "title": "Hackathon Weekend",
+      "description": "48-hour build sprint with prizes.",
+      "category": "tech",
+      "venue_name": "Fremont Foundry",
+      "venue_address": "154 N 35th St, Seattle, WA",
+      "start_offset_minutes": 38534,
+      "end_offset_minutes": 41414,
+      "image_url": "https://picsum.photos/seed/hackathon/800/500",
+      "is_featured": false,
+      "host_name": "TechConnect Seattle",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_t03_t1",
+          "name": "Hacker",
+          "description": "",
+          "price_cents": 2500,
+          "available": 100
+        }
+      ]
+    },
+    {
+      "id": "evt_t04",
+      "title": "Web3 Meetup",
+      "description": "Blockchain builders sharing progress.",
+      "category": "tech",
+      "venue_name": "The Cloud Room",
+      "venue_address": "1424 11th Ave, Seattle, WA",
+      "start_offset_minutes": 11174,
+      "end_offset_minutes": 11354,
+      "image_url": "https://picsum.photos/seed/web3/800/500",
+      "is_featured": false,
+      "host_name": "TechConnect Seattle",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_t04_t1",
+          "name": "Free",
+          "description": "",
+          "price_cents": 0,
+          "available": 80
+        }
+      ]
+    },
+    {
+      "id": "evt_t05",
+      "title": "Product Design Week",
+      "description": "Week-long design conference.",
+      "category": "tech",
+      "venue_name": "Modern Art Museum",
+      "venue_address": "789 Culture Blvd, Seattle, WA",
+      "start_offset_minutes": -22486,
+      "end_offset_minutes": -16246,
+      "image_url": "https://picsum.photos/seed/design-week/800/500",
+      "is_featured": false,
+      "host_name": "TechConnect Seattle",
+      "host_verified": false,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_t05_t1",
+          "name": "Full Pass",
+          "description": "",
+          "price_cents": 20000,
+          "available": 0
+        }
+      ]
+    },
+    {
+      "id": "evt_w01",
+      "title": "Sound Bath Meditation",
+      "description": "Crystal singing bowls and guided meditation.",
+      "category": "wellness",
+      "venue_name": "Botanical Gardens",
+      "venue_address": "456 Park Lane, Seattle, WA",
+      "start_offset_minutes": 4934,
+      "end_offset_minutes": 5054,
+      "image_url": "https://picsum.photos/seed/sound-bath/800/500",
+      "is_featured": false,
+      "host_name": "Zen Wellness",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_w01_t1",
+          "name": "Mat Spot",
+          "description": "",
+          "price_cents": 3000,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "evt_w02",
+      "title": "Breathwork Circle",
+      "description": "Guided breathwork and cold plunge.",
+      "category": "wellness",
+      "venue_name": "Alki Beach Club",
+      "venue_address": "2700 Alki Ave SW, Seattle, WA",
+      "start_offset_minutes": 13454,
+      "end_offset_minutes": 13574,
+      "image_url": "https://picsum.photos/seed/breathwork/800/500",
+      "is_featured": false,
+      "host_name": "Zen Wellness",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_w02_t1",
+          "name": "Session",
+          "description": "",
+          "price_cents": 2500,
+          "available": 30
+        }
+      ]
+    },
+    {
+      "id": "evt_w03",
+      "title": "Forest Bathing Walk",
+      "description": "Guided mindful walk through old growth forest.",
+      "category": "wellness",
+      "venue_name": "Discovery Park",
+      "venue_address": "3801 Discovery Park Blvd, Seattle, WA",
+      "start_offset_minutes": 19274,
+      "end_offset_minutes": 19454,
+      "image_url": "https://picsum.photos/seed/forest/800/500",
+      "is_featured": false,
+      "host_name": "Zen Wellness",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_w03_t1",
+          "name": "Walk",
+          "description": "",
+          "price_cents": 1500,
+          "available": 20
+        }
+      ]
+    },
+    {
+      "id": "evt_w04",
+      "title": "Wellness Retreat Day",
+      "description": "Full-day retreat with yoga, meditation, and plant-based lunch.",
+      "category": "wellness",
+      "venue_name": "Botanical Gardens",
+      "venue_address": "456 Park Lane, Seattle, WA",
+      "start_offset_minutes": 30734,
+      "end_offset_minutes": 31334,
+      "image_url": "https://picsum.photos/seed/retreat/800/500",
+      "is_featured": false,
+      "host_name": "Zen Wellness",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_w04_t1",
+          "name": "Full Day",
+          "description": "",
+          "price_cents": 8500,
+          "available": 30
+        }
+      ]
+    },
+    {
+      "id": "evt_w05",
+      "title": "Moonlight Meditation",
+      "description": "Full moon meditation on the waterfront.",
+      "category": "wellness",
+      "venue_name": "Alki Beach Club",
+      "venue_address": "2700 Alki Ave SW, Seattle, WA",
+      "start_offset_minutes": 48734,
+      "end_offset_minutes": 48854,
+      "image_url": "https://picsum.photos/seed/moonlight/800/500",
+      "is_featured": false,
+      "host_name": "Zen Wellness",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "evt_w05_t1",
+          "name": "Free",
+          "description": "",
+          "price_cents": 0,
+          "available": 100
+        }
+      ]
+    },
+    {
+      "id": "nat_001",
+      "title": "Brooklyn Rooftop Sessions",
+      "description": "Sunset DJs over the Manhattan skyline.",
+      "category": "music",
+      "venue_name": "The Crown",
+      "venue_address": "85 Flatbush Ave Ext, Brooklyn, NY",
+      "start_offset_minutes": 9854,
+      "end_offset_minutes": 10154,
+      "image_url": "https://picsum.photos/seed/brooklyn-roof/800/500",
+      "is_featured": false,
+      "host_name": "Crown Rooftop",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_001_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3500,
+          "available": 200
+        },
+        {
+          "id": "nat_001_t2",
+          "name": "VIP",
+          "description": "",
+          "price_cents": 9500,
+          "available": 50
+        }
+      ]
+    },
+    {
+      "id": "nat_002",
+      "title": "Comedy Cellar Showcase",
+      "description": "A surprise lineup of NYC's top stand-ups in the legendary basement room.",
+      "category": "comedy",
+      "venue_name": "Comedy Cellar",
+      "venue_address": "117 MacDougal St, New York, NY",
+      "start_offset_minutes": 5594,
+      "end_offset_minutes": 5714,
+      "image_url": "https://picsum.photos/seed/comedy-cellar/800/500",
+      "is_featured": false,
+      "host_name": "Comedy Cellar",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_002_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2800,
+          "available": 90
+        }
+      ]
+    },
+    {
+      "id": "nat_003",
+      "title": "MoMA After Hours",
+      "description": "Members-only late-night gallery walk with live string quartet.",
+      "category": "art",
+      "venue_name": "Museum of Modern Art",
+      "venue_address": "11 W 53rd St, New York, NY",
+      "start_offset_minutes": 16994,
+      "end_offset_minutes": 17174,
+      "image_url": "https://picsum.photos/seed/moma-afterhours/800/500",
+      "is_featured": false,
+      "host_name": "MoMA Events",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_003_t1",
+          "name": "Member",
+          "description": "",
+          "price_cents": 0,
+          "available": 300
+        },
+        {
+          "id": "nat_003_t2",
+          "name": "Guest",
+          "description": "",
+          "price_cents": 2500,
+          "available": 150
+        }
+      ]
+    },
+    {
+      "id": "nat_004",
+      "title": "Echo Park Synthwave Night",
+      "description": "Five hours of retrowave, neon visuals, and arcade games.",
+      "category": "music",
+      "venue_name": "The Echo",
+      "venue_address": "1822 Sunset Blvd, Los Angeles, CA",
+      "start_offset_minutes": 12794,
+      "end_offset_minutes": 13094,
+      "image_url": "https://picsum.photos/seed/synthwave-la/800/500",
+      "is_featured": false,
+      "host_name": "Echo LA",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_004_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3000,
+          "available": 280
+        }
+      ]
+    },
+    {
+      "id": "nat_005",
+      "title": "Venice Beach Volleyball Open",
+      "description": "Watch pro players battle on the sand. Free beer for spectators in shaded VIP.",
+      "category": "sports",
+      "venue_name": "Venice Beach Courts",
+      "venue_address": "1800 Ocean Front Walk, Venice, CA",
+      "start_offset_minutes": 19394,
+      "end_offset_minutes": 19814,
+      "image_url": "https://picsum.photos/seed/venice-volleyball/800/500",
+      "is_featured": false,
+      "host_name": "Venice Pro Tour",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_005_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 0,
+          "available": 500
+        },
+        {
+          "id": "nat_005_t2",
+          "name": "Shade VIP",
+          "description": "",
+          "price_cents": 6000,
+          "available": 100
+        }
+      ]
+    },
+    {
+      "id": "nat_006",
+      "title": "Smorgasburg LA Food Festival",
+      "description": "Over 80 vendors. Korean fried chicken to mochi waffles. Pay-per-bite.",
+      "category": "food",
+      "venue_name": "ROW DTLA",
+      "venue_address": "777 S Alameda St, Los Angeles, CA",
+      "start_offset_minutes": 15074,
+      "end_offset_minutes": 15434,
+      "image_url": "https://picsum.photos/seed/smorgasburg/800/500",
+      "is_featured": false,
+      "host_name": "Smorgasburg",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_006_t1",
+          "name": "Entry",
+          "description": "",
+          "price_cents": 500,
+          "available": 2000
+        }
+      ]
+    },
+    {
+      "id": "nat_007",
+      "title": "Lincoln Hall: Indie Showcase",
+      "description": "Four breakout bands. Bar is open.",
+      "category": "music",
+      "venue_name": "Lincoln Hall",
+      "venue_address": "2424 N Lincoln Ave, Chicago, IL",
+      "start_offset_minutes": 6974,
+      "end_offset_minutes": 7214,
+      "image_url": "https://picsum.photos/seed/lincoln-hall/800/500",
+      "is_featured": false,
+      "host_name": "Lincoln Hall",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_007_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2200,
+          "available": 500
+        },
+        {
+          "id": "nat_007_t2",
+          "name": "Balcony",
+          "description": "",
+          "price_cents": 3500,
+          "available": 80
+        }
+      ]
+    },
+    {
+      "id": "nat_008",
+      "title": "Chicago Deep Dish Crawl",
+      "description": "Three stops, three pies, one self-guided afternoon. Includes drink pairings.",
+      "category": "food",
+      "venue_name": "Lou Malnati's (start)",
+      "venue_address": "439 N Wells St, Chicago, IL",
+      "start_offset_minutes": 22454,
+      "end_offset_minutes": 22694,
+      "image_url": "https://picsum.photos/seed/deep-dish/800/500",
+      "is_featured": false,
+      "host_name": "Chi Food Tours",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_008_t1",
+          "name": "Crawler",
+          "description": "",
+          "price_cents": 5500,
+          "available": 80
+        }
+      ]
+    },
+    {
+      "id": "nat_009",
+      "title": "Stubb's Backyard BBQ + Live Music",
+      "description": "Texas brisket and three local acts on the iconic outdoor stage.",
+      "category": "music",
+      "venue_name": "Stubb's Bar-B-Q",
+      "venue_address": "801 Red River St, Austin, TX",
+      "start_offset_minutes": 3974,
+      "end_offset_minutes": 4274,
+      "image_url": "https://picsum.photos/seed/stubbs/800/500",
+      "is_featured": false,
+      "host_name": "Stubb's Austin",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_009_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3500,
+          "available": 600
+        }
+      ]
+    },
+    {
+      "id": "nat_010",
+      "title": "SXSW Late-Night Tech Mixer",
+      "description": "Founders, devs, and investors over mezcal cocktails.",
+      "category": "tech",
+      "venue_name": "The Driskill Bar",
+      "venue_address": "604 Brazos St, Austin, TX",
+      "start_offset_minutes": 31454,
+      "end_offset_minutes": 31694,
+      "image_url": "https://picsum.photos/seed/sxsw-mixer/800/500",
+      "is_featured": false,
+      "host_name": "Austin Tech Collective",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_010_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 4500,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "nat_011",
+      "title": "Wynwood Walls Block Party",
+      "description": "Street artists, DJ Khaled b2b surprise guest, food trucks.",
+      "category": "music",
+      "venue_name": "Wynwood Walls",
+      "venue_address": "266 NW 26th St, Miami, FL",
+      "start_offset_minutes": 11354,
+      "end_offset_minutes": 11714,
+      "image_url": "https://picsum.photos/seed/wynwood/800/500",
+      "is_featured": false,
+      "host_name": "Wynwood Live",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_011_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 5000,
+          "available": 1500
+        },
+        {
+          "id": "nat_011_t2",
+          "name": "VIP Cabana",
+          "description": "",
+          "price_cents": 25000,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "nat_012",
+      "title": "South Beach Yoga Sunrise",
+      "description": "Vinyasa flow at 7am on the sand. Mats provided.",
+      "category": "wellness",
+      "venue_name": "South Beach (5th St)",
+      "venue_address": "500 Ocean Dr, Miami Beach, FL",
+      "start_offset_minutes": 1874,
+      "end_offset_minutes": 1994,
+      "image_url": "https://picsum.photos/seed/sb-yoga/800/500",
+      "is_featured": false,
+      "host_name": "SoBe Wellness",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_012_t1",
+          "name": "Free RSVP",
+          "description": "",
+          "price_cents": 0,
+          "available": 80
+        },
+        {
+          "id": "nat_012_t2",
+          "name": "Smoothie Bundle",
+          "description": "",
+          "price_cents": 1200,
+          "available": 80
+        }
+      ]
+    },
+    {
+      "id": "nat_013",
+      "title": "Bluebird Café: Songwriters Round",
+      "description": "Four songwriters in the round. Intimate. Iconic.",
+      "category": "music",
+      "venue_name": "The Bluebird Café",
+      "venue_address": "4104 Hillsboro Pike, Nashville, TN",
+      "start_offset_minutes": 14114,
+      "end_offset_minutes": 14294,
+      "image_url": "https://picsum.photos/seed/bluebird/800/500",
+      "is_featured": false,
+      "host_name": "Bluebird Café",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_013_t1",
+          "name": "Reservation",
+          "description": "",
+          "price_cents": 2500,
+          "available": 100
+        }
+      ]
+    },
+    {
+      "id": "nat_014",
+      "title": "Broadway Honky-Tonk Crawl",
+      "description": "Six bars, six bands, one Stetson. Group of 15 max.",
+      "category": "music",
+      "venue_name": "Tootsie's (start)",
+      "venue_address": "422 Broadway, Nashville, TN",
+      "start_offset_minutes": 8354,
+      "end_offset_minutes": 8654,
+      "image_url": "https://picsum.photos/seed/broadway-nash/800/500",
+      "is_featured": false,
+      "host_name": "Nash Crawls",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_014_t1",
+          "name": "Crawler",
+          "description": "",
+          "price_cents": 3500,
+          "available": 90
+        }
+      ]
+    },
+    {
+      "id": "nat_015",
+      "title": "Red Rocks Sunrise Hike + Yoga",
+      "description": "Guided hike to the amphitheater followed by a flow class at sunrise.",
+      "category": "wellness",
+      "venue_name": "Red Rocks Amphitheatre",
+      "venue_address": "18300 W Alameda Pkwy, Morrison, CO",
+      "start_offset_minutes": 17654,
+      "end_offset_minutes": 17834,
+      "image_url": "https://picsum.photos/seed/redrocks/800/500",
+      "is_featured": false,
+      "host_name": "Mile High Wellness",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_015_t1",
+          "name": "Guided Hike",
+          "description": "",
+          "price_cents": 3000,
+          "available": 60
+        }
+      ]
+    },
+    {
+      "id": "nat_016",
+      "title": "Larimer Lounge: Punk Night",
+      "description": "Three local punk bands. PBR specials all night.",
+      "category": "music",
+      "venue_name": "Larimer Lounge",
+      "venue_address": "2721 Larimer St, Denver, CO",
+      "start_offset_minutes": 21434,
+      "end_offset_minutes": 21674,
+      "image_url": "https://picsum.photos/seed/larimer/800/500",
+      "is_featured": false,
+      "host_name": "Larimer Lounge",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_016_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 1800,
+          "available": 250
+        }
+      ]
+    },
+    {
+      "id": "nat_017",
+      "title": "Powell's Books: Author Night",
+      "description": "Bestselling fiction author reads and signs new release.",
+      "category": "art",
+      "venue_name": "Powell's City of Books",
+      "venue_address": "1005 W Burnside St, Portland, OR",
+      "start_offset_minutes": 24194,
+      "end_offset_minutes": 24314,
+      "image_url": "https://picsum.photos/seed/powells/800/500",
+      "is_featured": false,
+      "host_name": "Powell's Events",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_017_t1",
+          "name": "Free RSVP",
+          "description": "",
+          "price_cents": 0,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "nat_018",
+      "title": "Doug Fir Lounge: Indie Folk Trio",
+      "description": "Three rising songwriters in a candlelit basement venue.",
+      "category": "music",
+      "venue_name": "Doug Fir Lounge",
+      "venue_address": "830 E Burnside St, Portland, OR",
+      "start_offset_minutes": 27134,
+      "end_offset_minutes": 27374,
+      "image_url": "https://picsum.photos/seed/dougfir/800/500",
+      "is_featured": false,
+      "host_name": "Doug Fir",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_018_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2400,
+          "available": 280
+        }
+      ]
+    },
+    {
+      "id": "nat_019",
+      "title": "Fenway Bleacher Bar Trivia",
+      "description": "Sports trivia under the actual Green Monster. Prizes from the Sox shop.",
+      "category": "sports",
+      "venue_name": "Bleacher Bar",
+      "venue_address": "82A Lansdowne St, Boston, MA",
+      "start_offset_minutes": 5474,
+      "end_offset_minutes": 5654,
+      "image_url": "https://picsum.photos/seed/bleacher-bar/800/500",
+      "is_featured": false,
+      "host_name": "Bleacher Bar",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_019_t1",
+          "name": "Team of 4",
+          "description": "",
+          "price_cents": 4000,
+          "available": 60
+        }
+      ]
+    },
+    {
+      "id": "nat_020",
+      "title": "Ponce City Market Rooftop",
+      "description": "Skyline views, mini golf, and a four-DJ rotation.",
+      "category": "nightlife",
+      "venue_name": "Ponce City Market Roof",
+      "venue_address": "675 Ponce de Leon Ave NE, Atlanta, GA",
+      "start_offset_minutes": 29954,
+      "end_offset_minutes": 30254,
+      "image_url": "https://picsum.photos/seed/ponce/800/500",
+      "is_featured": false,
+      "host_name": "Ponce Roof",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_020_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 2800,
+          "available": 400
+        }
+      ]
+    },
+    {
+      "id": "nat_021",
+      "title": "Tipitina's Brass Brunch",
+      "description": "Live brass band, bottomless mimosas, beignets on the house.",
+      "category": "music",
+      "venue_name": "Tipitina's",
+      "venue_address": "501 Napoleon Ave, New Orleans, LA",
+      "start_offset_minutes": 35234,
+      "end_offset_minutes": 35474,
+      "image_url": "https://picsum.photos/seed/tipitinas/800/500",
+      "is_featured": false,
+      "host_name": "Tipitina's",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_021_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 4500,
+          "available": 300
+        }
+      ]
+    },
+    {
+      "id": "nat_022",
+      "title": "Omnia Vegas: International DJ Night",
+      "description": "Surprise headliner. Bottle service available.",
+      "category": "nightlife",
+      "venue_name": "Omnia Nightclub",
+      "venue_address": "3570 Las Vegas Blvd S, Las Vegas, NV",
+      "start_offset_minutes": 11414,
+      "end_offset_minutes": 11714,
+      "image_url": "https://picsum.photos/seed/omnia/800/500",
+      "is_featured": false,
+      "host_name": "Omnia Vegas",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_022_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 6500,
+          "available": 1200
+        },
+        {
+          "id": "nat_022_t2",
+          "name": "Booth (4)",
+          "description": "",
+          "price_cents": 80000,
+          "available": 30
+        }
+      ]
+    },
+    {
+      "id": "nat_023",
+      "title": "Reading Terminal Cheesesteak Showdown",
+      "description": "Six legendary shops battle for the crown. You vote.",
+      "category": "food",
+      "venue_name": "Reading Terminal Market",
+      "venue_address": "51 N 12th St, Philadelphia, PA",
+      "start_offset_minutes": 19514,
+      "end_offset_minutes": 19754,
+      "image_url": "https://picsum.photos/seed/cheesesteak/800/500",
+      "is_featured": false,
+      "host_name": "Reading Market",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_023_t1",
+          "name": "Voter Pass",
+          "description": "",
+          "price_cents": 3800,
+          "available": 250
+        }
+      ]
+    },
+    {
+      "id": "nat_024",
+      "title": "First Avenue: Prince Tribute",
+      "description": "A full night honoring Prince at the venue he made famous.",
+      "category": "music",
+      "venue_name": "First Avenue",
+      "venue_address": "701 N 1st Ave, Minneapolis, MN",
+      "start_offset_minutes": 25694,
+      "end_offset_minutes": 25994,
+      "image_url": "https://picsum.photos/seed/first-ave/800/500",
+      "is_featured": false,
+      "host_name": "First Avenue",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_024_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3200,
+          "available": 1500
+        },
+        {
+          "id": "nat_024_t2",
+          "name": "Mezzanine",
+          "description": "",
+          "price_cents": 5500,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "nat_025",
+      "title": "Mission District Taco Tour",
+      "description": "Five legendary taquerias in three hours. Salsa flight at every stop.",
+      "category": "food",
+      "venue_name": "La Taqueria (start)",
+      "venue_address": "2889 Mission St, San Francisco, CA",
+      "start_offset_minutes": 9374,
+      "end_offset_minutes": 9614,
+      "image_url": "https://picsum.photos/seed/mission-tacos/800/500",
+      "is_featured": false,
+      "host_name": "SF Food Tours",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_025_t1",
+          "name": "Crawler",
+          "description": "",
+          "price_cents": 6500,
+          "available": 60
+        }
+      ]
+    },
+    {
+      "id": "nat_026",
+      "title": "The Independent: Synth Pop Showcase",
+      "description": "Four electronic artists in SF's most intimate club room.",
+      "category": "music",
+      "venue_name": "The Independent",
+      "venue_address": "628 Divisadero St, San Francisco, CA",
+      "start_offset_minutes": 15674,
+      "end_offset_minutes": 15914,
+      "image_url": "https://picsum.photos/seed/the-independent/800/500",
+      "is_featured": false,
+      "host_name": "The Independent",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_026_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3000,
+          "available": 500
+        }
+      ]
+    },
+    {
+      "id": "nat_027",
+      "title": "La Jolla Cove Sunset Sailing",
+      "description": "Catamaran cruise with appetizers and wine pairings.",
+      "category": "wellness",
+      "venue_name": "La Jolla Cove Marina",
+      "venue_address": "1492 N Harbor Dr, San Diego, CA",
+      "start_offset_minutes": 28394,
+      "end_offset_minutes": 28574,
+      "image_url": "https://picsum.photos/seed/la-jolla/800/500",
+      "is_featured": false,
+      "host_name": "SoCal Sail Co.",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_027_t1",
+          "name": "Adult",
+          "description": "",
+          "price_cents": 9500,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "nat_028",
+      "title": "Motown Museum: After Dark",
+      "description": "Late-night tour of Hitsville USA with a live cover band.",
+      "category": "art",
+      "venue_name": "Motown Museum",
+      "venue_address": "2648 W Grand Blvd, Detroit, MI",
+      "start_offset_minutes": 32834,
+      "end_offset_minutes": 33014,
+      "image_url": "https://picsum.photos/seed/motown/800/500",
+      "is_featured": false,
+      "host_name": "Motown Museum",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_028_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 4000,
+          "available": 120
+        }
+      ]
+    },
+    {
+      "id": "nat_029",
+      "title": "Pike Place Late Breakfast Crawl",
+      "description": "Five stalls. Crab eggs benedict. Real maple bacon.",
+      "category": "food",
+      "venue_name": "Pike Place Market",
+      "venue_address": "85 Pike St, Seattle, WA",
+      "start_offset_minutes": 12074,
+      "end_offset_minutes": 12254,
+      "image_url": "https://picsum.photos/seed/pike-place/800/500",
+      "is_featured": false,
+      "host_name": "Pike Place Tours",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_029_t1",
+          "name": "Crawler",
+          "description": "",
+          "price_cents": 4800,
+          "available": 70
+        }
+      ]
+    },
+    {
+      "id": "nat_030",
+      "title": "Capitol Hill Drag Brunch",
+      "description": "Live performers, mimosas, full breakfast plate included.",
+      "category": "nightlife",
+      "venue_name": "R Place",
+      "venue_address": "619 E Pine St, Seattle, WA",
+      "start_offset_minutes": 22334,
+      "end_offset_minutes": 22514,
+      "image_url": "https://picsum.photos/seed/drag-brunch/800/500",
+      "is_featured": false,
+      "host_name": "R Place",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "nat_030_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 3800,
+          "available": 120
+        }
+      ]
+    },
+    {
+      "id": "np_001",
+      "title": "Harvest Gala: A Night for Hunger Relief",
+      "description": "Three-course dinner, live auction, and keynote from chef Daniel Boulud. Every ticket and donation feeds families in need.",
+      "category": "food",
+      "venue_name": "The Plaza Hotel",
+      "venue_address": "768 5th Ave, New York, NY",
+      "start_offset_minutes": 40034,
+      "end_offset_minutes": 40274,
+      "image_url": "https://picsum.photos/seed/harvest-gala/800/500",
+      "is_featured": false,
+      "host_name": "City Harvest Food Bank",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": {
+        "state": "building_energy",
+        "pulse": null,
+        "gravity": [
+          "community_favorite",
+          "returning_attendees"
+        ],
+        "framing": "far_future",
+        "intensity": 0.4
+      },
+      "ticket_types": [
+        {
+          "id": "np_001_t1",
+          "name": "Individual",
+          "description": "",
+          "price_cents": 25000,
+          "available": 200
+        },
+        {
+          "id": "np_001_t2",
+          "name": "Table of 10",
+          "description": "",
+          "price_cents": 220000,
+          "available": 20
+        }
+      ]
+    },
+    {
+      "id": "np_002",
+      "title": "Pups & Pints: Adoption Mixer",
+      "description": "Beer, food trucks, and 30+ rescue dogs looking for forever homes. All proceeds support vaccinations and adoption placements.",
+      "category": "wellness",
+      "venue_name": "Other Half Brewing",
+      "venue_address": "195 Centre St, Brooklyn, NY",
+      "start_offset_minutes": 15254,
+      "end_offset_minutes": 15494,
+      "image_url": "https://picsum.photos/seed/pups-pints/800/500",
+      "is_featured": false,
+      "host_name": "Paws Forward Animal Rescue",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "np_002_t1",
+          "name": "GA (incl. drink)",
+          "description": "",
+          "price_cents": 3500,
+          "available": 300
+        }
+      ]
+    },
+    {
+      "id": "np_003",
+      "title": "Read Across America: Author Festival",
+      "description": "A dozen children's book authors read live to kids; parents bid in a silent auction. Every book sold goes to a Title I classroom.",
+      "category": "art",
+      "venue_name": "The Smithsonian Castle",
+      "venue_address": "1000 Jefferson Dr SW, Washington, DC",
+      "start_offset_minutes": 48194,
+      "end_offset_minutes": 48494,
+      "image_url": "https://picsum.photos/seed/read-america/800/500",
+      "is_featured": false,
+      "host_name": "Books For Every Child",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "np_003_t1",
+          "name": "Family (up to 4)",
+          "description": "",
+          "price_cents": 4500,
+          "available": 150
+        },
+        {
+          "id": "np_003_t2",
+          "name": "Adult",
+          "description": "",
+          "price_cents": 2000,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "np_004",
+      "title": "Coastal Cleanup + Concert",
+      "description": "Morning beach cleanup, afternoon live music on the sand. Bring gloves, leave with cleaner shores.",
+      "category": "music",
+      "venue_name": "Coney Island Beach",
+      "venue_address": "1208 Surf Ave, Brooklyn, NY",
+      "start_offset_minutes": 26474,
+      "end_offset_minutes": 26894,
+      "image_url": "https://picsum.photos/seed/coastal-cleanup/800/500",
+      "is_featured": false,
+      "host_name": "Clean Coast Coalition",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "np_004_t1",
+          "name": "Free RSVP",
+          "description": "",
+          "price_cents": 0,
+          "available": 800
+        },
+        {
+          "id": "np_004_t2",
+          "name": "Concert + Lunch",
+          "description": "",
+          "price_cents": 2500,
+          "available": 300
+        }
+      ]
+    },
+    {
+      "id": "np_005",
+      "title": "Mind Matters: Wellness Festival",
+      "description": "Free therapy consults, sound baths, breathwork sessions, and panels on mental health access for young adults.",
+      "category": "wellness",
+      "venue_name": "The Wiltern",
+      "venue_address": "3790 Wilshire Blvd, Los Angeles, CA",
+      "start_offset_minutes": 43874,
+      "end_offset_minutes": 44354,
+      "image_url": "https://picsum.photos/seed/mind-matters/800/500",
+      "is_featured": false,
+      "host_name": "Mind Matters Foundation",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "np_005_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 0,
+          "available": 1200
+        },
+        {
+          "id": "np_005_t2",
+          "name": "Sponsor",
+          "description": "",
+          "price_cents": 10000,
+          "available": 80
+        }
+      ]
+    },
+    {
+      "id": "np_006",
+      "title": "Habitat for Humanity: 5K Build & Run",
+      "description": "Run a 5K, then help frame a house. All proceeds build affordable homes.",
+      "category": "sports",
+      "venue_name": "Grant Park",
+      "venue_address": "337 E Randolph St, Chicago, IL",
+      "start_offset_minutes": 20654,
+      "end_offset_minutes": 20894,
+      "image_url": "https://picsum.photos/seed/habitat-run/800/500",
+      "is_featured": false,
+      "host_name": "Habitat for Humanity Chicago",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "np_006_t1",
+          "name": "Runner",
+          "description": "",
+          "price_cents": 4500,
+          "available": 800
+        },
+        {
+          "id": "np_006_t2",
+          "name": "Cheer Squad",
+          "description": "",
+          "price_cents": 1500,
+          "available": 200
+        }
+      ]
+    },
+    {
+      "id": "np_007",
+      "title": "Big Brothers Big Sisters Charity Gala",
+      "description": "Black-tie dinner, live music, and silent auction. Proceeds match mentors with at-risk youth.",
+      "category": "food",
+      "venue_name": "The Fairmont Olympic",
+      "venue_address": "411 University St, Seattle, WA",
+      "start_offset_minutes": 57314,
+      "end_offset_minutes": 57554,
+      "image_url": "https://picsum.photos/seed/bbbs-gala/800/500",
+      "is_featured": false,
+      "host_name": "Big Brothers Big Sisters Puget Sound",
+      "host_verified": true,
+      "age_restriction": 21,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "np_007_t1",
+          "name": "Individual",
+          "description": "",
+          "price_cents": 35000,
+          "available": 250
+        },
+        {
+          "id": "np_007_t2",
+          "name": "Patron Pair",
+          "description": "",
+          "price_cents": 75000,
+          "available": 50
+        }
+      ]
+    },
+    {
+      "id": "np_008",
+      "title": "Make-A-Wish Comedy Night",
+      "description": "Six top stand-ups donate their sets. 100% of ticket sales fund wishes for children with critical illness.",
+      "category": "comedy",
+      "venue_name": "The Improv",
+      "venue_address": "8162 Melrose Ave, Los Angeles, CA",
+      "start_offset_minutes": 18494,
+      "end_offset_minutes": 18674,
+      "image_url": "https://picsum.photos/seed/makeawish/800/500",
+      "is_featured": false,
+      "host_name": "Make-A-Wish Foundation",
+      "host_verified": true,
+      "age_restriction": 18,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "np_008_t1",
+          "name": "GA",
+          "description": "",
+          "price_cents": 5000,
+          "available": 400
+        },
+        {
+          "id": "np_008_t2",
+          "name": "VIP Meet & Greet",
+          "description": "",
+          "price_cents": 15000,
+          "available": 40
+        }
+      ]
+    },
+    {
+      "id": "np_009",
+      "title": "Veterans Day Memorial Concert",
+      "description": "Symphony performance honoring service members. Tickets fund veteran transition programs.",
+      "category": "music",
+      "venue_name": "The Kennedy Center",
+      "venue_address": "2700 F St NW, Washington, DC",
+      "start_offset_minutes": 64514,
+      "end_offset_minutes": 64694,
+      "image_url": "https://picsum.photos/seed/veterans-concert/800/500",
+      "is_featured": false,
+      "host_name": "Wounded Warrior Project",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "np_009_t1",
+          "name": "Orchestra",
+          "description": "",
+          "price_cents": 8500,
+          "available": 400
+        },
+        {
+          "id": "np_009_t2",
+          "name": "Mezzanine",
+          "description": "",
+          "price_cents": 5500,
+          "available": 600
+        },
+        {
+          "id": "np_009_t3",
+          "name": "Balcony",
+          "description": "",
+          "price_cents": 3500,
+          "available": 800
+        }
+      ]
+    },
+    {
+      "id": "np_010",
+      "title": "St. Jude Walk/Run for Hope",
+      "description": "Family-friendly 5K through downtown. Every dollar goes to childhood cancer research.",
+      "category": "sports",
+      "venue_name": "Beale Street",
+      "venue_address": "203 Beale St, Memphis, TN",
+      "start_offset_minutes": 53774,
+      "end_offset_minutes": 53954,
+      "image_url": "https://picsum.photos/seed/stjude/800/500",
+      "is_featured": false,
+      "host_name": "St. Jude Children's Research Hospital",
+      "host_verified": true,
+      "age_restriction": null,
+      "social_energy_override": null,
+      "ticket_types": [
+        {
+          "id": "np_010_t1",
+          "name": "Walker",
+          "description": "",
+          "price_cents": 3000,
+          "available": 2000
+        },
+        {
+          "id": "np_010_t2",
+          "name": "Team Captain",
+          "description": "",
+          "price_cents": 6000,
+          "available": 200
+        }
+      ]
+    }
+  ]
+}
