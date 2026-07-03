@@ -40,7 +40,11 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "core",
+    "identity",
+    "audit",
 ]
+
+AUTH_USER_MODEL = "identity.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -99,7 +103,7 @@ CELERY_TIMEZONE = "UTC"
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "DEFAULT_PARSER_CLASSES": ["rest_framework.parsers.JSONParser"],
-    "DEFAULT_AUTHENTICATION_CLASSES": [],
+    "DEFAULT_AUTHENTICATION_CLASSES": ["identity.authentication.EchoTokenAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["core.scopes.HasRequiredScope"],
     "EXCEPTION_HANDLER": "core.envelope.envelope_exception_handler",
     "DEFAULT_PAGINATION_CLASS": "core.pagination.EchoCursorPagination",
@@ -126,6 +130,19 @@ SPECTACULAR_SETTINGS = {
     # Contract paths are absolute (/v1/...); don't strip a common prefix.
     "SCHEMA_PATH_PREFIX": "",
 }
+
+# ─── Identity / tokens (Phase 1) ─────────────────────────────────────────────
+
+# Access tokens are short-lived HS256 JWTs; refresh tokens rotate (identity.tokens).
+ECHO_TOKEN_SIGNING_KEY = env("ECHO_TOKEN_SIGNING_KEY", "") or SECRET_KEY
+ECHO_ACCESS_TOKEN_TTL_SECONDS = int(env("ECHO_ACCESS_TOKEN_TTL_SECONDS", "900"))
+ECHO_REFRESH_TOKEN_TTL_SECONDS = int(env("ECHO_REFRESH_TOKEN_TTL_SECONDS", str(30 * 24 * 60 * 60)))
+ECHO_GUEST_REFRESH_TTL_SECONDS = int(env("ECHO_GUEST_REFRESH_TTL_SECONDS", str(7 * 24 * 60 * 60)))
+
+# Expected audiences for platform identity-token verification. Empty = that
+# provider fails closed with 503 auth_not_configured (Phase 1 credential gate).
+ECHO_APPLE_BUNDLE_IDS = env_list("ECHO_APPLE_BUNDLE_IDS")
+ECHO_GOOGLE_CLIENT_IDS = env_list("ECHO_GOOGLE_CLIENT_IDS")
 
 # ─── Idempotency (locked platform rule) ──────────────────────────────────────
 
