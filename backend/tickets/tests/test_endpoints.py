@@ -1,7 +1,6 @@
 """W2 — S-06 endpoint behavior: locked shapes, owner-only-as-absent, scope
 enforcement, fail-closed 503, non-active refusals, wallet pagination."""
 
-import pytest
 
 from tickets import credentials
 from tickets.models import TicketStatus
@@ -9,13 +8,6 @@ from tickets.models import TicketStatus
 
 def ticket_path(ticket, suffix=""):
     return f"/v1/tickets/{ticket.echo_id}{suffix}"
-
-
-@pytest.fixture(autouse=True)
-def _reset_signer_cache():
-    credentials._signer = None
-    yield
-    credentials._signer = None
 
 
 # ─── GET /v1/tickets/:id ─────────────────────────────────────────────────────

@@ -4,6 +4,7 @@ scripts/check_contract_drift.py enforces it."""
 from django.urls import path
 
 from tickets.views import (
+    TicketAppleWalletView,
     TicketCredentialView,
     TicketDetailView,
     TicketRefreshView,
@@ -20,5 +21,10 @@ urlpatterns = [
         name="ticket-credential",
     ),
     path("v1/tickets/<str:ticket_id>/refresh", TicketRefreshView.as_view(), name="ticket-refresh"),
+    path(
+        "v1/tickets/<str:ticket_id>/apple-wallet",
+        TicketAppleWalletView.as_view(),
+        name="ticket-apple-wallet",
+    ),
     path("v1/wallet", WalletListView.as_view(), name="wallet"),
 ]

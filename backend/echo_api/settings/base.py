@@ -195,6 +195,19 @@ ECHO_CREDENTIAL_SIGNING_KEY = env("ECHO_CREDENTIAL_SIGNING_KEY", "")
 # credential's real expires_at).
 ECHO_CREDENTIAL_TTL_SECONDS = int(env("ECHO_CREDENTIAL_TTL_SECONDS", "30"))
 
+# ─── Apple Wallet / PassKit (Phase 4: tickets.passkit; fail-closed) ──────────
+
+# Paths to the operator-provided pass-signing assets (PEM): the Pass Type ID
+# certificate, its private key, and Apple's WWDR intermediate. All paths plus
+# both identifiers must be set or pass generation 503s
+# `wallet_pass_not_configured`.
+ECHO_PASSKIT_CERT_PATH = env("ECHO_PASSKIT_CERT_PATH", "")
+ECHO_PASSKIT_KEY_PATH = env("ECHO_PASSKIT_KEY_PATH", "")
+ECHO_PASSKIT_WWDR_CERT_PATH = env("ECHO_PASSKIT_WWDR_CERT_PATH", "")
+ECHO_PASSKIT_PASS_TYPE_ID = env("ECHO_PASSKIT_PASS_TYPE_ID", "")
+ECHO_PASSKIT_TEAM_ID = env("ECHO_PASSKIT_TEAM_ID", "")
+ECHO_PASSKIT_ORG_NAME = env("ECHO_PASSKIT_ORG_NAME", "ECHO")
+
 # ─── Sentry (slot — initialized in staging/prod when DSN is set) ─────────────
 
 SENTRY_DSN = env("SENTRY_DSN", "")

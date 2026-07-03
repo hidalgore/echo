@@ -29,6 +29,18 @@ def generate_seed_b64() -> str:
     ).decode("ascii")
 
 
+@pytest.fixture(autouse=True)
+def _reset_signer_caches():
+    """Process-wide signers cache by config; tests swap keys/paths per-test."""
+    from tickets import credentials, passkit
+
+    credentials._signer = None
+    passkit._pass_signer = None
+    yield
+    credentials._signer = None
+    passkit._pass_signer = None
+
+
 @pytest.fixture
 def signing_key(settings):
     """Configure a fresh per-test signing key (the fail-closed default stays

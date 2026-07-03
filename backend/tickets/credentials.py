@@ -254,6 +254,36 @@ def revoke_credential(ticket: Ticket, *, request=None, reason: str = "") -> bool
     return bool(deleted)
 
 
+# A pass minted very near event end still gets a usable barcode window.
+PKPASS_MIN_TTL = timedelta(hours=1)
+
+
+def mint_pkpass_token(ticket: Ticket) -> str:
+    """Long-lived barcode token for an Apple Wallet pass (typ=pkpass).
+
+    A pass in someone's Wallet cannot rotate without the PassKit web service
+    (deferred — see tickets.passkit), so this token lives until the event
+    ends instead of ~30s. It is still a server-signed payload, never a bare
+    serial, and revocation bites instantly: verification checks live ticket
+    status on every scan. No TicketCredential row is touched — pass tokens
+    ride alongside the rotating credential, not instead of it.
+    """
+    _refuse_non_active(ticket)
+    signer = get_signer()
+    now = timezone.now()
+    expires_at = max(ticket.event.ends_at, now + PKPASS_MIN_TTL)
+    return signer.sign(
+        {
+            "iss": TOKEN_ISSUER,
+            "typ": "pkpass",
+            "tid": str(ticket.echo_id),
+            "eid": str(ticket.event_id),
+            "iat": int(now.timestamp()),
+            "exp": int(expires_at.timestamp()),
+        }
+    )
+
+
 @dataclass(frozen=True)
 class VerificationResult:
     """Stable scan-verdict shape — Phase 5 door results are built from this."""

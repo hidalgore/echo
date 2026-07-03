@@ -20,15 +20,17 @@ per (identity, ticket) on top of the user bucket, and fail closed with 503
 
 import uuid
 
-from drf_spectacular.utils import extend_schema
+from django.http import HttpResponse
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework import exceptions, generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from audit import service as audit
 from core.envelope import error_response
 from core.pagination import EchoCursorPagination
 from core.ratelimit import UserRateThrottle
-from tickets import credentials
+from tickets import credentials, passkit
 from tickets.models import Ticket
 from tickets.serializers import CredentialSerializer, TicketSerializer, TicketStatusSerializer
 from tickets.throttling import CredentialThrottle
@@ -117,6 +119,59 @@ class TicketRefreshView(APIView):
         return _minted_credential_response(
             request, ticket_id, lambda ticket: credentials.rotate_credential(ticket, request=request)
         )
+
+
+class TicketAppleWalletView(APIView):
+    """POST /v1/tickets/:ticketId/apple-wallet — build + return the .pkpass.
+
+    The barcode carries a pkpass-typed server-signed token (long-lived by
+    necessity — no PassKit web service yet; the update slot is documented in
+    tickets.passkit). Both fail-closed gates apply: credential signing key
+    AND pass-signing certs.
+    """
+
+    required_scope = "user"
+    throttle_classes = [UserRateThrottle, CredentialThrottle]
+
+    @extend_schema(
+        operation_id="ticketAppleWallet",
+        request=None,
+        responses={200: OpenApiResponse(description="The signed .pkpass bundle (binary).")},
+    )
+    def post(self, request, ticket_id):
+        ticket = _get_owned_ticket_or_404(request, ticket_id)
+        try:
+            token = credentials.mint_pkpass_token(ticket)
+            pass_bytes = passkit.build_pass(
+                ticket, barcode_message=credentials.QR_PAYLOAD_PREFIX + token
+            )
+        except credentials.CredentialSigningNotConfigured:
+            return error_response(
+                "credentials_not_configured",
+                "Credentials are not configured for this environment.",
+                status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+        except passkit.PassKitNotConfigured:
+            return error_response(
+                "wallet_pass_not_configured",
+                "Apple Wallet passes are not configured for this environment.",
+                status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+        except credentials.TicketNotActive as exc:
+            return error_response(
+                "ticket_not_active",
+                f"This ticket is {exc.status.replace('_', ' ')} and cannot be added to Wallet.",
+                status.HTTP_409_CONFLICT,
+            )
+        audit.record(
+            "wallet_pass.generated",
+            request=request,
+            target=("ticket", str(ticket.echo_id)),
+            metadata={"event_id": str(ticket.event_id)},
+        )
+        response = HttpResponse(pass_bytes, content_type="application/vnd.apple.pkpass")
+        response["Content-Disposition"] = 'attachment; filename="echo-ticket.pkpass"'
+        return response
 
 
 class WalletPagination(EchoCursorPagination):

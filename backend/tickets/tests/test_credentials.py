@@ -10,15 +10,6 @@ from audit.models import AuditLogEntry
 from tickets import credentials
 from tickets.models import TicketCredential, TicketStatus
 
-
-@pytest.fixture(autouse=True)
-def _reset_signer_cache():
-    """The process-wide signer caches by seed; tests swap keys per-test."""
-    credentials._signer = None
-    yield
-    credentials._signer = None
-
-
 # ─── Fail-closed gate ────────────────────────────────────────────────────────
 
 
