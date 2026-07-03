@@ -23,6 +23,16 @@ ENDPOINTS_TS = Path(
 
 _ENDPOINT_RE = re.compile(r"method:\s*'(?P<method>[A-Z]+)',\s*path:\s*'(?P<path>/v1/[^']*)'")
 
+# ── Phase 3 AMENDMENT DECISION (flagged, documented here on purpose) ─────────
+# Server-to-server routes are NOT client contract surface: the TS registry is
+# the typed table apiCall() dials from, and a webhook the client must never
+# call doesn't belong in EndpointKey. They still must be named here explicitly
+# — an unlisted served route is drift, exactly as before. Nothing gets exempted
+# silently.
+SERVER_TO_SERVER: set[tuple[str, str]] = {
+    ("POST", "/v1/webhooks/stripe"),  # Stripe event delivery (Phase 3 / W4)
+}
+
 
 def registry_endpoints() -> set[tuple[str, str]]:
     if not ENDPOINTS_TS.exists():
@@ -69,8 +79,9 @@ def served_endpoints() -> set[tuple[str, str]]:
 def main() -> int:
     registry = registry_endpoints()
     served = served_endpoints()
+    exempt = {(method, normalize(path)) for method, path in SERVER_TO_SERVER}
 
-    drift = sorted(served - registry)
+    drift = sorted(served - registry - exempt)
     pending = sorted(registry - served)
 
     if drift:

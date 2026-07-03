@@ -33,6 +33,43 @@ class TestAdvanceEventLifecycle:
         assert event.status == EventStatus.SCHEDULED
         assert audit_actions(event) == ["event.published"]
 
+    def test_publish_snapshots_refund_policy_once(self, make_event):
+        """Phase 3: publish captures the refund policy (allow_refunds ->
+        'balanced' preset) exactly once; later transitions never rewrite it."""
+        now = timezone.now()
+        event = make_event(
+            status=EventStatus.DRAFT,
+            allow_refunds=True,
+            publish_at=now - timedelta(minutes=5),
+            sales_start_at=now + timedelta(days=1),
+        )
+        advance_event_lifecycle()
+        event.refresh_from_db()
+        assert event.refund_policy_snapshot["preset_id"] == "balanced"
+        assert {tier["days_before"] for tier in event.refund_policy_snapshot["tiers"]} == {7, 2, 0}
+
+        # Doctor the snapshot, run the next transition — it must survive.
+        sentinel = {"preset_id": "custom-sentinel", "tiers": []}
+        type(event).objects.filter(pk=event.pk).update(
+            refund_policy_snapshot=sentinel, sales_start_at=now - timedelta(minutes=1)
+        )
+        advance_event_lifecycle()
+        event.refresh_from_db()
+        assert event.status == EventStatus.ON_SALE
+        assert event.refund_policy_snapshot == sentinel
+
+    def test_no_refunds_flag_snapshots_strict_preset(self, make_event):
+        now = timezone.now()
+        event = make_event(
+            status=EventStatus.DRAFT,
+            allow_refunds=False,
+            publish_at=now - timedelta(minutes=5),
+            sales_start_at=now + timedelta(days=1),
+        )
+        advance_event_lifecycle()
+        event.refresh_from_db()
+        assert event.refund_policy_snapshot["preset_id"] == "strict"
+
     def test_opens_sales(self, make_event):
         now = timezone.now()
         event = make_event(status=EventStatus.SCHEDULED, sales_start_at=now - timedelta(minutes=1))

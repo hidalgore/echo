@@ -34,7 +34,7 @@ from events.serializers import (
 def _visible_events():
     return (
         Event.objects.filter(status__in=VISIBLE_STATUSES)
-        .select_related("venue")
+        .select_related("venue", "donation_campaign")
         .prefetch_related(Prefetch("tiers", queryset=TicketTier.objects.all()))
     )
 
@@ -144,7 +144,7 @@ class SavedEventsView(APIView):
     def get(self, request):
         saved = (
             SavedEvent.objects.filter(user=request.user)
-            .select_related("event__venue")
+            .select_related("event__venue", "event__donation_campaign")
             .prefetch_related("event__tiers")
         )
         paginator = EchoCursorPagination()  # -pk default = most recently saved first

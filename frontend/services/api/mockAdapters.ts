@@ -15,14 +15,17 @@
 import { API_STATUS } from '../../types/api/shared';
 import type { ApiResult, Paged, PageParams } from '../../types/api/shared';
 import type {
-  CheckoutIntentDTO, CircleDTO, CredentialDTO, DoorScanRequestDTO,
-  DoorScanResultDTO, EventDTO, EventInventoryDTO, RiskDecisionDTO, TicketDTO, TicketTierDTO,
+  CheckoutIntentDTO, CircleDTO, ConfirmPaymentResponseDTO, CredentialDTO,
+  DonationCampaignDTO, DoorScanRequestDTO, DoorScanResultDTO, EventDTO,
+  EventInventoryDTO, RiskDecisionDTO, TicketDTO, TicketTierDTO,
 } from '../../types/api/dto';
 import type { EchoPorts } from './ports';
 import { toAgeBadge, toTicketStatus } from './mappers';
 
 import { CONFIG } from '../../constants/config';
 import type { Event, Ticket } from '../../types';
+import type { NonprofitDonationCampaign } from '../../types/nonprofitDonation';
+import { computeDonationProcessingFee } from '../donationCampaignService';
 import type { EchoCircle } from '../../types/circle';
 import { ENERGY_STATE_LABEL } from '../../types/socialEnergy';
 import { getSocialEnergy } from '../socialEnergyService';
@@ -85,6 +88,22 @@ function toTicketTierDTO(tier: Event['ticket_types'][number]): TicketTierDTO {
   };
 }
 
+function toDonationCampaignDTO(campaign: NonprofitDonationCampaign): DonationCampaignDTO {
+  return {
+    echo_id: campaign.id,
+    nonprofit_name: campaign.nonprofitName,
+    cause_title: campaign.causeTitle,
+    cause_description: campaign.causeDescription,
+    // Domain amounts are dollars; the wire is cents (locked rule).
+    goal_cents: Math.round(campaign.goalAmount * 100),
+    raised_cents: Math.round(campaign.raisedAmount * 100),
+    donor_count: campaign.donorCount,
+    suggested_amounts_cents: campaign.suggestedAmounts.map((amount) => Math.round(amount * 100)),
+    // Derived progress states are display logic; the wire stores active|closed.
+    status: campaign.status === 'closed' ? 'closed' : 'active',
+  };
+}
+
 function toEventDTO(event: Event): EventDTO {
   const energy = getSocialEnergy(event);
   return {
@@ -109,6 +128,9 @@ function toEventDTO(event: Event): EventDTO {
     atmosphere_label: ENERGY_STATE_LABEL[energy.state],
     atmosphere_intensity: energy.intensity,
     tiers: event.ticket_types.map(toTicketTierDTO),
+    donation_campaign: event.donation_campaign
+      ? toDonationCampaignDTO(event.donation_campaign)
+      : null,
   };
 }
 
@@ -121,20 +143,33 @@ const INTENT_STATUS_TO_DTO: Record<CheckoutIntentStatus, CheckoutIntentDTO['stat
   expired: 'canceled',
 };
 
-function toCheckoutIntentDTO(intent: CheckoutIntent, event: Event | undefined): CheckoutIntentDTO {
+function toCheckoutIntentDTO(
+  intent: CheckoutIntent,
+  event: Event | undefined,
+  tierId?: string,
+): CheckoutIntentDTO {
   const ageGateRequired = (event?.age_restriction ?? 0) > 0;
+  const donationCents = intent.pricing.donation ?? 0;
+  const donationFeeCents = donationCents > 0
+    ? Math.round(computeDonationProcessingFee(donationCents / 100) * 100)
+    : 0;
   return {
     echo_id: intent.intent_id,
     event_id: intent.event_id,
+    tier_id: tierId ?? event?.ticket_types[0]?.id ?? '',
+    quantity: intent.quantity,
     status: ageGateRequired && intent.status === 'requires_payment_method'
       ? 'requires_verification'
       : INTENT_STATUS_TO_DTO[intent.status],
+    currency: intent.currency,
     subtotal_cents: intent.pricing.subtotal,
     fees_cents: intent.pricing.fees,
     tax_cents: intent.pricing.tax,
-    donation_cents: intent.pricing.donation ?? 0,
-    total_cents: intent.pricing.total,
+    donation_cents: donationCents,
+    donation_fee_cents: donationFeeCents,
+    total_cents: intent.pricing.total + donationFeeCents,
     age_verification_required: ageGateRequired,
+    expires_at: intent.expires_at,
   };
 }
 
@@ -270,16 +305,19 @@ export const mockPorts: EchoPorts = {
   },
 
   checkout: {
-    async createIntent(eventId, _idempotencyKey) {
-      const event = await findEvent(eventId);
-      if (!event) return notFound<CheckoutIntentDTO>('event', eventId);
+    async createIntent(request, _idempotencyKey) {
+      const event = await findEvent(request.event_id);
+      if (!event) return notFound<CheckoutIntentDTO>('event', request.event_id);
+      const tier = event.ticket_types.find((t) => t.id === request.ticket_type_id)
+        ?? event.ticket_types[0];
       const intent = await checkoutIntentService.createCheckoutIntent({
-        event_id: eventId,
-        quantity: 1,
-        ticket_type_id: event.ticket_types[0]?.id,
-        mock_subtotal_dollars: event.ticket_types[0]?.price ?? 0,
+        event_id: request.event_id,
+        quantity: request.quantity,
+        ticket_type_id: tier?.id,
+        donation_cents: request.donation_cents,
+        mock_subtotal_dollars: (tier?.price ?? 0) * request.quantity,
       });
-      return ok(toCheckoutIntentDTO(intent, event), API_STATUS.created);
+      return ok(toCheckoutIntentDTO(intent, event, tier?.id), API_STATUS.created);
     },
 
     async getIntent(id) {
@@ -288,14 +326,13 @@ export const mockPorts: EchoPorts = {
       return ok(toCheckoutIntentDTO(intent, event));
     },
 
-    async confirmPayment(intentId, idempotencyKey) {
+    async confirmPayment(intentId, paymentMethod, idempotencyKey) {
       const response = await checkoutIntentService.confirmPayment({
         intent_id: intentId,
-        payment_method: { type: 'card', token: 'tok_mock_visa' },
+        payment_method: paymentMethod,
         idempotency_key: idempotencyKey,
       });
-      const confirmed = response.tickets[0];
-      if (response.status !== 'succeeded' || !confirmed) {
+      if (response.status !== 'succeeded' || response.tickets.length === 0) {
         return {
           ok: false,
           status: API_STATUS.badRequest,
@@ -307,14 +344,16 @@ export const mockPorts: EchoPorts = {
       }
       const intent = await checkoutIntentService.getCheckoutIntent(intentId);
       const event = await findEvent(intent.event_id);
-      return ok<TicketDTO>({
-        echo_id: confirmed.ticket_id,
+      const issuedAt = new Date().toISOString();
+      const tickets: TicketDTO[] = response.tickets.map((ticket) => ({
+        echo_id: ticket.ticket_id,
         event_id: intent.event_id,
         tier_id: event?.ticket_types[0]?.id ?? 'general_admission',
         status: 'active',
         age_badge: eventAgeBadge(event),
-        issued_at: new Date().toISOString(),
-      }, API_STATUS.created);
+        issued_at: issuedAt,
+      }));
+      return ok<ConfirmPaymentResponseDTO>({ status: 'succeeded', tickets }, API_STATUS.created);
     },
   },
 

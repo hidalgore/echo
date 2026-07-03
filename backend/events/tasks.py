@@ -28,6 +28,7 @@ from django.utils import timezone
 
 from audit import service as audit
 from events.models import Event, EventStatus
+from events.refunds import build_refund_policy_snapshot
 
 logger = logging.getLogger(__name__)
 
@@ -51,11 +52,18 @@ def advance_event_lifecycle() -> int:
     advanced = 0
     for source, target, trigger_field, action in _TRANSITIONS:
         due = Event.objects.filter(status=source, **{f"{trigger_field}__lte": now}).only(
-            "echo_id", "public_id"
+            "echo_id", "public_id", "allow_refunds", "refund_policy_snapshot"
         )
         for event in due:
+            extra = {}
+            # Phase 3: publish captures the refund policy exactly once
+            # (at-time-of-publish semantics; consumed by Phase 8 refunds).
+            if target == EventStatus.SCHEDULED and event.refund_policy_snapshot is None:
+                extra["refund_policy_snapshot"] = build_refund_policy_snapshot(
+                    event.allow_refunds
+                )
             updated = Event.objects.filter(pk=event.pk, status=source).update(
-                status=target, updated_at=now
+                status=target, updated_at=now, **extra
             )
             if not updated:
                 continue  # another worker won the guarded update

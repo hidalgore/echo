@@ -50,13 +50,32 @@ cp .env.example .env                       # then edit if needed
 5. **Sentry**: create `echo-backend` + `echo-frontend` projects; set
    `SENTRY_DSN` + `SENTRY_ENVIRONMENT=staging` (backend init already wired in
    `settings/staging.py`; frontend SDK install is deferred — slot noted below).
-6. **Stripe**: test-mode keys into `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET`
-   env slots (consumed starting Phase 3).
+6. **Stripe** (consumed since Phase 3 — the gateway fails closed with 503
+   `payments_not_configured` until these are set):
+   - Test-mode secret key into `STRIPE_SECRET_KEY`.
+   - Stripe dashboard: add a webhook endpoint
+     `https://api-staging.echo.events/v1/webhooks/stripe` subscribed to
+     `payment_intent.succeeded`, `payment_intent.payment_failed`,
+     `charge.refunded`; put its signing secret into `STRIPE_WEBHOOK_SECRET`.
+   - Frontend build env: `EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY` (test-mode
+     publishable key) + `EXPO_PUBLIC_ECHO_CHECKOUT_MODE=live` to bind the
+     S-05 http port (mock stays the default otherwise).
+   - Checkout knobs (defaults fine): `RATE_LIMIT_CHECKOUT_INTENT` (6/min per
+     user+event), `ECHO_CHECKOUT_HOLD_TTL_SECONDS` (600; locked range 8–15
+     min), `ECHO_DEFAULT_TAX_RATE` (0.085).
+   - Apple Pay / Google Pay: token collection needs operator-provisioned
+     merchant identifiers (Apple merchant id + Google Pay config) — card is
+     the E2E path until then; the server already accepts all three token
+     types.
 7. **Workers**: systemd units for gunicorn / celery worker / celery beat
    (mirror the `siempre-*` unit naming convention).
 8. **Smoke**: `curl https://api-staging.echo.events/v1/config/public` returns
    the config payload; a bad route returns the locked envelope 404; hammering
-   returns 429 with `Retry-After`.
+   returns 429 with `Retry-After`. Phase 3 adds the revenue-path E2E: seeded
+   on-sale event → `POST /v1/checkout/intents` (Idempotency-Key required) →
+   `POST /v1/payments/confirm` with a Stripe test PaymentMethod (`pm_card_visa`)
+   → ticket rows issued → Stripe CLI `stripe trigger payment_intent.succeeded`
+   redelivery is deduped.
 
 ## Migration workflow (locked from day one)
 

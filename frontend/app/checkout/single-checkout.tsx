@@ -3,16 +3,25 @@
  * ══════════════════════════════════════════
  * For qty=1 only. Event card + price breakdown + Pay Now CTA.
  * No Circle selector, no path choice.
+ *
+ * Phase 3 / W5: behind EXPO_PUBLIC_ECHO_CHECKOUT_MODE=live the payment runs
+ * the real S-05 sequence (create intent -> Stripe card token -> confirm) via
+ * getPorts().checkout, and the price/tickets recorded come from the server.
+ * Mock mode keeps the local simulated payment + client-side hold untouched.
  */
 import React, { useMemo, useState } from 'react';
 import { useDynamicTheme } from '../../theme/dynamicTheme';
-import { View, ScrollView, StyleSheet, StatusBar, TouchableOpacity, Alert } from 'react-native';
+import { View, ScrollView, StyleSheet, StatusBar, TouchableOpacity, Alert, Platform } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from '../../components/ui';
 import { CircleEventCard, GradientCTA } from '../../components/circle';
 import { MOCK_EVENTS } from '../../services/mock';
+import { getPorts } from '../../services/api/ports';
+import { newIdempotencyKey } from '../../services/api/apiClient';
+import { useEventStore } from '../../stores/eventStore';
+import { CardPaymentField, collectCardPaymentToken } from '../../components/checkout/StripeCheckout';
 import { CONFIG } from '../../constants/config';
 import { useTicketStore } from '../../stores/ticketStore';
 import { computeCheckoutFees } from '../../services/pricingEngine';
@@ -42,11 +51,16 @@ export default function SingleCheckoutScreen() {
     donationAmount?: string;
     donationType?: string;
   }>();
-  const event = MOCK_EVENTS.find(e => e.id === eventId) || MOCK_EVENTS[0];
+  // Live discovery serves backend events the bundled corpus doesn't know —
+  // resolve through the store (it falls back to MOCK_EVENTS internally).
+  const storeEvent = useEventStore((state) => state.getEventById(eventId ?? ''));
+  const event = storeEvent || MOCK_EVENTS.find(e => e.id === eventId) || MOCK_EVENTS[0];
+  const liveCheckout = CONFIG.CHECKOUT_MODE === 'live';
   const fallbackPrice = event?.ticket_types?.[0]?.price ?? 40;
   const qty = Math.max(1, Number.parseInt(qtyStr || quantityStr || '1', 10) || 1);
   const isCircleOrganizer = mode === 'circle_organizer';
   const [processing, setProcessing] = useState(false);
+  const [cardComplete, setCardComplete] = useState(false);
   const [donationSelection, setDonationSelection] = useState<DonationSelection>({ amount: Number(donationAmountParam) || 0, type: (donationTypeParam as DonationSelection['type']) || 'fixed' });
 
   const selectedTickets = useMemo<CheckoutSelection[]>(() => {
@@ -77,22 +91,96 @@ export default function SingleCheckoutScreen() {
     : `${qty} ticket${qty === 1 ? '' : 's'}`;
   const checkoutTitle = mode === 'pay_all' ? 'Pay for all tickets' : isCircleOrganizer ? 'Start ECHO Circle' : 'Confirm & pay';
 
+  /** Live path: real S-05 intent -> card token -> confirm. Returns the
+   *  server-truth numbers for the local wallet record, or null when the flow
+   *  stopped with the user already informed. */
+  const payViaCheckoutPort = async () => {
+    const checkout = getPorts().checkout;
+    const created = await checkout.createIntent(
+      {
+        event_id: event.id,
+        ticket_type_id: selectedTickets[0]?.id || event.ticket_types?.[0]?.id,
+        quantity: checkoutQty,
+        donation_cents: donationAmount > 0 ? Math.round(donationAmount * 100) : undefined,
+        client_context: {
+          platform: Platform.OS === 'ios' ? 'ios' : Platform.OS === 'android' ? 'android' : 'web',
+          locale: 'en-US',
+        },
+      },
+      newIdempotencyKey(),
+    );
+    if (!created.ok) {
+      Alert.alert('Checkout unavailable', created.error.message);
+      return null;
+    }
+    const intent = created.data;
+    if (intent.status === 'requires_verification') {
+      // Locked gate: no payment before verification (server enforces it too).
+      Alert.alert(
+        'Age verification required',
+        'This event requires age verification before payment.',
+        [
+          { text: 'Not now', style: 'cancel' },
+          { text: 'Verify age', onPress: () => router.push('/verify-age' as never) },
+        ],
+      );
+      return null;
+    }
+    const card = await collectCardPaymentToken();
+    if (!card.ok) {
+      Alert.alert('Payment method needed', card.message);
+      return null;
+    }
+    const confirmed = await checkout.confirmPayment(
+      intent.echo_id,
+      { type: 'card', token: card.token },
+      newIdempotencyKey(),
+    );
+    if (!confirmed.ok) {
+      Alert.alert('Payment failed', confirmed.error.message);
+      return null;
+    }
+    return {
+      ticketOrderId: confirmed.data.tickets[0]?.echo_id ?? `tkt_${Date.now()}`,
+      totalDollars: intent.total_cents / 100,
+      subtotalDollars: intent.subtotal_cents / 100,
+      feeDollars: intent.fees_cents / 100,
+    };
+  };
+
   const completePayment = async () => {
     setProcessing(true);
     let holdId: string | null = null;
     try {
-      // MVP inventory hold: keeps mock data intact while modeling the production sequence.
-      const hold = await createInventoryHold({
-        eventId: event.id,
-        ticketTypeId: selectedTickets[0]?.id || event.ticket_types?.[0]?.id || 'general',
-        quantity: checkoutQty,
-      });
-      holdId = hold.id;
+      let ticketOrderId = `tkt_${Date.now()}`;
+      let paidTotal = total;
+      let paidSubtotal = subtotal;
+      let paidFee = fee;
 
-      // Simulate payment
-      await new Promise(r => setTimeout(r, 1200));
+      if (liveCheckout) {
+        const purchase = await payViaCheckoutPort();
+        if (!purchase) {
+          setProcessing(false);
+          return;
+        }
+        ticketOrderId = purchase.ticketOrderId;
+        paidTotal = purchase.totalDollars;
+        paidSubtotal = purchase.subtotalDollars;
+        paidFee = purchase.feeDollars;
+      } else {
+        // Mock-only client hold simulation of the production sequence (the
+        // real hold is server-side from Phase 3 on).
+        const hold = await createInventoryHold({
+          eventId: event.id,
+          ticketTypeId: selectedTickets[0]?.id || event.ticket_types?.[0]?.id || 'general',
+          quantity: checkoutQty,
+        });
+        holdId = hold.id;
+
+        // Simulate payment
+        await new Promise(r => setTimeout(r, 1200));
+      }
       const { addTicket } = useTicketStore.getState();
-      const ticketOrderId = `tkt_${Date.now()}`;
       const circleId = isCircleOrganizer ? `circle_${Date.now()}` : undefined;
       const donationRecord = event.donation_campaign && donationAmount > 0
         ? buildDonationRecord({
@@ -115,10 +203,12 @@ export default function SingleCheckoutScreen() {
         user_id: 'user_current',
         ticket_type_id: selectedTickets[0]?.id || event.ticket_types?.[0]?.id || 'general',
         status: 'active',
+        // Real scanning credentials are server-signed and land in Phase 4;
+        // this local code only feeds the wallet preview.
         qr_code: `ECHO-${event.id}-${Date.now()}`,
         nfc_credential: `nfc_${event.id}_${Date.now()}`,
         purchased_at: new Date().toISOString(),
-        price_paid: total,
+        price_paid: paidTotal,
         quantity: checkoutQty,
         total_quantity: checkoutQty,
         ticket_mix: selectedTickets.length
@@ -127,12 +217,12 @@ export default function SingleCheckoutScreen() {
               name: organizerTicket?.name || 'Ticket',
               quantity: checkoutQty,
               unit_price: Number(organizerTicket?.price) || fallbackPrice,
-              subtotal,
+              subtotal: paidSubtotal,
             }]
-          : [{ tier_id: event.ticket_types?.[0]?.id || 'general', name: 'General Admission', quantity: checkoutQty, unit_price: fallbackPrice, subtotal }],
-        subtotal,
-        fees: fee,
-        total,
+          : [{ tier_id: event.ticket_types?.[0]?.id || 'general', name: 'General Admission', quantity: checkoutQty, unit_price: fallbackPrice, subtotal: paidSubtotal }],
+        subtotal: paidSubtotal,
+        fees: paidFee,
+        total: paidTotal,
         donation_summary: donationRecord,
         payment_status: 'paid',
         access_status: 'active',
@@ -148,7 +238,7 @@ export default function SingleCheckoutScreen() {
         } : null,
       });
 
-      await completeInventoryHold(holdId);
+      if (holdId) await completeInventoryHold(holdId);
 
       if (isCircleOrganizer && circleId) {
         const freshCircle = createFreshCircle({
@@ -172,13 +262,22 @@ export default function SingleCheckoutScreen() {
       setProcessing(false);
       router.replace('/(tabs)/wallet');
     } catch (error) {
-      await releaseInventoryHold(holdId);
+      if (holdId) await releaseInventoryHold(holdId);
       setProcessing(false);
-      Alert.alert('Checkout paused', 'ECHO could not complete the mock checkout. Your ticket hold was released.');
+      Alert.alert(
+        'Checkout paused',
+        liveCheckout
+          ? 'ECHO could not finish saving your reservation. Check your wallet before retrying — your ticket hold releases automatically if the payment did not go through.'
+          : 'ECHO could not complete the mock checkout. Your ticket hold was released.',
+      );
     }
   };
 
   const handlePay = () => {
+    if (liveCheckout && !cardComplete) {
+      Alert.alert('Payment method needed', 'Enter your card details to complete the reservation.');
+      return;
+    }
     if (donationAmount > 0 && event.donation_campaign) {
       Alert.alert(
         'Donation added',
@@ -264,19 +363,29 @@ export default function SingleCheckoutScreen() {
           </View>
         </View>
 
-        {/* Payment method preview */}
+        {/* Payment method: live checkout collects a real card via the Stripe
+            seam; mock keeps the static preview. */}
         <View style={s.section}>
-          <TouchableOpacity style={s.paymentMethod} activeOpacity={0.82}>
-            <View style={s.paymentIcon}>
-              <Ionicons name="card-outline" size={20} color="#20C7FF" />
+          {liveCheckout ? (
+            <View style={s.paymentMethod}>
+              <View style={{ flex: 1 }}>
+                <Text style={s.paymentLabel}>Payment method</Text>
+                <CardPaymentField onComplete={setCardComplete} />
+              </View>
             </View>
-            <View style={{ flex: 1 }}>
-              <Text style={s.paymentLabel}>Payment method</Text>
-              <Text style={s.paymentValue}>Visa ····4242</Text>
-            </View>
-            <Text style={s.paymentChange}>Change</Text>
-            <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.25)" />
-          </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={s.paymentMethod} activeOpacity={0.82}>
+              <View style={s.paymentIcon}>
+                <Ionicons name="card-outline" size={20} color="#20C7FF" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={s.paymentLabel}>Payment method</Text>
+                <Text style={s.paymentValue}>Visa ····4242</Text>
+              </View>
+              <Text style={s.paymentChange}>Change</Text>
+              <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.25)" />
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* Trust strip */}

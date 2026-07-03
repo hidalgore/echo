@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "identity",
     "audit",
     "events",
+    "checkout",
+    "tickets",
 ]
 
 AUTH_USER_MODEL = "identity.User"
@@ -120,6 +122,8 @@ REST_FRAMEWORK = {
         "host": env("RATE_LIMIT_HOST", "120/min"),
         "door": env("RATE_LIMIT_DOOR", "600/min"),
         "admin": env("RATE_LIMIT_ADMIN", "120/min"),
+        # Phase 3 compliance note: low per-(user, event) on intent creation.
+        "checkout_intent": env("RATE_LIMIT_CHECKOUT_INTENT", "6/min"),
     },
 }
 
@@ -154,12 +158,20 @@ IDEMPOTENCY_MAX_KEY_LENGTH = 255
 # ─── App config (served by /v1/config/public) ────────────────────────────────
 
 ECHO_MIN_APP_VERSION = env("ECHO_MIN_APP_VERSION", "9.0.0")
-# Locked fee model (display constants; authoritative pricing engine is Phase 3).
+# Locked fee model, consumed by the Phase 3 pricing engine (checkout.pricing).
 ECHO_PLATFORM_FEE_RATE = 0.05
 ECHO_PAYMENT_PROCESSING_RATE = 0.029
 ECHO_PAYMENT_PROCESSING_FLAT_CENTS = 30
 
-# ─── Stripe (slots only — not wired until Phase 3) ───────────────────────────
+# ─── Checkout (Phase 3) ──────────────────────────────────────────────────────
+
+# Tax slot: flat default rate until per-jurisdiction calculation lands
+# (mirrors the client engine's 8.5% WA default).
+ECHO_DEFAULT_TAX_RATE = float(env("ECHO_DEFAULT_TAX_RATE", "0.085"))
+# Inventory-hold TTL — locked range 8-15 minutes.
+ECHO_CHECKOUT_HOLD_TTL_SECONDS = int(env("ECHO_CHECKOUT_HOLD_TTL_SECONDS", "600"))
+
+# ─── Stripe (Phase 3: consumed by checkout.stripe_gateway; fail-closed) ──────
 
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", "")
 STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET", "")

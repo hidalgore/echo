@@ -29,9 +29,22 @@ EVENT_KEYS = {
     "atmosphere_label",
     "atmosphere_intensity",
     "tiers",
+    "donation_campaign",  # Phase 3 EventDTO amendment (null for most events)
 }
 
 TIER_KEYS = {"echo_id", "name", "description", "price_cents", "available"}
+
+CAMPAIGN_KEYS = {
+    "echo_id",
+    "nonprofit_name",
+    "cause_title",
+    "cause_description",
+    "goal_cents",
+    "raised_cents",
+    "donor_count",
+    "suggested_amounts_cents",
+    "status",
+}
 
 # The doctrine's forbidden substrings anywhere in a serialized payload.
 FORBIDDEN_KEY_FRAGMENTS = ("quantity", "sold", "capacity", "attendance", "sell_through", "occupancy")
@@ -128,7 +141,40 @@ class TestEventDetailAndInventory:
         body = client.get(f"/v1/events/{event.echo_id}").json()
         assert body["public_id"].startswith("EV-")
         assert set(body.keys()) == EVENT_KEYS
+        assert body["donation_campaign"] is None  # no campaign -> null on the wire
         assert_no_raw_counts(body)
+
+    def test_donation_campaign_served_with_exact_keys(self, client, make_event, make_tier):
+        from events.models import DonationCampaign
+
+        event = make_event(host_is_nonprofit=True)
+        make_tier(event)
+        DonationCampaign.objects.create(
+            event=event,
+            nonprofit_name="Golden Futures Foundation",
+            cause_title="Youth Scholarship Fund",
+            cause_description="Scholarships and mentorship.",
+            goal_cents=500_000,
+            raised_cents=124_000,
+            donor_count=47,
+            suggested_amounts_cents=[500, 1000, 2500],
+        )
+        body = client.get(f"/v1/events/{event.echo_id}").json()
+        campaign = body["donation_campaign"]
+        assert set(campaign.keys()) == CAMPAIGN_KEYS
+        assert campaign["status"] == "active"
+        assert campaign["raised_cents"] == 124_000
+        # Progress only — donor identities never ride the wire.
+        assert_no_raw_counts(body)
+
+    def test_held_inventory_shrinks_available_only(self, client, make_event, make_tier):
+        """Phase 3 holds doctrine: `available` reflects holds; held/sold
+        counts never leak (the key allowlist above is the enforcement)."""
+        event = make_event()
+        make_tier(event, total=100, sold=40, quantity_held=15)
+        body = client.get(f"/v1/events/{event.echo_id}").json()
+        assert body["tiers"][0]["available"] == 45
+        assert set(body["tiers"][0].keys()) == TIER_KEYS
 
     def test_detail_draft_and_unknown_are_404(self, client, make_event):
         draft = make_event(status=EventStatus.DRAFT)

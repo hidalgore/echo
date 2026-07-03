@@ -17,4 +17,8 @@ app.conf.beat_schedule = {
         "task": "events.tasks.advance_event_lifecycle",
         "schedule": 60,  # every minute; idempotent, only ever advances
     },
+    "expire-stale-checkout-intents": {
+        "task": "checkout.tasks.expire_stale_checkout_intents",
+        "schedule": 60,  # every minute; guarded transitions release exactly once
+    },
 }

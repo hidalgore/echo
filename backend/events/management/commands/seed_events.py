@@ -27,7 +27,8 @@ from django.db import transaction
 from django.utils import timezone
 
 from audit import service as audit
-from events.models import Event, EventStatus, TicketTier, Venue
+from events.models import DonationCampaign, Event, EventStatus, TicketTier, Venue
+from events.refunds import build_refund_policy_snapshot
 
 DEFAULT_SNAPSHOT = Path(__file__).resolve().parent.parent.parent / "seed" / "mock_events.json"
 
@@ -79,6 +80,7 @@ class Command(BaseCommand):
             for record in records:
                 event, event_created, changed = self._upsert_event(record, now)
                 self._upsert_tiers(event, record["ticket_types"])
+                self._upsert_campaign(event, record.get("donation_campaign"))
                 if event_created:
                     created += 1
                 elif changed:
@@ -140,11 +142,17 @@ class Command(BaseCommand):
             "host_verified": record["host_verified"],
             "age_restriction": record["age_restriction"],
             "social_energy_override": record["social_energy_override"],
+            # Phase 3: nonprofit hosts get the platform-fee waiver; the corpus
+            # marks them via their donation campaign (dump-mock-events.ts).
+            "host_is_nonprofit": record.get("host_is_nonprofit", False),
         }
 
         existing = Event.objects.filter(import_ref=record["id"]).select_related("venue").first()
         if existing is None:
             event = Event(import_ref=record["id"], **fields)
+            # Seeded events materialize already-published: capture the
+            # refund-policy snapshot the publish transition would have taken.
+            event.refund_policy_snapshot = build_refund_policy_snapshot(event.allow_refunds)
             event.save()
             return event, True, True
 
@@ -179,3 +187,33 @@ class Command(BaseCommand):
             existing.price_cents = tier["price_cents"]
             existing.sort_order = index
             existing.save(update_fields=["name", "description", "price_cents", "sort_order", "updated_at"])
+
+    def _upsert_campaign(self, event: Event, record: dict | None) -> None:
+        """Idempotent like tiers: content refreshes on re-runs, but progress
+        counters (raised_cents / donor_count) are set on create only — real
+        donations (Phase 3 checkout) own them once the row exists. A corpus
+        that drops a campaign closes it rather than deleting attribution."""
+        if record is None:
+            DonationCampaign.objects.filter(event=event).update(status="closed")
+            return
+        fields = {
+            "nonprofit_name": record["nonprofit_name"],
+            "cause_title": record["cause_title"],
+            "cause_description": record["cause_description"],
+            "goal_cents": record["goal_cents"],
+            "suggested_amounts_cents": record["suggested_amounts_cents"],
+            "status": record["status"],
+        }
+        existing = DonationCampaign.objects.filter(event=event).first()
+        if existing is None:
+            DonationCampaign.objects.create(
+                event=event,
+                import_ref=record.get("id", ""),
+                raised_cents=record.get("raised_cents", 0),
+                donor_count=record.get("donor_count", 0),
+                **fields,
+            )
+            return
+        for name, value in fields.items():
+            setattr(existing, name, value)
+        existing.save(update_fields=[*fields.keys(), "updated_at"])

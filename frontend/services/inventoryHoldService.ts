@@ -1,3 +1,13 @@
+/**
+ * Inventory holds — MOCK FIXTURE (demoted in Phase 3 / W5).
+ *
+ * Real holds are server-side and atomic from Phase 3 on: created by
+ * POST /v1/checkout/intents, completed on payment success, released on
+ * failure/TTL by the backend expiry worker (locked doctrine — the client
+ * never owns inventory). This local simulation only backs the mock checkout
+ * path in app/checkout/single-checkout.tsx so offline demos keep modeling
+ * the production sequence.
+ */
 import { getJSON, setJSON } from './persistence';
 
 export type InventoryHoldStatus = 'active' | 'released' | 'completed' | 'expired';

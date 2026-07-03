@@ -127,4 +127,7 @@ class TestContractDrift:
             if method.upper() in ("GET", "POST", "PATCH", "PUT", "DELETE")
         }
         assert served, "backend must serve at least /v1/config/public"
-        assert served <= registry, f"drift: {served - registry}"
+        # Server-to-server routes (Phase 3 amendment decision) are vouched for
+        # by the script's explicit allowlist, not by the client registry.
+        exempt = {(method, drift.normalize(path)) for method, path in drift.SERVER_TO_SERVER}
+        assert served <= registry | exempt, f"drift: {served - registry - exempt}"

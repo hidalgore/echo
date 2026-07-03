@@ -14,8 +14,9 @@
  */
 
 import type { AgeBadgeDTO, TicketStatusDTO } from '../../types/api/shared';
-import type { EventDTO, TicketDTO, TicketTierDTO } from '../../types/api/dto';
+import type { DonationCampaignDTO, EventDTO, TicketDTO, TicketTierDTO } from '../../types/api/dto';
 import type { Event, TicketType } from '../../types';
+import type { NonprofitDonationCampaign } from '../../types/nonprofitDonation';
 
 // ─── Age badge (locked single source of truth) ───────────────────────────────
 
@@ -85,13 +86,34 @@ export function fromTicketTierDTO(tier: TicketTierDTO): TicketType {
   };
 }
 
+/** Phase 3: wire campaign (cents, stored statuses) → domain campaign
+ *  (dollars). Host-config booleans the wire deliberately omits get the
+ *  corpus defaults; derived progress statuses are computed by
+ *  donationCampaignService at render time. */
+export function fromDonationCampaignDTO(dto: DonationCampaignDTO): NonprofitDonationCampaign {
+  return {
+    id: dto.echo_id,
+    nonprofitName: dto.nonprofit_name,
+    causeTitle: dto.cause_title,
+    causeDescription: dto.cause_description,
+    goalAmount: dto.goal_cents / 100,
+    raisedAmount: dto.raised_cents / 100,
+    donorCount: dto.donor_count,
+    suggestedAmounts: dto.suggested_amounts_cents.map((cents) => cents / 100),
+    publicPageEnabled: true,
+    allowPublicNameOptIn: true,
+    closesAtEventCloseout: true,
+    status: dto.status,
+  };
+}
+
 /**
  * Wire event → domain Event for the discovery surfaces. Fields the S-03 wire
  * does not carry stay client defaults until their owning phase lands:
- * donation_campaign (Phase 3), detail_media_* (Phase 7 host uploads),
- * refund/transfer policy flags (Phases 3/8). Social Energy display keeps
- * deriving client-side from the same event signals (the served label +
- * intensity are the doctrine contract, not yet a rendered input).
+ * detail_media_* (Phase 7 host uploads), refund/transfer policy flags
+ * (Phase 8 transfers; refund snapshots are server-side). Social Energy
+ * display keeps deriving client-side from the same event signals (the served
+ * label + intensity are the doctrine contract, not yet a rendered input).
  */
 export function fromEventDTO(dto: EventDTO): Event {
   const age = fromAgeBadge(dto.age_badge);
@@ -111,5 +133,8 @@ export function fromEventDTO(dto: EventDTO): Event {
     ticket_types: dto.tiers.map(fromTicketTierDTO),
     status: dto.status,
     age_restriction: age.age21Plus ? 21 : age.age18Plus ? 18 : null,
+    donation_campaign: dto.donation_campaign
+      ? fromDonationCampaignDTO(dto.donation_campaign)
+      : null,
   };
 }
