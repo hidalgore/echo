@@ -58,7 +58,10 @@ def envelope_exception_handler(exc, context):
             exc.get_codes() if isinstance(exc.get_codes(), str) else "api_error",
         )
         details = None
-        message = str(exc.detail) if not isinstance(exc.detail, (list, dict)) else exc.default_detail
+        # str() also forces DRF's lazy-translation default_detail proxies —
+        # the idempotency store persists these bodies to a JSONField, which
+        # (unlike the HTTP renderer) refuses non-primitive values.
+        message = str(exc.detail) if not isinstance(exc.detail, (list, dict)) else str(exc.default_detail)
         if isinstance(exc.detail, (list, dict)):
             details = {"fields": exc.detail} if isinstance(exc.detail, dict) else {"errors": exc.detail}
 

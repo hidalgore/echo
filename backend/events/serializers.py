@@ -10,7 +10,7 @@ sell-through — tests assert the exact key sets.
 from rest_framework import serializers
 
 from events import social_energy
-from events.models import Event, TicketTier
+from events.models import DonationCampaign, Event, TicketTier
 
 
 def age_badge(age_restriction) -> str:
@@ -31,11 +31,31 @@ class TicketTierSerializer(serializers.ModelSerializer):
         fields = ["echo_id", "name", "description", "price_cents", "available"]
 
 
+class DonationCampaignSerializer(serializers.ModelSerializer):
+    """Phase 3 EventDTO amendment: campaign progress for the checkout /
+    nonprofit surfaces. Progress only — donor identities are never wired."""
+
+    class Meta:
+        model = DonationCampaign
+        fields = [
+            "echo_id",
+            "nonprofit_name",
+            "cause_title",
+            "cause_description",
+            "goal_cents",
+            "raised_cents",
+            "donor_count",
+            "suggested_amounts_cents",
+            "status",
+        ]
+
+
 class EventSerializer(serializers.ModelSerializer):
     venue_name = serializers.CharField(source="venue.name", read_only=True)
     venue_address = serializers.CharField(source="venue.address", read_only=True)
     age_badge = serializers.SerializerMethodField()
     tiers = TicketTierSerializer(many=True, read_only=True)
+    donation_campaign = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -56,10 +76,16 @@ class EventSerializer(serializers.ModelSerializer):
             "host_verified",
             "age_badge",
             "tiers",
+            "donation_campaign",
         ]
 
     def get_age_badge(self, event) -> str:
         return age_badge(event.age_restriction)
+
+    def get_donation_campaign(self, event) -> dict | None:
+        # Reverse OneToOne: absent for most events (null on the wire).
+        campaign = getattr(event, "donation_campaign", None)
+        return DonationCampaignSerializer(campaign).data if campaign is not None else None
 
     def to_representation(self, event):
         data = super().to_representation(event)

@@ -5,7 +5,7 @@ import pytest
 from django.core.management import call_command
 
 from audit.models import AuditLogEntry
-from events.models import Event, EventStatus, TicketTier, Venue
+from events.models import DonationCampaign, Event, EventStatus, TicketTier, Venue
 
 
 @pytest.mark.django_db
@@ -46,3 +46,32 @@ class TestSeedEvents:
     def test_seed_writes_summary_audit(self):
         call_command("seed_events")
         assert AuditLogEntry.objects.filter(action="catalog.seeded").count() == 1
+
+    def test_campaigns_and_nonprofit_flags_seeded_idempotently(self):
+        """Phase 3: the corpus's nonprofit events carry their campaigns; a
+        re-seed refreshes content but never clobbers donation progress
+        (real donations own the counters, like tier sales)."""
+        call_command("seed_events")
+        campaigns = DonationCampaign.objects.count()
+        assert campaigns >= 5  # the corpus's nonprofit set
+        assert Event.objects.filter(host_is_nonprofit=True).count() == campaigns
+        assert not Event.objects.filter(
+            host_is_nonprofit=False, donation_campaign__isnull=False
+        ).exists()
+
+        campaign = DonationCampaign.objects.first()
+        DonationCampaign.objects.filter(pk=campaign.pk).update(raised_cents=999_999, donor_count=88)
+
+        call_command("seed_events")
+        assert DonationCampaign.objects.count() == campaigns
+        campaign.refresh_from_db()
+        assert campaign.raised_cents == 999_999
+        assert campaign.donor_count == 88
+
+    def test_seeded_events_carry_refund_policy_snapshot(self):
+        """Seeded events materialize already-published, so they get the
+        snapshot the publish transition would have taken."""
+        call_command("seed_events")
+        assert not Event.objects.filter(refund_policy_snapshot__isnull=True).exists()
+        sample = Event.objects.first()
+        assert sample.refund_policy_snapshot["preset_id"] == "balanced"  # allow_refunds default

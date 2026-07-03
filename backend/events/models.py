@@ -109,6 +109,15 @@ class Event(EchoIdModel):
     allow_refunds = models.BooleanField(default=True)
     allow_transfers = models.BooleanField(default=True)
 
+    # Phase 3: nonprofit hosts get the platform-fee waiver (processing always
+    # applies — locked fee model). Set by seed for the corpus's campaign
+    # events; Phase 7 EIN verification becomes the real source of truth.
+    host_is_nonprofit = models.BooleanField(default=False)
+
+    # Phase 3: refund policy captured once at publish (events.refunds), never
+    # rewritten afterwards; consumed by Phase 8 refund execution.
+    refund_policy_snapshot = models.JSONField(null=True, blank=True)
+
     # Host-locked Social Energy override (frontend SocialEnergy shape). The
     # engine honors `state`/`intensity` from it; everything else is client
     # display logic.
@@ -163,6 +172,10 @@ class TicketTier(EchoIdModel):
     # NEVER serialized — the API exposes `available` only.
     quantity_total = models.PositiveIntegerField()
     quantity_sold = models.PositiveIntegerField(default=0)
+    # Actively held by in-flight checkout intents (checkout.services owns
+    # every transition under select_for_update). Reduces `available`; never
+    # serialized itself (doctrine).
+    quantity_held = models.PositiveIntegerField(default=0)
 
     sort_order = models.PositiveSmallIntegerField(default=0)
 
@@ -172,6 +185,14 @@ class TicketTier(EchoIdModel):
             models.CheckConstraint(
                 condition=models.Q(quantity_sold__lte=models.F("quantity_total")),
                 name="tier_sold_lte_total",
+            ),
+            # Holds + sales can never overcommit capacity (DB-level backstop
+            # for the never-oversell doctrine).
+            models.CheckConstraint(
+                condition=models.Q(
+                    quantity_sold__lte=models.F("quantity_total") - models.F("quantity_held")
+                ),
+                name="tier_sold_plus_held_lte_total",
             ),
             models.UniqueConstraint(
                 fields=["event", "import_ref"],
@@ -185,7 +206,48 @@ class TicketTier(EchoIdModel):
 
     @property
     def available(self) -> int:
-        return max(0, self.quantity_total - self.quantity_sold)
+        """The only inventory number ever serialized: what a buyer could hold
+        right now — capacity minus sales minus other buyers' active holds."""
+        return max(0, self.quantity_total - self.quantity_sold - self.quantity_held)
+
+
+class DonationCampaignStatus(models.TextChoices):
+    """Stored states only. Progress states the client derives for display
+    (goal_reached / goal_exceeded) are never persisted or served."""
+
+    ACTIVE = "active"
+    CLOSED = "closed"
+
+
+class DonationCampaign(EchoIdModel):
+    """A nonprofit host's donation drive attached to one event (Phase 3 owns
+    donations; Phase 7 adds host CRUD + EIN verification). Served inside the
+    event payload (Phase 3 EventDTO amendment) because the checkout UI renders
+    campaign progress before any intent exists. Donor identities are never
+    serialized — progress only."""
+
+    event = models.OneToOneField(Event, on_delete=models.CASCADE, related_name="donation_campaign")
+    # Stable key for idempotent imports (corpus campaign ids).
+    import_ref = models.CharField(max_length=64, blank=True, default="")
+
+    nonprofit_name = models.CharField(max_length=200)
+    cause_title = models.CharField(max_length=200)
+    cause_description = models.TextField(blank=True, default="")
+
+    goal_cents = models.PositiveBigIntegerField()
+    # Denormalized progress counters; checkout.services credits them when a
+    # carrying payment succeeds. Seed sets them on create only (real
+    # donations own them afterwards, like tier sales counters).
+    raised_cents = models.PositiveBigIntegerField(default=0)
+    donor_count = models.PositiveIntegerField(default=0)
+
+    suggested_amounts_cents = models.JSONField(default=list, blank=True)
+    status = models.CharField(
+        max_length=16, choices=DonationCampaignStatus.choices, default=DonationCampaignStatus.ACTIVE
+    )
+
+    def __str__(self) -> str:
+        return f"DonationCampaign({self.event_id}, {self.nonprofit_name})"
 
 
 class SavedEvent(EchoIdModel):
