@@ -18,6 +18,16 @@ export type ApiClientConfig = {
   baseUrl: string;
   /** Returns a bearer token (or null for public/guest calls). */
   getAuthToken?: () => string | null | Promise<string | null>;
+  /**
+   * Refresh-on-401 hook (Phase 1 / W3). Called when a request that CARRIED a
+   * bearer token comes back 401; must return a fresh access token, or null if
+   * the session is unrecoverable (the 401 is then returned to the caller).
+   * The implementation is responsible for single-flighting concurrent
+   * refreshes (authService holds the in-flight promise); apiClient guarantees
+   * at most ONE refresh+retry per logical call and never invokes the hook for
+   * `authRefresh` itself.
+   */
+  refreshAuthToken?: () => Promise<string | null>;
   maxRetries?: number;
 };
 
@@ -53,7 +63,7 @@ export async function apiCall<T>(key: EndpointKey, opts: CallOptions = {}): Prom
   const url = `${config.baseUrl}${path}${qs}`;
 
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  const token = config.getAuthToken ? await config.getAuthToken() : null;
+  let token = config.getAuthToken ? await config.getAuthToken() : null;
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
   if (def.idempotent) {
@@ -73,6 +83,9 @@ export async function apiCall<T>(key: EndpointKey, opts: CallOptions = {}): Prom
   let attempt = 0;
   // Retry only idempotent-safe situations: GETs, or mutations carrying a key.
   const retrySafe = def.method === 'GET' || !!def.idempotent;
+  // Refresh-on-401: once per logical call, only when a bearer was sent, and
+  // never for the refresh endpoint itself (that 401 means the session is dead).
+  let refreshAttempted = false;
 
   while (true) {
     let status = 0;
@@ -84,6 +97,22 @@ export async function apiCall<T>(key: EndpointKey, opts: CallOptions = {}): Prom
       if (res.ok) return { ok: true, status, data: json as T };
       const error = (json as { error?: { code: string; message: string; details?: Record<string, unknown> } }).error
         ?? { code: `http_${status}`, message: res.statusText || 'Request failed' };
+      if (
+        status === API_STATUS.unauthenticated &&
+        token &&
+        !refreshAttempted &&
+        key !== 'authRefresh' &&
+        config.refreshAuthToken
+      ) {
+        refreshAttempted = true;
+        const fresh = await config.refreshAuthToken();
+        if (fresh) {
+          token = fresh;
+          headers['Authorization'] = `Bearer ${fresh}`;
+          init.headers = headers;
+          continue; // replay the original request once with the new bearer
+        }
+      }
       if (retrySafe && isRetryable(status) && attempt < maxRetries) {
         await delay(backoffMs(attempt++));
         continue;

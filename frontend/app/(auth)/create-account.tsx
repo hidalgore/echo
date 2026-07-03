@@ -22,8 +22,13 @@ export default function CreateAccountScreen() {
       return;
     }
     setError('');
-    await register({ first_name: firstName, last_name: lastName, email, password });
-    router.replace('/(tabs)');
+    try {
+      await register({ first_name: firstName, last_name: lastName, email, password });
+      router.replace('/(tabs)');
+    } catch (e) {
+      // Live auth mode: email/password has no backend surface (mock-only).
+      setError(e instanceof Error ? e.message : 'Sign-up failed. Please try again.');
+    }
   };
 
   return (

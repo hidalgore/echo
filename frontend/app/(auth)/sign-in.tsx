@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, Animated, Dimensions, StatusBar } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, Animated, Dimensions, StatusBar, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -13,7 +13,7 @@ const WORDMARK_W = W * 0.65;
 
 export default function LoginScreen() {
   const insets = useSafeAreaInsets();
-  const { login } = useAuthStore();
+  const { loginWithApple, loginWithGoogle, continueAsGuest } = useAuthStore();
   const logoFade = useRef(new Animated.Value(0)).current;
   const contentFade = useRef(new Animated.Value(0)).current;
 
@@ -24,8 +24,19 @@ export default function LoginScreen() {
     ]).start();
   }, []);
 
-  const handleAuth = async () => {
-    await login('demo@echo.events', 'demo');
+  const handleAuth = async (provider: 'apple' | 'google') => {
+    try {
+      await (provider === 'apple' ? loginWithApple() : loginWithGoogle());
+      router.replace('/(tabs)');
+    } catch (e) {
+      Alert.alert('Sign-in failed', e instanceof Error ? e.message : 'Please try again.');
+    }
+  };
+
+  const handleGuest = () => {
+    // Fire-and-forget: guest browsing must not wait on (or fail with) the
+    // session call — the store logs failures and public endpoints still work.
+    continueAsGuest();
     router.replace('/(tabs)');
   };
 
@@ -46,7 +57,7 @@ export default function LoginScreen() {
       {/* Auth buttons */}
       <Animated.View style={[s.authWrap, { opacity: contentFade, paddingBottom: insets.bottom + 24 }]}>
         {/* Apple */}
-        <TouchableOpacity onPress={handleAuth} activeOpacity={0.88} style={s.btnOuter}>
+        <TouchableOpacity onPress={() => handleAuth('apple')} activeOpacity={0.88} style={s.btnOuter}>
           <LinearGradient colors={[...gradients.echo]} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={s.btnGrad}>
             <View style={s.btnInner}>
               <Ionicons name="logo-apple" size={20} color="#F5F7FB" />
@@ -56,7 +67,7 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         {/* Google */}
-        <TouchableOpacity onPress={handleAuth} activeOpacity={0.88} style={s.btnOuter}>
+        <TouchableOpacity onPress={() => handleAuth('google')} activeOpacity={0.88} style={s.btnOuter}>
           <LinearGradient colors={[...gradients.echo]} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={s.btnGrad}>
             <View style={s.btnInner}>
               <Text style={s.googleG}>G</Text>
@@ -66,7 +77,7 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         {/* Guest */}
-        <TouchableOpacity onPress={() => router.replace('/(tabs)')} activeOpacity={0.85} style={s.guestBtn}>
+        <TouchableOpacity onPress={handleGuest} activeOpacity={0.85} style={s.guestBtn}>
           <Text style={s.guestText}>Explore as Guest</Text>
           <Text style={s.guestSub}>(Limited features until sign-in)</Text>
         </TouchableOpacity>
