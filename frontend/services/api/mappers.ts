@@ -14,7 +14,8 @@
  */
 
 import type { AgeBadgeDTO, TicketStatusDTO } from '../../types/api/shared';
-import type { TicketDTO } from '../../types/api/dto';
+import type { EventDTO, TicketDTO, TicketTierDTO } from '../../types/api/dto';
+import type { Event, TicketType } from '../../types';
 
 // ─── Age badge (locked single source of truth) ───────────────────────────────
 
@@ -68,5 +69,47 @@ export function toTicketDTO(domain: {
     status: toTicketStatus(domain.status),
     age_badge: toAgeBadge({ age18Plus: domain.age18Plus, age21Plus: domain.age21Plus }),
     issued_at: domain.issuedAt,
+  };
+}
+
+// ─── Event DTO → domain (Phase 2 / W4 discovery swap) ────────────────────────
+
+export function fromTicketTierDTO(tier: TicketTierDTO): TicketType {
+  return {
+    id: tier.echo_id,
+    name: tier.name,
+    // Domain prices are dollars; the wire is cents (locked rule).
+    price: tier.price_cents / 100,
+    available: tier.available,
+    description: tier.description || undefined,
+  };
+}
+
+/**
+ * Wire event → domain Event for the discovery surfaces. Fields the S-03 wire
+ * does not carry stay client defaults until their owning phase lands:
+ * donation_campaign (Phase 3), detail_media_* (Phase 7 host uploads),
+ * refund/transfer policy flags (Phases 3/8). Social Energy display keeps
+ * deriving client-side from the same event signals (the served label +
+ * intensity are the doctrine contract, not yet a rendered input).
+ */
+export function fromEventDTO(dto: EventDTO): Event {
+  const age = fromAgeBadge(dto.age_badge);
+  return {
+    id: dto.echo_id,
+    title: dto.title,
+    description: dto.description,
+    venue_name: dto.venue_name,
+    venue_address: dto.venue_address,
+    start_time: dto.starts_at,
+    end_time: dto.ends_at,
+    image_url: dto.image_url || undefined,
+    category: dto.category,
+    is_featured: dto.is_featured,
+    host_name: dto.host_name || undefined,
+    host_verified: dto.host_verified,
+    ticket_types: dto.tiers.map(fromTicketTierDTO),
+    status: dto.status,
+    age_restriction: age.age21Plus ? 21 : age.age18Plus ? 18 : null,
   };
 }

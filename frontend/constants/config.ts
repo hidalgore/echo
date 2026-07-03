@@ -9,9 +9,20 @@
 const AUTH_MODE: 'live' | 'mock' =
   process.env.EXPO_PUBLIC_ECHO_AUTH_MODE === 'live' ? 'live' : 'mock';
 
+/**
+ * Discovery domain swap gate (Phase 2 / W4), mirroring AUTH_MODE. 'live'
+ * binds the http DiscoveryPort (S-03) and hydrates the event store from the
+ * API; 'mock' keeps the bundled corpus. Mock stays the default until the
+ * operator smokes the staging swap — flip per environment with
+ * EXPO_PUBLIC_ECHO_DISCOVERY_MODE=live (inlined by Expo at bundle time).
+ */
+const DISCOVERY_MODE: 'live' | 'mock' =
+  process.env.EXPO_PUBLIC_ECHO_DISCOVERY_MODE === 'live' ? 'live' : 'mock';
+
 export const CONFIG = {
   MOCK_MODE: true,
   AUTH_MODE,
+  DISCOVERY_MODE,
   API_BASE_URL: process.env.EXPO_PUBLIC_ECHO_API_URL || 'https://api.echo.events',
   WEB_BASE_URL: 'https://getechoaccess.com',
   SEARCH_API_BASE_PATH: '/v1/search',

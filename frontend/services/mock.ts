@@ -1,3 +1,9 @@
+/**
+ * Phase 2: the event corpus below is DEMOTED to seed fixtures — it is the
+ * source for the backend catalog (dumped by scripts/dump-mock-events.ts,
+ * seeded by manage.py seed_events) and the DISCOVERY_MODE='mock' fallback.
+ * It is not deleted until the operator smokes the staging discovery swap.
+ */
 import { Event, Ticket, User } from '../types';
 import { GENERATED_EVENTS } from './mockEvents';
 import { EXTRA_EVENTS } from './mockEventsNational';

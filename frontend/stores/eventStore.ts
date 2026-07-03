@@ -7,6 +7,39 @@ import { useTicketStore } from './ticketStore';
 import { loadHostedEvents, saveHostedEvents } from '../services/eventRepository';
 import { ensureEventRuntime } from '../services/doorModeService';
 import { isEventDetailVideoDurationAllowed } from '../constants/eventMedia';
+import { CONFIG } from '../constants/config';
+import { getPorts } from '../services/api/ports';
+import { fromEventDTO } from '../services/api/mappers';
+
+// Phase 2 / W4: 'live' hydrates from the S-03 http port (bound in _layout);
+// 'mock' keeps the bundled corpus. See constants/config.ts.
+const isLiveDiscovery = CONFIG.DISCOVERY_MODE === 'live';
+
+// Server pages are capped at 100; the seeded catalog is ~160 events, so this
+// is 2 requests today with a runaway guard, not a hot loop.
+const REMOTE_PAGE_LIMIT = 100;
+const REMOTE_MAX_PAGES = 10;
+
+/** Pull the full published catalog. Null = nothing reachable (caller falls
+ * back to the bundled corpus so discovery never renders empty). */
+async function fetchRemoteEvents(): Promise<Event[] | null> {
+  try {
+    const discovery = getPorts().discovery;
+    const collected: Event[] = [];
+    let cursor: string | undefined;
+    for (let page = 0; page < REMOTE_MAX_PAGES; page++) {
+      const result = await discovery.listEvents({ cursor, limit: REMOTE_PAGE_LIMIT });
+      if (!result.ok) return collected.length ? collected : null;
+      collected.push(...result.data.items.map(fromEventDTO));
+      cursor = result.data.nextCursor;
+      if (!cursor) break;
+    }
+    return collected;
+  } catch {
+    // getPorts() before bindPorts, or an adapter bug — same fallback as offline.
+    return null;
+  }
+}
 
 interface PublishHostedEventInput {
   title: string;
@@ -50,6 +83,8 @@ interface EventState {
   isSaved: (id: string) => boolean;
   canSaveEvent: (id: string) => boolean;
   toggleSaved: (id: string) => void;
+  /** Live discovery only: replace savedIds with the server's saved list. */
+  syncSavedEvents: () => Promise<void>;
   publishHostedEvent: (input: PublishHostedEventInput) => Event;
 }
 
@@ -137,9 +172,22 @@ export const useEventStore = create<EventState>((set, get) => ({
   hydrate: async () => {
     if (get().hydrated) return;
     const hosted = await loadHostedEvents();
-    const events = mergeEvents(hosted);
+    let events: Event[];
+    if (isLiveDiscovery) {
+      const remote = await fetchRemoteEvents();
+      if (remote) {
+        events = [...hosted, ...remote.filter((event) => !hosted.some((h) => h.id === event.id))];
+      } else {
+        // API unreachable: keep discovery browsable on the bundled corpus.
+        if (__DEV__) console.warn('[eventStore] live discovery unavailable; serving mock corpus');
+        events = mergeEvents(hosted);
+      }
+    } else {
+      events = mergeEvents(hosted);
+    }
     const collections = deriveCollections(events);
     set({ events, ...collections, hydrated: true });
+    if (isLiveDiscovery) void get().syncSavedEvents();
   },
 
   fetchEvents: async () => {
@@ -228,11 +276,42 @@ export const useEventStore = create<EventState>((set, get) => ({
     const wasAdd = !next.has(id);
     if (next.has(id)) next.delete(id); else next.add(id);
     set({ savedIds: next });
+    // Live discovery: persist the toggle server-side (optimistic; revert on
+    // failure — e.g. guest scope 403 or offline — so UI matches server truth).
+    if (isLiveDiscovery) {
+      const discovery = getPorts().discovery;
+      void (wasAdd ? discovery.saveEvent(id) : discovery.unsaveEvent(id)).then((result) => {
+        if (result.ok) return;
+        const reverted = new Set(get().savedIds);
+        if (wasAdd) reverted.delete(id); else reverted.add(id);
+        set({ savedIds: reverted });
+      });
+    }
     // Pulse the wallet tab icon on bookmark adds only (v59.3 — Q5/Q6 lock).
     if (wasAdd) {
       // Lazy import to keep stores decoupled.
       const { useUIStore } = require('./uiStore');
       useUIStore.getState().triggerBookmarkPulse();
+    }
+  },
+
+  syncSavedEvents: async () => {
+    if (!isLiveDiscovery) return;
+    try {
+      const discovery = getPorts().discovery;
+      const ids: string[] = [];
+      let cursor: string | undefined;
+      for (let page = 0; page < REMOTE_MAX_PAGES; page++) {
+        const result = await discovery.listSavedEvents({ cursor, limit: REMOTE_PAGE_LIMIT });
+        // Anonymous/guest (401/403) or offline: keep the local set untouched.
+        if (!result.ok) return;
+        ids.push(...result.data.items.map((item) => item.echo_id));
+        cursor = result.data.nextCursor;
+        if (!cursor) break;
+      }
+      set({ savedIds: new Set(ids) });
+    } catch {
+      // Same posture as a failed request: local saved state stands.
     }
   },
 }));
