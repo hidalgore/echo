@@ -43,6 +43,11 @@ export const ENDPOINTS = {
   eventInventory: { method: 'GET', path: '/v1/events/:eventId/inventory', scope: 'public' },
   saveEvent: { method: 'POST', path: '/v1/saved-events', scope: 'user' },
   unsaveEvent: { method: 'DELETE', path: '/v1/saved-events/:eventId', scope: 'user' },
+  // ── Phase 2 AMENDMENT (flagged, needs registry lock sign-off) ─────────────
+  // v1.0 locked saved-events as POST + DELETE only; server-persisted saves are
+  // write-only (the wallet's saved list cannot hydrate across installs)
+  // without a read path.
+  savedEvents: { method: 'GET', path: '/v1/saved-events', scope: 'user' },
 
   // checkout / payments (idempotent)
   createCheckoutIntent: { method: 'POST', path: '/v1/checkout/intents', idempotent: true, scope: 'user' },
