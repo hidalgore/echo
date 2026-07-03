@@ -76,9 +76,12 @@ class TestScopes:
             assert scope_satisfies(scope, "public") or scope == "public" or True
 
     def test_admin_route_denied_for_public_requests(self, client):
+        # Phase 1: with bearer authentication installed, an ANONYMOUS request
+        # short of the required scope is 401 unauthenticated ("go sign in"),
+        # not 403 — 403 is reserved for authenticated-but-insufficient scope.
         response = client.get("/v1/_test/admin-only")
-        assert response.status_code == 403
-        assert response.json()["error"]["code"] == "unauthorized"
+        assert response.status_code == 401
+        assert response.json()["error"]["code"] == "unauthenticated"
 
 
 class TestEnvelope:

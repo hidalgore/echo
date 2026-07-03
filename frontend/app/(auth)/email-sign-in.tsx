@@ -21,8 +21,13 @@ export default function EmailSignInScreen() {
       return;
     }
     setError('');
-    await login(email, password);
-    router.replace('/(tabs)');
+    try {
+      await login(email, password);
+      router.replace('/(tabs)');
+    } catch (e) {
+      // Live auth mode: email/password has no backend surface (mock-only).
+      setError(e instanceof Error ? e.message : 'Sign-in failed. Please try again.');
+    }
   };
 
   return (

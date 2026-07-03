@@ -1,7 +1,18 @@
 // ECHO App Configuration
+
+/**
+ * Auth domain swap gate (Phase 1 / W3). 'mock' keeps the pre-backend local
+ * auth; 'live' rides the real S-01/S-02 endpoints. Mock stays the default
+ * until the operator smokes the staging swap — flip per environment with
+ * EXPO_PUBLIC_ECHO_AUTH_MODE=live (inlined by Expo at bundle time).
+ */
+const AUTH_MODE: 'live' | 'mock' =
+  process.env.EXPO_PUBLIC_ECHO_AUTH_MODE === 'live' ? 'live' : 'mock';
+
 export const CONFIG = {
   MOCK_MODE: true,
-  API_BASE_URL: 'https://api.echo.events',
+  AUTH_MODE,
+  API_BASE_URL: process.env.EXPO_PUBLIC_ECHO_API_URL || 'https://api.echo.events',
   WEB_BASE_URL: 'https://getechoaccess.com',
   SEARCH_API_BASE_PATH: '/v1/search',
   APP_VERSION: '9.0.0',

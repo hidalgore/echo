@@ -6,6 +6,7 @@ from drf_spectacular.views import SpectacularAPIView
 
 urlpatterns = [
     path("", include("core.urls")),
+    path("", include("identity.urls")),
     path("internal/schema", SpectacularAPIView.as_view(), name="openapi-schema"),
 ]
 

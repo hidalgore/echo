@@ -1,9 +1,10 @@
 """
 Auth scope scaffolding (locked scopes: public/guest/user/host/door/admin).
 
-Phase 0 wires *enforcement*, not identity: every request resolves to the
-`public` scope until Phase 1 attaches real authentication, which only needs to
-replace `resolve_request_scope`. Views declare `required_scope`.
+Phase 1: identity.authentication.EchoTokenAuthentication verifies bearer
+tokens and attaches the granted scope as `request.auth.scope`;
+`resolve_request_scope` reads it. Anonymous requests stay `public`.
+Views declare `required_scope`.
 
 Hierarchy (a granted scope satisfies the ones it covers):
   admin  -> everything
@@ -35,12 +36,19 @@ def scope_satisfies(granted: str, required: str) -> bool:
 
 
 def resolve_request_scope(request) -> str:
-    """Phase 0: no identity — every request is `public`.
+    """Return the request's granted scope from its verified token context.
 
-    Phase 1 replaces this with token verification that returns the session's
-    granted scope (and attaches the user/device to the request).
+    Accessing `request.auth` runs DRF authentication lazily; an invalid or
+    expired bearer token raises AuthenticationFailed here (envelope 401)
+    rather than degrading to public.
     """
-    return "public"
+    auth = getattr(request, "auth", None)
+    scope = getattr(auth, "scope", None)
+    if scope is None:
+        return "public"
+    if scope not in SCOPES:
+        raise ValueError(f"token carries unknown scope: {scope!r}")
+    return scope
 
 
 class HasRequiredScope(BasePermission):

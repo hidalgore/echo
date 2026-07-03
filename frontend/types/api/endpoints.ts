@@ -23,6 +23,12 @@ export const ENDPOINTS = {
   authGoogle: { method: 'POST', path: '/v1/auth/google', scope: 'public' },
   guestSession: { method: 'POST', path: '/v1/sessions/guest', scope: 'public' },
   publicConfig: { method: 'GET', path: '/v1/config/public', scope: 'public' },
+  // ── Phase 1 AMENDMENT (flagged, needs registry lock sign-off) ─────────────
+  // W1 locks refresh rotation + revocation; v1.0 omitted the endpoints that
+  // make them reachable. refresh authenticates via the refresh token itself
+  // (scope public); logout requires any authenticated session (guest floor).
+  authRefresh: { method: 'POST', path: '/v1/auth/refresh', scope: 'public' },
+  authLogout: { method: 'POST', path: '/v1/auth/logout', scope: 'guest' },
 
   // S-02 me / FTUE / verification
   meFlags: { method: 'POST', path: '/v1/me/flags', scope: 'user' },

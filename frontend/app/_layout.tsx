@@ -11,11 +11,19 @@ import { CONFIG } from '../constants/config';
 import { configureApiClient } from '../services/api/apiClient';
 import { bindPorts } from '../services/api/ports';
 import { mockPorts } from '../services/api/mockAdapters';
+import { refreshSession } from '../services/auth/authService';
+import { getAccessTokenSync } from '../services/auth/tokenStorage';
 
 // Bind the API seam before any screen renders. Mock adapters today; http
 // adapters replace them domain-by-domain as backend phases land (the swap is
-// this one binding — no screen edits).
-configureApiClient({ baseUrl: CONFIG.API_BASE_URL });
+// this one binding — no screen edits). Phase 1: the auth domain rides the
+// bearer + single-flight refresh hooks (tokenStorage/authService); every
+// other domain still resolves through mockPorts.
+configureApiClient({
+  baseUrl: CONFIG.API_BASE_URL,
+  getAuthToken: getAccessTokenSync,
+  refreshAuthToken: refreshSession,
+});
 bindPorts(mockPorts);
 
 function RootInner() {

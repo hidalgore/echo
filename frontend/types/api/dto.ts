@@ -8,6 +8,39 @@
 
 import type { EchoId, PublicId, TicketStatusDTO, AgeBadgeDTO } from './shared';
 
+// ─── S-01 / S-02 identity (Phase 1) ──────────────────────────────────────────
+
+/** GET /v1/me and the `user` member of session responses. */
+export type MeDTO = {
+  echo_id: EchoId;
+  public_id: PublicId;
+  email: string | null;
+  name: string;
+  phone: string;
+  avatar_url: string;
+  flags: Record<string, boolean | number | string>;
+  created_at: string; // ISO
+};
+
+/** Device descriptor sent with every session-issuing call. */
+export type DeviceInDTO = {
+  install_id: string;
+  platform: 'ios' | 'android' | 'web';
+  os_version?: string;
+  model?: string;
+  app_version?: string;
+};
+
+/** Response of /v1/auth/apple|google|refresh and /v1/sessions/guest. */
+export type SessionDTO = {
+  access_token: string;
+  token_type: 'Bearer';
+  expires_in: number;
+  refresh_token: string;
+  user: MeDTO | null; // null for guest sessions
+  is_new_user?: boolean; // login endpoints only
+};
+
 export type EventDTO = {
   echo_id: EchoId;
   public_id: PublicId;
