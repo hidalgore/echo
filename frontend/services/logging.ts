@@ -260,11 +260,9 @@ const installStoreLogging = () => {
     snapshot: (state) => ({
       circleId: state.circle?.id ?? null,
       status: state.circle?.status ?? null,
-      step: state.circle?.step ?? null,
       secondsRemaining: state.secondsRemaining,
-      claimedTickets: state.circle?.claimedTickets ?? 0,
+      claimedTickets: state.circle?.members.filter((member) => member.status === 'claimed').length ?? 0,
       totalTickets: state.circle?.totalTickets ?? 0,
-      remainingAmount: state.circle?.remainingAmount ?? 0,
       memberStatusCounts: summarizeCounts(state.circle?.members?.map((member) => member.status) ?? []),
     }),
   });

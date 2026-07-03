@@ -68,6 +68,9 @@ export type EchoCircle = {
 export type CircleDerivedCounts = {
   total: number;
   claimed: number;
+  /** Members with status 'invited' only (subset of pending). */
+  invited: number;
+  /** Members awaiting resolution: status 'invited' or 'pending'. */
   pending: number;
   open: number;
   released: number;

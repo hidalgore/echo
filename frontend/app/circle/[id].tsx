@@ -71,7 +71,8 @@ export default function CircleHubScreen() {
   const isClosed = circle.status === 'closed';
   const isActive = !isComplete && !isClosed;
   const activeMembers = circle.members.filter(m => m.status !== 'replaced');
-  const pendingCount = counts.open + counts.invited + counts.pending + counts.expired;
+  // counts.pending already includes 'invited' members, so don't add counts.invited again.
+  const pendingCount = counts.open + counts.pending + counts.expired;
   const circleDonationRecords = useDonationStore.getState().records.filter((record) => record.circleId === circle.id && record.paymentStatus === 'paid');
   const circleDonationTotal = circleDonationRecords.reduce((sum, record) => sum + record.amount, 0);
 
@@ -214,7 +215,7 @@ export default function CircleHubScreen() {
           <View style={[s.actionsCard, { backgroundColor: c.surface2, borderColor: c.hairline }]}>
             <Text style={[s.actionsTitle, { color: c.text }]}>Actions</Text>
             {counts.open > 0 && <ActionRow icon="person-add-outline" label="Invite open spots" color={c} onPress={() => router.push({ pathname: '/circle/invite', params: { id: circle.id } })} />}
-            {counts.invited + counts.pending > 0 && <ActionRow icon="notifications-outline" label="Send reminder" color={c} onPress={handleRemind} />}
+            {counts.pending > 0 && <ActionRow icon="notifications-outline" label="Send reminder" color={c} onPress={handleRemind} />}
             {pendingCount > 0 && <ActionRow icon="card-outline" label="Cover remaining" color={c} onPress={() => store.coverRemaining()} />}
             {pendingCount > 0 && <ActionRow icon="remove-circle-outline" label="Release unpaid spots" color={c} onPress={() => store.releaseRemaining()} />}
             <ActionRow icon="lock-closed-outline" label="Close Circle" color={c} onPress={() => setShowCloseConfirm(true)} />

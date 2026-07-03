@@ -16,6 +16,7 @@ export function deriveCounts(circle: EchoCircle): CircleDerivedCounts {
   return {
     total: circle.totalTickets,
     claimed: m.filter(s => s.status === 'claimed').length,
+    invited: m.filter(s => s.status === 'invited').length,
     pending: m.filter(s => s.status === 'invited' || s.status === 'pending').length,
     open: m.filter(s => s.status === 'open').length,
     released: m.filter(s => s.status === 'released').length,

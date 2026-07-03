@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15.5,
     lineHeight: 20,
-    fontWeight: '850',
+    fontWeight: '800',
     letterSpacing: -0.2,
   },
   venue: {

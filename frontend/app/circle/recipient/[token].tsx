@@ -542,8 +542,8 @@ const s = StyleSheet.create({
   memberRow: { flexDirection: 'row', alignItems: 'center', gap: 12, borderTopWidth: 1, paddingVertical: 13 },
   avatar: { width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
   avatarText: { fontSize: 14, fontWeight: '900' },
-  memberName: { fontSize: 15, fontWeight: '850' },
-  memberMeta: { fontSize: 12.5, fontWeight: '650', marginTop: 2 },
+  memberName: { fontSize: 15, fontWeight: '800' },
+  memberMeta: { fontSize: 12.5, fontWeight: '600', marginTop: 2 },
 
   edgeWrap: { flex: 1, paddingHorizontal: 26, alignItems: 'center', justifyContent: 'center' },
   edgeIcon: { width: 86, height: 86, borderRadius: 43, borderWidth: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },

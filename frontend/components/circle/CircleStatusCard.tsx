@@ -33,7 +33,7 @@ type Props = {
 
 const STATE_CONFIG: Record<CircleState, {
   pillLabel: string; pillColor: string; pillBg: string;
-  borderColors: string[];
+  borderColors: [string, string, string, string];
 }> = {
   created: {
     pillLabel: 'Circle created', pillColor: '#10B981', pillBg: 'rgba(16,185,129,0.12)',

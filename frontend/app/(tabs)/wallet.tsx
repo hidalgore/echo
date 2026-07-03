@@ -104,7 +104,7 @@ export default function WalletScreen() {
 
   // Circle state
   const walletPriority: WalletPriority = useMemo(() => deriveWalletPriority(!!primaryTicket, circle), [primaryTicket, circle]);
-  const hasActiveCircle = circle && (circle.status === 'created' || circle.status === 'waiting' || circle.status === 'action_needed' || circle.status === 'complete');
+  const hasActiveCircle = !!circle && (circle.status === 'created' || circle.status === 'waiting' || circle.status === 'action_needed' || circle.status === 'complete');
 
   // Refresh
   const onRefresh = async () => {
@@ -448,7 +448,7 @@ const impact = StyleSheet.create({
   card: { marginHorizontal: 20, marginBottom: 12, borderRadius: 24, padding: 18, borderWidth: 1 },
   topRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   iconWrap: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' },
-  title: { fontSize: 16, fontWeight: '850' },
+  title: { fontSize: 16, fontWeight: '800' },
   sub: { fontSize: 12, marginTop: 2 },
   statusPill: { paddingHorizontal: 9, paddingVertical: 5, borderRadius: 999, borderWidth: 1 },
   statusText: { fontSize: 10.5, fontWeight: '900', textTransform: 'uppercase' },
@@ -458,7 +458,7 @@ const impact = StyleSheet.create({
   track: { height: 6, borderRadius: 999, overflow: 'hidden', marginTop: 7 },
   fill: { height: '100%', borderRadius: 999 },
   actionsRow: { flexDirection: 'row', gap: 16, marginTop: 14 },
-  actionText: { fontSize: 12, fontWeight: '850' },
+  actionText: { fontSize: 12, fontWeight: '800' },
 });
 
 function HostAvatarChip({ name, avatarUrl, isFollowing, c, onPress }: {

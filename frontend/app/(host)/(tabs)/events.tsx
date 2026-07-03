@@ -498,13 +498,13 @@ const s = StyleSheet.create({
   reportMetricValue: {
     color: colors.textPrimary,
     fontSize: 18,
-    fontWeight: '850',
+    fontWeight: '800',
   },
   donationReportBox: { marginTop: 14, padding: 14, borderRadius: radius.lg, backgroundColor: 'rgba(32,199,255,0.08)', borderWidth: 1, borderColor: 'rgba(32,199,255,0.16)', flexDirection: 'row', alignItems: 'center', gap: 12 },
   donationReportTitle: { fontSize: 13, fontWeight: '800', color: colors.textPrimary },
   donationReportMeta: { fontSize: 11, color: colors.textTertiary, marginTop: 3 },
   donationReportMetric: { alignItems: 'flex-end' },
-  donationReportValue: { fontSize: 16, fontWeight: '850', color: colors.accentCyan },
+  donationReportValue: { fontSize: 16, fontWeight: '800', color: colors.accentCyan },
   donationReportLabel: { fontSize: 10, color: colors.textTertiary, marginTop: 2 },
   reportMetricLabel: {
     color: colors.textTertiary,
