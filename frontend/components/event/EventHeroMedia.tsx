@@ -72,7 +72,9 @@ export function EventHeroMedia({
   return (
     <Image
       source={{ uri: resolvedUri }}
-      style={[styles.media, style, imageStyle]}
+      // `style` is the shared container style (ViewStyle); its runtime props are
+      // Image-compatible, only the TS unions differ (overflow: 'scroll').
+      style={[styles.media, style as StyleProp<ImageStyle>, imageStyle]}
       resizeMode="cover"
     />
   );

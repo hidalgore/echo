@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export const echoWalletGradient = ['#149CFF', '#7657FF', '#E238B8', '#FF8A1F'];
+export const echoWalletGradient = ['#149CFF', '#7657FF', '#E238B8', '#FF8A1F'] as const;
 
 export function EchoGradientBorder({ children, style, innerStyle, radius = 28, stroke = 1.25 }: {
   children: React.ReactNode;

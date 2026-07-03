@@ -85,7 +85,7 @@ const statusForDay = (day: number): 'ended' | 'live' | 'on_sale' | 'scheduled' =
 
 // ─── EVENTS ─────────────────────────────────────────────────────
 
-export const GENERATED_EVENTS: Event[] = [
+const RAW_EVENTS: Event[] = [
   // ════════════════════════════════════════════════════════════════
   // MUSIC — 25 events
   // ════════════════════════════════════════════════════════════════
@@ -224,7 +224,9 @@ export const GENERATED_EVENTS: Event[] = [
   { id: 'evt_w03', title: 'Forest Bathing Walk', description: 'Guided mindful walk through old growth forest.', venue_name: 'Discovery Park', venue_address: '3801 Discovery Park Blvd, Seattle, WA', start_time: getDate(14, 9), end_time: endDate(14, 9, 3), category: 'wellness', image_url: img('forest'), ticket_types: tix([{ name: 'Walk', price: 15, avail: 20 }], 'evt_w03'), status: 'on_sale', age_restriction: null, host_name: h(10).name, host_verified: true },
   { id: 'evt_w04', title: 'Wellness Retreat Day', description: 'Full-day retreat with yoga, meditation, and plant-based lunch.', venue_name: v(1).name, venue_address: v(1).addr, start_time: getDate(22, 8), end_time: endDate(22, 8, 10), category: 'wellness', image_url: img('retreat'), ticket_types: tix([{ name: 'Full Day', price: 85, avail: 30 }], 'evt_w04'), status: 'on_sale', age_restriction: null, host_name: h(10).name, host_verified: true },
   { id: 'evt_w05', title: 'Moonlight Meditation', description: 'Full moon meditation on the waterfront.', venue_name: v(17).name, venue_address: v(17).addr, start_time: getDate(34, 20), end_time: endDate(34, 20, 2), category: 'wellness', image_url: img('moonlight'), ticket_types: tix([{ name: 'Free', price: 0, avail: 100 }], 'evt_w05'), status: 'on_sale', age_restriction: null, host_name: h(10).name, host_verified: true },
-].map((event) => ({
+];
+
+export const GENERATED_EVENTS: Event[] = RAW_EVENTS.map((event) => ({
   // Apply default locked event policies based on event characteristics
   allow_refunds: event.ticket_types.every(t => t.price === 0) ? true   // Free events: always refundable
     : event.age_restriction === 21 ? false                             // 21+ events: no refunds (strict)

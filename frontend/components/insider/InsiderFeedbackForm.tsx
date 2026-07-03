@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   chipRow: { gap: 8, paddingVertical: 6 },
   chip: { borderRadius: 999, paddingHorizontal: 12, paddingVertical: 8, borderWidth: 1, borderColor: 'rgba(255,255,255,0.10)', backgroundColor: 'rgba(255,255,255,0.04)' },
   chipActive: { backgroundColor: 'rgba(32,199,255,0.16)', borderColor: 'rgba(32,199,255,0.30)' },
-  chipText: { color: 'rgba(255,255,255,0.58)', fontSize: 12, fontWeight: '750', textTransform: 'capitalize' },
+  chipText: { color: 'rgba(255,255,255,0.58)', fontSize: 12, fontWeight: '700', textTransform: 'capitalize' },
   chipTextActive: { color: '#FFF' },
   input: { minHeight: 46, borderRadius: 14, paddingHorizontal: 14, color: '#FFF', backgroundColor: 'rgba(15,17,21,0.58)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', marginTop: 10 },
   multiline: { minHeight: 86, paddingTop: 14, textAlignVertical: 'top' },

@@ -424,7 +424,7 @@ const s = StyleSheet.create({
   },
   accessPassEyebrow: { fontSize: 10, fontWeight: '900', letterSpacing: 1, color: colors.echoBlue, marginBottom: 2 },
   accessPassBtn: { height: 48, borderRadius: 999, backgroundColor: '#F7F8FA', flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center' },
-  accessPassBtnText: { color: '#0F1115', fontSize: 14, fontWeight: '850' },
+  accessPassBtnText: { color: '#0F1115', fontSize: 14, fontWeight: '800' },
   // Sections
   section: { marginTop: 24, paddingHorizontal: 20 },
   sectionTitle: {
@@ -469,10 +469,10 @@ const s = StyleSheet.create({
   passOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.68)', justifyContent: 'flex-end' },
   passSheet: { backgroundColor: '#11141A', borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingTop: 10, paddingBottom: 30, borderTopWidth: 1, borderColor: 'rgba(255,255,255,0.10)' },
   passHandle: { alignSelf: 'center', width: 52, height: 4, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.18)', marginBottom: 16 },
-  passTitle: { color: '#F7F8FA', fontSize: 22, fontWeight: '850' },
+  passTitle: { color: '#F7F8FA', fontSize: 22, fontWeight: '800' },
   passBody: { color: 'rgba(255,255,255,0.55)', fontSize: 13, lineHeight: 19, marginTop: 5, marginBottom: 14 },
   passPrimaryBtn: { height: 50, borderRadius: 999, backgroundColor: '#F7F8FA', alignItems: 'center', justifyContent: 'center', marginTop: 16 },
-  passPrimaryText: { color: '#0F1115', fontSize: 15, fontWeight: '850' },
+  passPrimaryText: { color: '#0F1115', fontSize: 15, fontWeight: '800' },
   passCloseBtn: { height: 46, alignItems: 'center', justifyContent: 'center', marginTop: 8 },
   passCloseText: { color: 'rgba(255,255,255,0.55)', fontSize: 14, fontWeight: '700' },
   deleteOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.70)', justifyContent: 'center', paddingHorizontal: 24 },

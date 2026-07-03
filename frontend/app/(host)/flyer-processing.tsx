@@ -42,7 +42,7 @@ export default function FlyerProcessingScreen() {
   const loadFromEventDraft = useEventDraftStore((state) => state.loadFromEvent);
   const [steps, setSteps] = useState<ProcessingStep[]>(INITIAL_STEPS);
   const [error, setError] = useState<string | null>(null);
-  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     let cancelled = false;
@@ -83,7 +83,7 @@ export default function FlyerProcessingScreen() {
               eventDetailMediaUri: flyerUri,
               eventDetailMediaType: 'image',
               ticketingModel: nextDraft.price > 0 ? 'paid' : 'free',
-              tickets: [{ id: 'tier_1', name: 'General Admission', price: nextDraft.price || 0, quantity: nextDraft.capacity || 100, salesStart: '', salesEnd: '' }],
+              tickets: [{ id: 'tier_1', name: 'General Admission', price: nextDraft.price || 0, quantity: nextDraft.capacity || 100, salesStart: '', salesEnd: '', accessTierId: 'general_admission' }],
               notes: result.rawText,
               categories: nextDraft.category && nextDraft.category !== 'Other' ? [nextDraft.category as never] : [],
             });

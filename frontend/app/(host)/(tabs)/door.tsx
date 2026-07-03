@@ -592,7 +592,7 @@ function targetIconColor(state: SurfaceState) {
   return 'rgba(245,247,251,0.90)';
 }
 
-function targetGradient(state: SurfaceState): string[] {
+function targetGradient(state: SurfaceState): [string, string, string] {
   if (state === 'approved') return ['#10B981', '#20C7FF', '#7B4DFF'];
   if (state === 'denied') return ['#EF4444', '#F59E0B', '#E63DAD'];
   if (state === 'offline' || state === 'paused') return ['#F59E0B', '#7B4DFF', '#20C7FF'];
@@ -675,7 +675,7 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     fontSize: 25,
     lineHeight: 29,
-    fontWeight: '850',
+    fontWeight: '800',
     textAlign: 'center',
     letterSpacing: -0.5,
     paddingHorizontal: 10,
@@ -684,7 +684,7 @@ const styles = StyleSheet.create({
     color: 'rgba(245,247,251,0.56)',
     fontSize: 17,
     lineHeight: 22,
-    fontWeight: '650',
+    fontWeight: '600',
     marginTop: 7,
     textAlign: 'center',
   },
@@ -802,7 +802,7 @@ const styles = StyleSheet.create({
   countLabel: {
     color: 'rgba(245,247,251,0.45)',
     fontSize: 11,
-    fontWeight: '750',
+    fontWeight: '700',
     textTransform: 'uppercase',
     letterSpacing: 0.7,
   },
@@ -810,7 +810,7 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     fontSize: 24,
     lineHeight: 28,
-    fontWeight: '850',
+    fontWeight: '800',
     marginTop: 2,
   },
   countDivider: {
@@ -867,7 +867,7 @@ const styles = StyleSheet.create({
   closeEventCtaText: {
     color: '#FCA5A5',
     fontSize: 14,
-    fontWeight: '850',
+    fontWeight: '800',
   },
   pauseResumeCta: {
     minHeight: 50,
@@ -913,7 +913,7 @@ const styles = StyleSheet.create({
   confirmTitle: {
     color: colors.textPrimary,
     fontSize: 22,
-    fontWeight: '850',
+    fontWeight: '800',
     textAlign: 'center',
     marginBottom: 8,
   },
@@ -1011,7 +1011,7 @@ const styles = StyleSheet.create({
   sheetTitle: {
     color: colors.textPrimary,
     fontSize: 20,
-    fontWeight: '850',
+    fontWeight: '800',
     marginBottom: 12,
   },
   optionRow: {

@@ -119,7 +119,7 @@ export function DoorScanResultScreenA11y({ result, actions = [], onAction, onNex
       </ScrollView>
 
       <View style={[s.footer, { paddingBottom: insets.bottom + SPACE[12] }]}>
-        <Button title="Next Scan" onPress={onNextScan} />
+        <Button title="Next Scan" onPress={() => onNextScan?.()} />
       </View>
     </View>
   );

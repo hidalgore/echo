@@ -40,11 +40,13 @@ export function toTicketStatus(domainStatus: string): TicketStatusDTO {
       return 'active';
     case 'validated':
     case 'checked_in':
+    case 'used':
       return 'checked_in';
     case 'expired':
       return 'expired';
     case 'revoked':
     case 'suspended':
+    case 'refunded':
       return 'revoked';
     case 'transferred':
       return 'transferred';

@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 15,
-    fontWeight: '650',
+    fontWeight: '600',
   },
 });
 

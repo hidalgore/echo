@@ -873,6 +873,13 @@ function AgeRestrictionLockCard() {
 
 function TicketingStep() {
   const { draft, setTicketingModel, updateTicket, addTicketTier, removeTicketTier, setAllowRefunds, setAllowTransfers } = useEventDraftStore();
+  const { pricingGuidance, fetchPricingGuidance } = useHostAIStore();
+
+  const firstTierPrice = draft.tickets[0]?.price ?? 0;
+  const primaryCategory = draft.categories[0] || 'Music';
+  useEffect(() => {
+    if (firstTierPrice > 0) fetchPricingGuidance(firstTierPrice, primaryCategory);
+  }, [firstTierPrice, primaryCategory, fetchPricingGuidance]);
 
   return (
     <View>
@@ -964,8 +971,12 @@ function TicketingStep() {
           </TouchableOpacity>
 
           {/* AI Pricing Guidance */}
-          {draft.tickets[0]?.price > 0 && (
-            <AIPricingGuidanceCard price={draft.tickets[0].price} eventType={draft.categories[0] || 'Music'} />
+          {firstTierPrice > 0 && pricingGuidance && (
+            <AIPricingGuidanceCard
+              recommendation={pricingGuidance.recommendation}
+              support={pricingGuidance.support}
+              cta={pricingGuidance.ctaLabel}
+            />
           )}
         </>
       )}
