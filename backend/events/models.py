@@ -168,6 +168,15 @@ class TicketTier(EchoIdModel):
     description = models.CharField(max_length=300, blank=True, default="")
     price_cents = models.PositiveIntegerField()
 
+    # Phase 5 AMENDMENT (flagged): maps this catalog tier into the locked
+    # Access Control System v1 tier vocabulary (door.access mirrors the
+    # client's ACCESS_TIER_DEFINITIONS table). Door verdicts derive zone
+    # authorization and the wire DoorScanResultDTO.tier_id from this; GA is
+    # the safe default (main entry only). Choices live in door.access —
+    # validated at the door boundary, not the DB, so events stays decoupled
+    # from the door app.
+    access_tier = models.CharField(max_length=32, default="general_admission")
+
     # Social Energy engine inputs + Phase 3 inventory-hold substrate.
     # NEVER serialized — the API exposes `available` only.
     quantity_total = models.PositiveIntegerField()
