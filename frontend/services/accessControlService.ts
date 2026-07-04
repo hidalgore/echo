@@ -159,7 +159,10 @@ export function buildAITrustAssistantRecommendation(args: {
  * special instructions, verification state, decision, failure reason, and the
  * suggested staff action. Pure/deterministic; safe for offline Door Mode.
  */
-export type DoorVerificationState = 'verified' | 'duplicate_blocked' | 'security_hold' | 'flagged' | 'denied' | 'wrong_zone';
+// Phase 5 AMENDMENT (flagged): `duplicate_alert` — a re-scan inside the
+// server's 5-minute duplicate window is APPROVED with an alert (locked rule:
+// alert, not block); `duplicate_blocked` remains the outside-window refusal.
+export type DoorVerificationState = 'verified' | 'duplicate_alert' | 'duplicate_blocked' | 'security_hold' | 'flagged' | 'denied' | 'wrong_zone';
 
 export type DoorModeResultView = {
   approved: boolean;
