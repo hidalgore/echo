@@ -14,10 +14,11 @@
 
 import type { Paged } from '../../types/api/shared';
 import type {
-  CheckoutIntentDTO, ConfirmPaymentResponseDTO, CredentialDTO, EventDTO,
-  EventInventoryDTO, TicketDTO,
+  CheckoutIntentDTO, ConfirmPaymentResponseDTO, CredentialDTO,
+  DoorOfflineBundleDTO, DoorReconcileResultDTO, DoorScanResultDTO,
+  DoorSessionDTO, EventDTO, EventInventoryDTO, TicketDTO,
 } from '../../types/api/dto';
-import type { CheckoutPort, DiscoveryPort, TicketPort } from './ports';
+import type { CheckoutPort, DiscoveryPort, DoorPort, TicketPort } from './ports';
 import { apiCall } from './apiClient';
 
 export const httpDiscoveryPort: DiscoveryPort = {
@@ -67,4 +68,36 @@ export const httpTicketPort: TicketPort = {
     apiCall<Paged<TicketDTO>>('wallet', {
       query: { cursor: params.cursor, limit: params.limit },
     }),
+};
+
+// Phase 5 (S-07). Scans/reconcile/purchases are idempotency-flagged in the
+// registry (apiCall refuses them without a key); session reads, pause/resume
+// (flagged amendment rows) and the offline bundle are plain calls. The
+// reconcile body wraps the ledger array in {scans} — audit-produced shape.
+export const httpDoorPort: DoorPort = {
+  getSession: (sessionId) => apiCall<DoorSessionDTO>('doorSession', { params: { sessionId } }),
+
+  pauseSession: (sessionId) =>
+    apiCall<DoorSessionDTO>('doorSessionPause', { params: { sessionId } }),
+
+  resumeSession: (sessionId, passcode) =>
+    apiCall<DoorSessionDTO>('doorSessionResume', { params: { sessionId }, body: { passcode } }),
+
+  getOfflineBundle: (sessionId) =>
+    apiCall<DoorOfflineBundleDTO>('doorOfflineBundle', { params: { sessionId } }),
+
+  submitScan: (req, idempotencyKey) =>
+    apiCall<DoorScanResultDTO>('doorScans', { body: req, idempotencyKey }),
+
+  reconcile: (ledger, idempotencyKey) =>
+    apiCall<DoorReconcileResultDTO>('doorReconcile', { body: { scans: ledger }, idempotencyKey }),
+
+  createPurchaseIntent: (request, idempotencyKey) =>
+    apiCall<CheckoutIntentDTO>('doorPurchaseIntent', { body: request, idempotencyKey }),
+
+  confirmPurchase: (request, idempotencyKey) =>
+    apiCall<ConfirmPaymentResponseDTO>('doorPurchaseConfirm', { body: request, idempotencyKey }),
+
+  getPurchaseIntent: (id) =>
+    apiCall<CheckoutIntentDTO>('doorPurchaseIntentStatus', { params: { id } }),
 };

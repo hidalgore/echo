@@ -16,7 +16,8 @@ import { API_STATUS } from '../../types/api/shared';
 import type { ApiResult, Paged, PageParams } from '../../types/api/shared';
 import type {
   CheckoutIntentDTO, CircleDTO, ConfirmPaymentResponseDTO, CredentialDTO,
-  DonationCampaignDTO, DoorScanRequestDTO, DoorScanResultDTO, EventDTO,
+  DonationCampaignDTO, DoorOfflineBundleDTO, DoorReconcileResultDTO,
+  DoorScanRequestDTO, DoorScanResultDTO, DoorSessionDTO, EventDTO,
   EventInventoryDTO, RiskDecisionDTO, TicketDTO, TicketTierDTO,
 } from '../../types/api/dto';
 import type { EchoPorts } from './ports';
@@ -43,6 +44,7 @@ import { newIdempotencyKey } from './apiClient';
 import { useEventStore } from '../../stores/eventStore';
 import { useTicketStore } from '../../stores/ticketStore';
 import { useCircleStore } from '../../stores/circleStore';
+import { useHostProfileStore } from '../../stores/hostProfileStore';
 import { formatDate, formatTime } from '../../utils/format';
 
 // ─── Result helpers ──────────────────────────────────────────────────────────
@@ -230,6 +232,28 @@ function findTicket(ticketId: string): Ticket | undefined {
   return useTicketStore.getState().getTicketById(ticketId);
 }
 
+// Door sessions are provisioned server-side (Phase 5 management command);
+// the mock materializes any requested id as a live main-entry session so the
+// local-first door screen (which mints its own session ids) keeps working.
+const mockDoorSessions = new Map<string, DoorSessionDTO>();
+
+function mockDoorSession(sessionId: string): DoorSessionDTO {
+  let session = mockDoorSessions.get(sessionId);
+  if (!session) {
+    session = {
+      session_id: sessionId,
+      event_id: '',
+      label: 'Mock door',
+      zone: 'main_entry',
+      status: 'active',
+      expires_at: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString(),
+      passcode_locked_until: null,
+    };
+    mockDoorSessions.set(sessionId, session);
+  }
+  return session;
+}
+
 function buildCredentialDTO(ticket: Ticket): CredentialDTO {
   // The mock plays the SERVER here: it fabricates a fresh short-lived
   // credential per call, mirroring the Phase 4 rotation contract. The old
@@ -376,8 +400,61 @@ export const mockPorts: EchoPorts = {
   },
 
   door: {
+    async getSession(sessionId) {
+      return ok(mockDoorSession(sessionId));
+    },
+
+    async pauseSession(sessionId) {
+      const session = mockDoorSession(sessionId);
+      if (session.status !== 'closed') session.status = 'paused';
+      return ok({ ...session });
+    },
+
+    async resumeSession(sessionId, passcode) {
+      // Mirrors the server semantics: resume is passcode-gated. The mock
+      // validates against the host's locally-stored Door Mode passcode.
+      const session = mockDoorSession(sessionId);
+      if (!useHostProfileStore.getState().verifyDoorModePasscode(passcode)) {
+        return {
+          ok: false,
+          status: 403,
+          error: { code: 'door_passcode_invalid', message: 'Incorrect passcode.' },
+        };
+      }
+      if (session.status !== 'closed') session.status = 'active';
+      return ok({ ...session });
+    },
+
+    async getOfflineBundle(sessionId) {
+      const session = mockDoorSession(sessionId);
+      const tickets = useTicketStore.getState().tickets
+        .filter((ticket) => !session.event_id || ticket.event_id === session.event_id);
+      const event = useEventStore.getState().getEventById(session.event_id);
+      return ok<DoorOfflineBundleDTO>({
+        format_version: 1,
+        generated_at: new Date().toISOString(),
+        session_id: session.session_id,
+        event_id: session.event_id,
+        zone: session.zone,
+        signing_public_key_pem: '-----BEGIN PUBLIC KEY-----\nmock\n-----END PUBLIC KEY-----\n',
+        qr_payload_prefix: 'ECHO1.',
+        scan_leeway_seconds: 10,
+        duplicate_window_seconds: 300,
+        relaxations: ['rotating_nonce_freshness'],
+        admissions: tickets.map((ticket) => ({
+          ticket_id: ticket.id,
+          nfc_credential_id: ticket.nfc_credential ?? null,
+          status: toTicketStatus(ticket.access_status || ticket.status),
+          tier_id: 'general_admission',
+          age_badge: eventAgeBadge(event),
+          authorized_zones: ['main_entry'],
+        })),
+      });
+    },
+
     async submitScan(req: DoorScanRequestDTO, _idempotencyKey) {
       const ticket = req.ticket_id ? findTicket(req.ticket_id) : undefined;
+      const event = ticket ? useEventStore.getState().getEventById(ticket.event_id) : undefined;
       const usable = !!ticket
         && (ticket.access_status || ticket.status) === 'active'
         && ticket.payment_status !== 'refunded';
@@ -391,12 +468,42 @@ export const mockPorts: EchoPorts = {
         failure_reason: approved ? undefined : (ticket ? 'pass_not_usable' : 'pass_not_found'),
         tier_id: tierId,
         authorized_zones: zoneAuthorized ? ['main_entry'] : [],
+        age_badge: eventAgeBadge(event),
       });
     },
 
-    async reconcile(_ledger, _idempotencyKey) {
+    async reconcile(ledger, _idempotencyKey) {
       // Offline ledgers reconcile to server truth in Phase 5; mock accepts all.
-      return ok({ ok: true as const });
+      return ok<DoorReconcileResultDTO>({
+        ok: true,
+        received: ledger.length,
+        merged: ledger.length,
+        replayed: 0,
+        conflicts: 0,
+        rejected: 0,
+        results: ledger.map((entry) => ({
+          scanned_at: entry.scanned_at,
+          merged: true,
+          approved: true,
+          verification_state: 'verified',
+        })),
+      });
+    },
+
+    // Door purchases ride the same engine as user checkout — in the mock
+    // exactly as on the server (locked rule: never a second checkout path).
+    async createPurchaseIntent({ session_id: _session, ...request }, idempotencyKey) {
+      return mockPorts.checkout.createIntent(request, idempotencyKey);
+    },
+
+    async confirmPurchase(request, idempotencyKey) {
+      return mockPorts.checkout.confirmPayment(
+        request.intent_id, request.payment_method, idempotencyKey,
+      );
+    },
+
+    async getPurchaseIntent(intentId) {
+      return mockPorts.checkout.getIntent(intentId);
     },
   },
 
