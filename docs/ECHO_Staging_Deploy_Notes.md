@@ -85,19 +85,43 @@ cp .env.example .env                       # then edit if needed
      tests use self-signed fixtures) is an operator smoke step on a device.
    - Frontend build env: `EXPO_PUBLIC_ECHO_TICKET_MODE=live` binds the S-06
      http port (mock stays the default otherwise).
-8. **Workers**: systemd units for gunicorn / celery worker / celery beat
+8. **Door devices (Phase 5 — operator-provisioned)**: each scanning post gets
+   its own session + token pair from the box:
+   `manage.py provision_door_session --event <echo_id> --zone main_entry
+   --label "North door"` — prints the session id, 6-digit pause/resume
+   passcode, and door-scoped access/refresh tokens ONCE (stored hashed;
+   re-run to re-provision, there is no recovery read). Knobs (defaults fine):
+   `RATE_LIMIT_DOOR` (600/min), `RATE_LIMIT_DOOR_PURCHASE` (10/min per
+   session), `ECHO_DOOR_SCAN_LEEWAY_SECONDS` (10),
+   `ECHO_DOOR_DUPLICATE_WINDOW_SECONDS` (300),
+   `ECHO_DOOR_PASSCODE_MAX_ATTEMPTS` (5) /
+   `ECHO_DOOR_PASSCODE_LOCKOUT_SECONDS` (900). Frontend build env:
+   `EXPO_PUBLIC_ECHO_DOOR_MODE=live` binds the S-07 http port (mock stays the
+   default otherwise). NOTE: real NFC/QR scanner input needs native modules
+   that are part of the owed native build — until then the live door path is
+   exercised by curl, not the door screen.
+9. **Workers**: systemd units for gunicorn / celery worker / celery beat
    (mirror the `siempre-*` unit naming convention).
-9. **Smoke**: `curl https://api-staging.echo.events/v1/config/public` returns
-   the config payload; a bad route returns the locked envelope 404; hammering
-   returns 429 with `Retry-After`. Phase 3 adds the revenue-path E2E: seeded
-   on-sale event → `POST /v1/checkout/intents` (Idempotency-Key required) →
-   `POST /v1/payments/confirm` with a Stripe test PaymentMethod (`pm_card_visa`)
-   → ticket rows issued → Stripe CLI `stripe trigger payment_intent.succeeded`
-   redelivery is deduped. Phase 4 adds the credential E2E: buy a ticket →
-   `GET /v1/wallet` lists it → two `GET /v1/tickets/:id/credential` calls 30s
-   apart return different tokens → `POST .../refresh` rotates immediately →
-   a revoked ticket's credential 409s → `POST .../apple-wallet` returns a
-   `.pkpass` that installs on a real device (operator).
+10. **Smoke**: `curl https://api-staging.echo.events/v1/config/public` returns
+    the config payload; a bad route returns the locked envelope 404; hammering
+    returns 429 with `Retry-After`. Phase 3 adds the revenue-path E2E: seeded
+    on-sale event → `POST /v1/checkout/intents` (Idempotency-Key required) →
+    `POST /v1/payments/confirm` with a Stripe test PaymentMethod (`pm_card_visa`)
+    → ticket rows issued → Stripe CLI `stripe trigger payment_intent.succeeded`
+    redelivery is deduped. Phase 4 adds the credential E2E: buy a ticket →
+    `GET /v1/wallet` lists it → two `GET /v1/tickets/:id/credential` calls 30s
+    apart return different tokens → `POST .../refresh` rotates immediately →
+    a revoked ticket's credential 409s → `POST .../apple-wallet` returns a
+    `.pkpass` that installs on a real device (operator). Phase 5 adds the door
+    E2E (door-scoped bearer from step 8): buy → `GET .../credential` →
+    `POST /v1/door/scans` with the `qr_payload` approves (`verified`,
+    ticket flips to `checked_in`) → immediate re-scan returns
+    `duplicate_alert` (approved) → revoke the ticket and a fresh scan refuses
+    (`ticket_not_active`) → `POST .../offline-bundle` returns the versioned
+    bundle with the Ed25519 public key → `POST /v1/door/reconcile` with an
+    offline ledger merges (replay under a new Idempotency-Key reports
+    `replayed`) → door purchase intent + confirm issues walk-up tickets →
+    `manage.py door_closeout --event <id>` writes the three CSVs.
 
 ## Migration workflow (locked from day one)
 
