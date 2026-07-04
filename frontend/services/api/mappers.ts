@@ -62,11 +62,15 @@ export function toTicketStatus(domainStatus: string): TicketStatusDTO {
 export function toTicketDTO(domain: {
   echoId: string; eventId: string; tierId: string; status: string;
   age18Plus?: boolean; age21Plus?: boolean; issuedAt: string;
+  /** Phase 4 amendment: purchase linkage; falls back to the record id for
+   *  mock domain tickets, which keep one record per purchase. */
+  intentId?: string;
 }): TicketDTO {
   return {
     echo_id: domain.echoId,
     event_id: domain.eventId,
     tier_id: domain.tierId,
+    intent_id: domain.intentId ?? domain.echoId,
     status: toTicketStatus(domain.status),
     age_badge: toAgeBadge({ age18Plus: domain.age18Plus, age21Plus: domain.age21Plus }),
     issued_at: domain.issuedAt,

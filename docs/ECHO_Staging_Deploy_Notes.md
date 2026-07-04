@@ -67,15 +67,37 @@ cp .env.example .env                       # then edit if needed
      merchant identifiers (Apple merchant id + Google Pay config) — card is
      the E2E path until then; the server already accepts all three token
      types.
-7. **Workers**: systemd units for gunicorn / celery worker / celery beat
+7. **Credentials & Apple Wallet** (consumed since Phase 4 — both surfaces
+   fail closed with envelope 503s until configured):
+   - `ECHO_CREDENTIAL_SIGNING_KEY`: base64 Ed25519 seed from
+     `manage.py generate_credential_signing_key` (fresh per environment; the
+     printed public key is what Phase 5 door bundles will ship). Missing →
+     503 `credentials_not_configured` on credential/refresh/apple-wallet.
+   - `ECHO_CREDENTIAL_TTL_SECONDS` (default 30 — the locked rotation cadence)
+     and `RATE_LIMIT_CREDENTIAL` (default 30/min per user+ticket).
+   - **Apple Wallet signing assets (operator-provided)**: export the Pass
+     Type ID certificate + private key as PEM, download Apple's WWDR
+     intermediate (PEM), place on the box and set `ECHO_PASSKIT_CERT_PATH`,
+     `ECHO_PASSKIT_KEY_PATH`, `ECHO_PASSKIT_WWDR_CERT_PATH`,
+     `ECHO_PASSKIT_PASS_TYPE_ID` (e.g. `pass.events.echo.ticket`),
+     `ECHO_PASSKIT_TEAM_ID` (+ optional `ECHO_PASSKIT_ORG_NAME`). Missing →
+     503 `wallet_pass_not_configured`. Real-pass install verification (unit
+     tests use self-signed fixtures) is an operator smoke step on a device.
+   - Frontend build env: `EXPO_PUBLIC_ECHO_TICKET_MODE=live` binds the S-06
+     http port (mock stays the default otherwise).
+8. **Workers**: systemd units for gunicorn / celery worker / celery beat
    (mirror the `siempre-*` unit naming convention).
-8. **Smoke**: `curl https://api-staging.echo.events/v1/config/public` returns
+9. **Smoke**: `curl https://api-staging.echo.events/v1/config/public` returns
    the config payload; a bad route returns the locked envelope 404; hammering
    returns 429 with `Retry-After`. Phase 3 adds the revenue-path E2E: seeded
    on-sale event → `POST /v1/checkout/intents` (Idempotency-Key required) →
    `POST /v1/payments/confirm` with a Stripe test PaymentMethod (`pm_card_visa`)
    → ticket rows issued → Stripe CLI `stripe trigger payment_intent.succeeded`
-   redelivery is deduped.
+   redelivery is deduped. Phase 4 adds the credential E2E: buy a ticket →
+   `GET /v1/wallet` lists it → two `GET /v1/tickets/:id/credential` calls 30s
+   apart return different tokens → `POST .../refresh` rotates immediately →
+   a revoked ticket's credential 409s → `POST .../apple-wallet` returns a
+   `.pkpass` that installs on a real device (operator).
 
 ## Migration workflow (locked from day one)
 

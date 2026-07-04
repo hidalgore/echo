@@ -35,7 +35,6 @@ import {
   type CheckoutIntent,
   type CheckoutIntentStatus,
 } from '../checkoutIntentService';
-import { createAccessPass, buildSignedCredential } from '../accessPassService';
 import { canTierAccessZone } from '../accessControlService';
 import { createFreshCircle } from '../circleMock';
 import { deriveCounts } from '../circleStateModel';
@@ -179,6 +178,9 @@ function toTicketDTOFromDomain(ticket: Ticket): TicketDTO {
     echo_id: ticket.id,
     event_id: ticket.event_id,
     tier_id: ticket.ticket_type_id,
+    // Mock purchases keep one local record per purchase, so the record id
+    // doubles as the intent linkage (Phase 4 amendment field).
+    intent_id: ticket.id,
     status: toTicketStatus(ticket.access_status || ticket.status),
     age_badge: eventAgeBadge(event),
     issued_at: ticket.purchased_at,
@@ -229,29 +231,16 @@ function findTicket(ticketId: string): Ticket | undefined {
 }
 
 function buildCredentialDTO(ticket: Ticket): CredentialDTO {
-  // Exercise the same mock services the wallet uses today; the server-signed
-  // rotating credential replaces this in Phase 4 (client never mints tokens).
-  const pass = createAccessPass({
-    id: `ap_${ticket.id}`,
-    attendeeId: ticket.user_id,
-    eventId: ticket.event_id,
-    tierId: 'general_admission',
-    permissions: ['main_entry'],
-  });
-  const credential = buildSignedCredential({
-    credentialId: `cred_${ticket.id}`,
-    accessPass: pass,
-    type: ticket.nfc_credential ? 'nfc_credential' : 'qr_fallback',
-    validationToken: newIdempotencyKey(),
-    signature: 'sig_mock',
-    expiresAt: new Date(Date.now() + CONFIG.NFC_CREDENTIAL_ROTATE_INTERVAL_MS).toISOString(),
-  });
+  // The mock plays the SERVER here: it fabricates a fresh short-lived
+  // credential per call, mirroring the Phase 4 rotation contract. The old
+  // accessPassService struct-assembly is gone with the service — the client
+  // never mints tokens (locked rule); only this mock server-stand-in does.
   return {
     ticket_id: ticket.id,
-    nfc_credential_id: ticket.nfc_credential,
-    qr_payload: ticket.qr_code,
-    validation_token: credential.validationToken,
-    expires_at: credential.expiresAt ?? new Date(Date.now() + CONFIG.NFC_CREDENTIAL_ROTATE_INTERVAL_MS).toISOString(),
+    nfc_credential_id: ticket.nfc_credential ?? `nfc_mock_${ticket.id}`,
+    qr_payload: `ECHO1.mock.${newIdempotencyKey()}`,
+    validation_token: newIdempotencyKey(),
+    expires_at: new Date(Date.now() + CONFIG.NFC_CREDENTIAL_ROTATE_INTERVAL_MS).toISOString(),
   };
 }
 
@@ -349,6 +338,7 @@ export const mockPorts: EchoPorts = {
         echo_id: ticket.ticket_id,
         event_id: intent.event_id,
         tier_id: event?.ticket_types[0]?.id ?? 'general_admission',
+        intent_id: intentId,
         status: 'active',
         age_badge: eventAgeBadge(event),
         issued_at: issuedAt,
@@ -375,6 +365,13 @@ export const mockPorts: EchoPorts = {
       if (!ticket) return notFound<CredentialDTO>('ticket', ticketId);
       // Each refresh mints a new short-lived token (mock of the 30s rotation).
       return ok(buildCredentialDTO(ticket));
+    },
+
+    async listWallet(params) {
+      // Per-admission rows server-side; the mock store already holds one
+      // record per purchase, so rows come back pre-grouped here.
+      const page = paginate(useTicketStore.getState().tickets, params);
+      return ok({ items: page.items.map(toTicketDTOFromDomain), nextCursor: page.nextCursor });
     },
   },
 

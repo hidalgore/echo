@@ -27,6 +27,7 @@ import { isExpired } from '../../utils/event';
 import { PostEventSection } from '../../components/wallet/PostEventSection';
 import { EchodPromptCard } from '../../components/wallet/EchodPromptCard';
 import { ScreenBackButton } from '../../components/shared/ScreenBackButton';
+import { useCredentialRotation } from '../../hooks/useCredentialRotation';
 import {
   formatCountdown,
   getCircleSummaryLabel,
@@ -234,7 +235,7 @@ export default function TicketDetailScreen() {
         onShowQr={handleShowQr}
       />
 
-      <QrSheet visible={qrVisible} onClose={() => setQrVisible(false)} qrValue={ticket.qr_code} />
+      <QrSheet visible={qrVisible} onClose={() => setQrVisible(false)} ticketId={ticket.id} />
 
 
       <Modal visible={circleStatusVisible} transparent animationType="slide" onRequestClose={() => setCircleStatusVisible(false)}>
@@ -492,15 +493,31 @@ function TicketMenuSheet({ visible, onClose, onViewCircleStatus, onDirections, o
   );
 }
 
-function QrSheet({ visible, onClose, qrValue }: { visible: boolean; onClose: () => void; qrValue: string }) {
+function QrSheet({ visible, onClose, ticketId }: { visible: boolean; onClose: () => void; ticketId: string }) {
+  // Server-minted rotating credential — never the local placeholder qr_code
+  // (Phase 3 wrote fabricated strings into wallet records; they are not
+  // credentials). The hook pauses while the sheet is closed.
+  const { credential, error } = useCredentialRotation(visible ? ticketId : undefined);
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <Pressable style={styles.sheetOverlay} onPress={onClose}>
         <Pressable style={styles.qrSheet} onPress={() => {}}>
           <View style={styles.sheetHandle} />
           <Text variant="sheetTitle" style={styles.sheetTitle}>Backup QR</Text>
-          <PseudoQrCode value={qrValue} />
-          <Text variant="caption" color="textMuted" style={styles.qrHelp}>System-generated fallback only • NFC remains primary whenever available</Text>
+          {credential?.qr_payload ? (
+            <PseudoQrCode value={credential.qr_payload} />
+          ) : (
+            <View style={styles.qrLoading}>
+              <Text variant="caption" color="textMuted">
+                {error ?? 'Fetching entry credential…'}
+              </Text>
+            </View>
+          )}
+          <Text variant="caption" color="textMuted" style={styles.qrHelp}>
+            {credential
+              ? 'Rotates automatically every ~30s • NFC remains primary whenever available'
+              : 'System-generated fallback only • NFC remains primary whenever available'}
+          </Text>
           <TouchableOpacity style={styles.closeBtn} onPress={onClose} activeOpacity={0.86}>
             <Text variant="meta">Close</Text>
           </TouchableOpacity>
@@ -856,6 +873,16 @@ const styles = StyleSheet.create({
   },
   qrPixel: { width: 7.17, height: 7.17, backgroundColor: '#000000' },
   qrPixelOff: { backgroundColor: '#FFFFFF' },
+  // Same footprint as qrMatrix so fetch/error states don't jump the sheet.
+  qrLoading: {
+    width: 232,
+    height: 232,
+    borderRadius: 18,
+    marginTop: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.06)',
+  },
   qrHelp: { textAlign: 'center', marginTop: 14, marginBottom: 14 },
   closeBtn: {
     height: 48,

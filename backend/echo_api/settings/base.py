@@ -124,6 +124,9 @@ REST_FRAMEWORK = {
         "admin": env("RATE_LIMIT_ADMIN", "120/min"),
         # Phase 3 compliance note: low per-(user, event) on intent creation.
         "checkout_intent": env("RATE_LIMIT_CHECKOUT_INTENT", "6/min"),
+        # Phase 4: per-(identity, ticket) on credential get/refresh — the 30s
+        # rotation cadence is 2/min, so this is pure headroom + abuse ceiling.
+        "credential": env("RATE_LIMIT_CREDENTIAL", "30/min"),
     },
 }
 
@@ -134,6 +137,11 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
     # Contract paths are absolute (/v1/...); don't strip a common prefix.
     "SCHEMA_PATH_PREFIX": "",
+    # Multiple serializers expose a `status` choices field (events vs tickets);
+    # name the ticket one explicitly so schema generation stays deterministic.
+    "ENUM_NAME_OVERRIDES": {
+        "TicketStatusEnum": "tickets.models.TicketStatus.choices",
+    },
 }
 
 # ─── Identity / tokens (Phase 1) ─────────────────────────────────────────────
@@ -175,6 +183,30 @@ ECHO_CHECKOUT_HOLD_TTL_SECONDS = int(env("ECHO_CHECKOUT_HOLD_TTL_SECONDS", "600"
 
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", "")
 STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET", "")
+
+# ─── Credentials (Phase 4: consumed by tickets.credentials; fail-closed) ─────
+
+# Base64-encoded 32-byte Ed25519 private seed; mint one with
+# `manage.py generate_credential_signing_key`. Missing -> envelope 503
+# `credentials_not_configured` on every credential surface.
+ECHO_CREDENTIAL_SIGNING_KEY = env("ECHO_CREDENTIAL_SIGNING_KEY", "")
+# Credential lifetime — the locked ~30s rotation cadence (the client's
+# CONFIG.NFC_CREDENTIAL_ROTATE_INTERVAL_MS drives its refresh off the
+# credential's real expires_at).
+ECHO_CREDENTIAL_TTL_SECONDS = int(env("ECHO_CREDENTIAL_TTL_SECONDS", "30"))
+
+# ─── Apple Wallet / PassKit (Phase 4: tickets.passkit; fail-closed) ──────────
+
+# Paths to the operator-provided pass-signing assets (PEM): the Pass Type ID
+# certificate, its private key, and Apple's WWDR intermediate. All paths plus
+# both identifiers must be set or pass generation 503s
+# `wallet_pass_not_configured`.
+ECHO_PASSKIT_CERT_PATH = env("ECHO_PASSKIT_CERT_PATH", "")
+ECHO_PASSKIT_KEY_PATH = env("ECHO_PASSKIT_KEY_PATH", "")
+ECHO_PASSKIT_WWDR_CERT_PATH = env("ECHO_PASSKIT_WWDR_CERT_PATH", "")
+ECHO_PASSKIT_PASS_TYPE_ID = env("ECHO_PASSKIT_PASS_TYPE_ID", "")
+ECHO_PASSKIT_TEAM_ID = env("ECHO_PASSKIT_TEAM_ID", "")
+ECHO_PASSKIT_ORG_NAME = env("ECHO_PASSKIT_ORG_NAME", "ECHO")
 
 # ─── Sentry (slot — initialized in staging/prod when DSN is set) ─────────────
 

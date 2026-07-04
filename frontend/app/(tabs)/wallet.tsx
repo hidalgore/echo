@@ -36,6 +36,7 @@ import type { DynamicPalette } from '../../theme/dynamicTheme';
 import type { DonationRecord, NonprofitDonationCampaign } from '../../types/nonprofitDonation';
 import { formatDonationCurrency, getCampaignProgressPercent } from '../../services/donationCampaignService';
 import { WebWalletPage } from '../../components/web/WebWalletPage';
+import { useCredentialRotation } from '../../hooks/useCredentialRotation';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -338,7 +339,7 @@ export default function WalletScreen() {
         }}
       />
 
-      <WalletQrSheet visible={qrVisible} qrValue={primaryTicket?.qr_code ?? ''} c={c} onClose={() => setQrVisible(false)} />
+      <WalletQrSheet visible={qrVisible} ticketId={primaryTicket?.id} c={c} onClose={() => setQrVisible(false)} />
     </View>
   );
 }
@@ -517,7 +518,10 @@ function MenuTile({ icon, label, c, onPress, disabled = false }: {
   );
 }
 
-function WalletQrSheet({ visible, qrValue, c, onClose }: { visible: boolean; qrValue: string; c: DynamicPalette; onClose: () => void; }) {
+function WalletQrSheet({ visible, ticketId, c, onClose }: { visible: boolean; ticketId: string | undefined; c: DynamicPalette; onClose: () => void; }) {
+  // Server-minted rotating credential via the ticket port — never the local
+  // placeholder qr_code the Phase 3 checkout wrote. Paused while closed.
+  const { credential, error } = useCredentialRotation(visible ? ticketId : undefined);
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <Pressable style={qs.overlay} onPress={onClose}>
@@ -525,10 +529,16 @@ function WalletQrSheet({ visible, qrValue, c, onClose }: { visible: boolean; qrV
           <View style={[qs.handle, { backgroundColor: c.hairlineStrong }]} />
           <Text style={[qs.title, { color: c.text }]}>Barcode</Text>
           <View style={[qs.qrPlaceholder, { backgroundColor: c.surface2, borderColor: c.border }]}>
-            <Ionicons name="qr-code-outline" size={96} color={c.textDisabled} />
-            <Text style={[qs.qrNote, { color: c.textDisabled }]}>QR / Barcode renders here</Text>
+            <Ionicons name="qr-code-outline" size={96} color={credential ? c.text : c.textDisabled} />
+            <Text style={[qs.qrNote, { color: credential ? c.textTertiary : c.textDisabled }]} numberOfLines={1}>
+              {credential ? credential.qr_payload : error ?? 'Fetching entry credential…'}
+            </Text>
           </View>
-          <Text style={[qs.help, { color: c.textTertiary }]}>System-generated fallback only · NFC remains primary whenever available</Text>
+          <Text style={[qs.help, { color: c.textTertiary }]}>
+            {credential
+              ? 'Rotates automatically every ~30s · NFC remains primary whenever available'
+              : 'System-generated fallback only · NFC remains primary whenever available'}
+          </Text>
           <TouchableOpacity style={[qs.closeBtn, { backgroundColor: c.surface2, borderColor: c.border }]} onPress={onClose} activeOpacity={0.86}>
             <Text style={[qs.closeBtnText, { color: c.text }]}>Close</Text>
           </TouchableOpacity>
