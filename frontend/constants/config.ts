@@ -41,12 +41,25 @@ const CHECKOUT_MODE: 'live' | 'mock' =
 const TICKET_MODE: 'live' | 'mock' =
   process.env.EXPO_PUBLIC_ECHO_TICKET_MODE === 'live' ? 'live' : 'mock';
 
+/**
+ * Door domain swap gate (Phase 5 / W5), mirroring the others. 'live' binds
+ * the http DoorPort (S-07): sessions/scans/bundles/reconcile/purchases ride
+ * the door-scoped backend (device provisioned via `manage.py
+ * provision_door_session`). 'mock' keeps the local simulated door. Mock stays
+ * the default until the operator smokes the staging swap — flip per
+ * environment with EXPO_PUBLIC_ECHO_DOOR_MODE=live (inlined by Expo at
+ * bundle time).
+ */
+const DOOR_MODE: 'live' | 'mock' =
+  process.env.EXPO_PUBLIC_ECHO_DOOR_MODE === 'live' ? 'live' : 'mock';
+
 export const CONFIG = {
   MOCK_MODE: true,
   AUTH_MODE,
   DISCOVERY_MODE,
   CHECKOUT_MODE,
   TICKET_MODE,
+  DOOR_MODE,
   /** Stripe publishable key (test mode until launch); empty = collection
    *  fails visibly at pay time, never silently. */
   STRIPE_PUBLISHABLE_KEY: process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',

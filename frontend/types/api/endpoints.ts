@@ -72,6 +72,14 @@ export const ENDPOINTS = {
 
   // door mode
   doorSession: { method: 'GET', path: '/v1/door/sessions/:sessionId', scope: 'door' },
+  // Phase 5 AMENDMENT (flagged, needs registry lock sign-off): the locked
+  // v1.0 registry had no route for the 6-digit pause/resume validation. The
+  // audit concluded a session sub-action (not a session-state field):
+  // validation is a mutation — attempt counting, lockout, audit — which a
+  // GET field cannot carry. Pause takes no passcode (any staffer must be
+  // able to stop entry instantly); resume validates it server-side.
+  doorSessionPause: { method: 'POST', path: '/v1/door/sessions/:sessionId/pause', scope: 'door' },
+  doorSessionResume: { method: 'POST', path: '/v1/door/sessions/:sessionId/resume', scope: 'door' },
   doorOfflineBundle: { method: 'POST', path: '/v1/door/sessions/:sessionId/offline-bundle', scope: 'door' },
   doorScans: { method: 'POST', path: '/v1/door/scans', idempotent: true, scope: 'door' },
   doorReconcile: { method: 'POST', path: '/v1/door/reconcile', idempotent: true, scope: 'door' },

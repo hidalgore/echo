@@ -92,8 +92,8 @@ def verify_access_token(token: str) -> AccessClaims:
     except jwt.PyJWTError as exc:
         raise TokenError(f"invalid access token: {exc}") from exc
 
-    if claims["scope"] not in ("guest", "user"):
-        # host/door/admin tokens do not exist yet; refuse rather than trust.
+    if claims["scope"] not in ("guest", "user", "door"):
+        # host/admin tokens do not exist yet; refuse rather than trust.
         raise TokenError(f"unsupported token scope: {claims['scope']!r}")
     if is_family_revoked(claims["fam"]):
         raise TokenError("session has been revoked")

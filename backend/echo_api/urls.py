@@ -10,6 +10,7 @@ urlpatterns = [
     path("", include("events.urls")),
     path("", include("checkout.urls")),
     path("", include("tickets.urls")),
+    path("", include("door.urls")),
     path("internal/schema", SpectacularAPIView.as_view(), name="openapi-schema"),
 ]
 

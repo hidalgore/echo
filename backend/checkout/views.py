@@ -12,6 +12,12 @@ This is the first real consumer of core.idempotency (the locked platform
 rule): both flagged mutations run under IdempotencyMixin, so a repeated key
 replays the stored result and a concurrent duplicate 409s.
 
+Phase 5: the intent-creation and confirm orchestration are module-level
+functions (`build_intent_response`, `confirm_intent_response`) so the S-07
+door-purchase views ride the SAME engine — pricing, holds, Stripe, issuance —
+with only buyer resolution and audit attribution differing (locked rule:
+never a second checkout path).
+
 Age gate (locked): intents on age-restricted events are created as
 `requires_verification` and confirm refuses them. Server-side verification
 records land in Phase 6 — until then age-gated events cannot complete a live
@@ -80,6 +86,106 @@ def _get_owned_intent_or_404(request, intent_id) -> CheckoutIntent:
         raise exceptions.NotFound("Checkout intent not found.") from None
 
 
+def _resolve_tier(event, ticket_type_id):
+    tiers = list(event.tiers.all())
+    if not tiers:
+        raise exceptions.ValidationError({"event_id": "This event has no ticket tiers."})
+    if ticket_type_id is None:
+        return tiers[0]  # tiers are ordered by sort_order (model Meta)
+    for tier in tiers:
+        if tier.echo_id == ticket_type_id:
+            return tier
+    raise exceptions.ValidationError({"ticket_type_id": "Unknown ticket tier for this event."})
+
+
+def build_intent_response(request, *, buyer, audit_action, extra_audit_metadata=None):
+    """Shared intent-creation engine: validate -> price -> hold -> create.
+
+    S-05 passes the authenticated buyer; S-07 door purchases pass the
+    session's walk-up user. Everything else — eligibility, donation rules,
+    pricing, the atomic hold, the age gate — is identical by construction.
+    """
+    serializer = CreateCheckoutIntentRequestSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    payload = serializer.validated_data
+
+    event = _get_event_or_404(payload["event_id"])
+    if event.status not in PURCHASABLE_STATUSES:
+        return error_response(
+            "event_not_on_sale",
+            "Tickets for this event are not currently on sale.",
+            status.HTTP_409_CONFLICT,
+        )
+
+    tier = _resolve_tier(event, payload.get("ticket_type_id"))
+
+    campaign = getattr(event, "donation_campaign", None)
+    donation_cents = payload["donation_cents"]
+    if donation_cents > 0 and campaign is None:
+        raise exceptions.ValidationError(
+            {"donation_cents": "This event has no donation campaign."}
+        )
+
+    pricing = compute_pricing(
+        tier.price_cents * payload["quantity"],
+        nonprofit_host=event.host_is_nonprofit,
+        donation_cents=donation_cents,
+    )
+
+    age_gated = bool(event.age_restriction)
+    try:
+        with transaction.atomic():
+            services.acquire_hold(tier, payload["quantity"])
+            intent = CheckoutIntent.objects.create(
+                user=buyer,
+                event=event,
+                tier=tier,
+                quantity=payload["quantity"],
+                status=(
+                    IntentStatus.REQUIRES_VERIFICATION
+                    if age_gated
+                    else IntentStatus.REQUIRES_PAYMENT
+                ),
+                currency=payload["currency"],
+                subtotal_cents=pricing.subtotal_cents,
+                platform_fee_cents=pricing.platform_fee_cents,
+                processing_fee_cents=pricing.processing_fee_cents,
+                tax_cents=pricing.tax_cents,
+                donation_cents=pricing.donation_cents,
+                donation_fee_cents=pricing.donation_fee_cents,
+                total_cents=pricing.total_cents,
+                age_verification_required=age_gated,
+                donation_campaign=campaign if donation_cents > 0 else None,
+                expires_at=timezone.now()
+                + timedelta(seconds=settings.ECHO_CHECKOUT_HOLD_TTL_SECONDS),
+            )
+    except services.InsufficientInventory:
+        # The locked client error code for stock races.
+        return error_response(
+            "inventory_changed",
+            "Not enough tickets remain in this tier.",
+            status.HTTP_409_CONFLICT,
+        )
+
+    audit.record(
+        audit_action,
+        request=request,
+        actor=buyer if getattr(buyer, "is_authenticated", True) else None,
+        target=("checkout_intent", intent.echo_id),
+        metadata={
+            "event_id": str(event.echo_id),
+            "tier_id": str(tier.echo_id),
+            "quantity": intent.quantity,
+            "total_cents": intent.total_cents,
+            "donation_cents": intent.donation_cents,
+            "age_verification_required": age_gated,
+            "client_context": payload.get("client_context") or {},
+            **(extra_audit_metadata or {}),
+        },
+    )
+    return Response(CheckoutIntentSerializer(intent).data, status=status.HTTP_201_CREATED)
+
+
 class CheckoutIntentCreateView(IdempotencyMixin, APIView):
     """POST /v1/checkout/intents — server pricing + atomic inventory hold."""
 
@@ -93,94 +199,9 @@ class CheckoutIntentCreateView(IdempotencyMixin, APIView):
         responses={201: CheckoutIntentSerializer},
     )
     def post(self, request):
-        serializer = CreateCheckoutIntentRequestSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        payload = serializer.validated_data
-
-        event = _get_event_or_404(payload["event_id"])
-        if event.status not in PURCHASABLE_STATUSES:
-            return error_response(
-                "event_not_on_sale",
-                "Tickets for this event are not currently on sale.",
-                status.HTTP_409_CONFLICT,
-            )
-
-        tier = self._resolve_tier(event, payload.get("ticket_type_id"))
-
-        campaign = getattr(event, "donation_campaign", None)
-        donation_cents = payload["donation_cents"]
-        if donation_cents > 0 and campaign is None:
-            raise exceptions.ValidationError(
-                {"donation_cents": "This event has no donation campaign."}
-            )
-
-        pricing = compute_pricing(
-            tier.price_cents * payload["quantity"],
-            nonprofit_host=event.host_is_nonprofit,
-            donation_cents=donation_cents,
+        return build_intent_response(
+            request, buyer=request.user, audit_action="checkout.intent_created"
         )
-
-        age_gated = bool(event.age_restriction)
-        try:
-            with transaction.atomic():
-                services.acquire_hold(tier, payload["quantity"])
-                intent = CheckoutIntent.objects.create(
-                    user=request.user,
-                    event=event,
-                    tier=tier,
-                    quantity=payload["quantity"],
-                    status=(
-                        IntentStatus.REQUIRES_VERIFICATION
-                        if age_gated
-                        else IntentStatus.REQUIRES_PAYMENT
-                    ),
-                    currency=payload["currency"],
-                    subtotal_cents=pricing.subtotal_cents,
-                    platform_fee_cents=pricing.platform_fee_cents,
-                    processing_fee_cents=pricing.processing_fee_cents,
-                    tax_cents=pricing.tax_cents,
-                    donation_cents=pricing.donation_cents,
-                    donation_fee_cents=pricing.donation_fee_cents,
-                    total_cents=pricing.total_cents,
-                    age_verification_required=age_gated,
-                    donation_campaign=campaign if donation_cents > 0 else None,
-                    expires_at=timezone.now()
-                    + timedelta(seconds=settings.ECHO_CHECKOUT_HOLD_TTL_SECONDS),
-                )
-        except services.InsufficientInventory:
-            # The locked client error code for stock races.
-            return error_response(
-                "inventory_changed",
-                "Not enough tickets remain in this tier.",
-                status.HTTP_409_CONFLICT,
-            )
-
-        audit.record(
-            "checkout.intent_created",
-            request=request,
-            target=("checkout_intent", intent.echo_id),
-            metadata={
-                "event_id": str(event.echo_id),
-                "tier_id": str(tier.echo_id),
-                "quantity": intent.quantity,
-                "total_cents": intent.total_cents,
-                "donation_cents": intent.donation_cents,
-                "age_verification_required": age_gated,
-                "client_context": payload.get("client_context") or {},
-            },
-        )
-        return Response(CheckoutIntentSerializer(intent).data, status=status.HTTP_201_CREATED)
-
-    def _resolve_tier(self, event, ticket_type_id):
-        tiers = list(event.tiers.all())
-        if not tiers:
-            raise exceptions.ValidationError({"event_id": "This event has no ticket tiers."})
-        if ticket_type_id is None:
-            return tiers[0]  # tiers are ordered by sort_order (model Meta)
-        for tier in tiers:
-            if tier.echo_id == ticket_type_id:
-                return tier
-        raise exceptions.ValidationError({"ticket_type_id": "Unknown ticket tier for this event."})
 
 
 class CheckoutIntentDetailView(APIView):
@@ -193,6 +214,147 @@ class CheckoutIntentDetailView(APIView):
     def get(self, request, intent_id):
         intent = _get_owned_intent_or_404(request, intent_id)
         return Response(CheckoutIntentSerializer(intent).data)
+
+
+def _refuse_unconfirmable(intent) -> Response | None:
+    """Terminal / gated intents never reach Stripe."""
+    if intent.status == IntentStatus.REQUIRES_VERIFICATION:
+        return error_response(
+            "age_verification_required",
+            "Age verification must be completed before payment.",
+            status.HTTP_409_CONFLICT,
+        )
+    if intent.status == IntentStatus.SUCCEEDED:
+        return error_response(
+            "intent_already_completed",
+            "This checkout intent was already paid.",
+            status.HTTP_409_CONFLICT,
+        )
+    if intent.status in (IntentStatus.CANCELED, IntentStatus.EXPIRED):
+        return error_response(
+            "intent_expired",
+            "This checkout intent has expired. Start a new checkout.",
+            status.HTTP_409_CONFLICT,
+        )
+    if intent.status == IntentStatus.PROCESSING:
+        return error_response(
+            "payment_in_flight",
+            "A payment for this intent is already being processed.",
+            status.HTTP_409_CONFLICT,
+        )
+    if intent.expires_at <= timezone.now():
+        # TTL passed but the beat hasn't swept it yet — expire it now.
+        services.release_hold(
+            intent, target_status=IntentStatus.EXPIRED, audit_action="checkout.hold_expired"
+        )
+        return error_response(
+            "intent_expired",
+            "This checkout intent has expired. Start a new checkout.",
+            status.HTTP_409_CONFLICT,
+        )
+    return None
+
+
+def _revert_to_payable(intent) -> None:
+    CheckoutIntent.objects.filter(pk=intent.pk, status=IntentStatus.PROCESSING).update(
+        status=IntentStatus.REQUIRES_PAYMENT, updated_at=timezone.now()
+    )
+    intent.status = IntentStatus.REQUIRES_PAYMENT
+
+
+def confirm_intent_response(request, *, intent, payment_method, extra_audit_metadata=None):
+    """Shared confirm engine: claim -> Stripe charge -> complete atomically.
+
+    The caller has already resolved + authorized the intent (owner-only for
+    S-05, session-walk-up for S-07 door purchases). Charge idempotency is
+    scoped to (intent, client Idempotency-Key) exactly as before.
+    """
+    blocked = _refuse_unconfirmable(intent)
+    if blocked is not None:
+        return blocked
+
+    # Claim the intent (requires_payment -> processing) so a concurrent
+    # confirm with a *different* idempotency key can't double-charge; the
+    # same-key case is already handled by the idempotency layer.
+    claimed = CheckoutIntent.objects.filter(
+        pk=intent.pk, status=IntentStatus.REQUIRES_PAYMENT
+    ).update(status=IntentStatus.PROCESSING, updated_at=timezone.now())
+    if not claimed:
+        return error_response(
+            "payment_in_flight",
+            "A payment for this intent is already being processed.",
+            status.HTTP_409_CONFLICT,
+        )
+    intent.status = IntentStatus.PROCESSING
+
+    try:
+        gateway = stripe_gateway.get_gateway()
+    except stripe_gateway.GatewayNotConfigured:
+        _revert_to_payable(intent)
+        return error_response(
+            "payments_not_configured",
+            "Payments are not configured for this environment.",
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
+
+    outcome = gateway.confirm_payment(
+        amount_cents=intent.total_cents,
+        currency=intent.currency,
+        payment_method_token=payment_method["token"],
+        # Scope Stripe's idempotency to this intent + this client attempt:
+        # a client retry replays, a fresh attempt (new key) re-charges a
+        # failed intent.
+        idempotency_key=f"{intent.echo_id}:{request.headers.get(IDEMPOTENCY_HEADER, '')}",
+        metadata={
+            "checkout_intent_id": str(intent.echo_id),
+            "event_id": str(intent.event_id),
+            "user_id": str(intent.user_id),
+        },
+    )
+
+    if outcome.payment_intent_id:
+        CheckoutIntent.objects.filter(pk=intent.pk).update(
+            stripe_payment_intent_id=outcome.payment_intent_id, updated_at=timezone.now()
+        )
+        intent.stripe_payment_intent_id = outcome.payment_intent_id
+
+    if not outcome.succeeded:
+        # Leave the hold in place: the buyer may retry with another
+        # method until the TTL returns it.
+        _revert_to_payable(intent)
+        audit.record(
+            "payment.failed",
+            request=request,
+            target=("checkout_intent", intent.echo_id),
+            metadata={
+                "source": "confirm",
+                "error_code": outcome.error_code,
+                "stripe_payment_intent_id": outcome.payment_intent_id,
+                "payment_method_type": payment_method["type"],
+                **(extra_audit_metadata or {}),
+            },
+        )
+        return error_response(
+            outcome.error_code or stripe_gateway.ERROR_UNKNOWN,
+            outcome.error_message or "Payment could not be confirmed.",
+            status.HTTP_402_PAYMENT_REQUIRED,
+        )
+
+    tickets = services.complete_intent(intent, source="confirm", request=request)
+    if tickets is None:
+        # The TTL expired mid-charge and inventory is gone (complete_intent
+        # audited payment.orphaned) — surface the locked stock-race code.
+        return error_response(
+            "inventory_changed",
+            "Your ticket hold expired before payment completed and the tier "
+            "sold out. Support has been notified.",
+            status.HTTP_409_CONFLICT,
+        )
+
+    return Response(
+        {"status": "succeeded", "tickets": TicketSerializer(tickets, many=True).data},
+        status=status.HTTP_201_CREATED,
+    )
 
 
 class PaymentConfirmView(IdempotencyMixin, APIView):
@@ -214,136 +376,9 @@ class PaymentConfirmView(IdempotencyMixin, APIView):
         payload = serializer.validated_data
 
         intent = _get_owned_intent_or_404(request, payload["intent_id"])
-
-        blocked = self._refuse_unconfirmable(intent)
-        if blocked is not None:
-            return blocked
-
-        # Claim the intent (requires_payment -> processing) so a concurrent
-        # confirm with a *different* idempotency key can't double-charge; the
-        # same-key case is already handled by the idempotency layer.
-        claimed = CheckoutIntent.objects.filter(
-            pk=intent.pk, status=IntentStatus.REQUIRES_PAYMENT
-        ).update(status=IntentStatus.PROCESSING, updated_at=timezone.now())
-        if not claimed:
-            return error_response(
-                "payment_in_flight",
-                "A payment for this intent is already being processed.",
-                status.HTTP_409_CONFLICT,
-            )
-        intent.status = IntentStatus.PROCESSING
-
-        try:
-            gateway = stripe_gateway.get_gateway()
-        except stripe_gateway.GatewayNotConfigured:
-            self._revert_to_payable(intent)
-            return error_response(
-                "payments_not_configured",
-                "Payments are not configured for this environment.",
-                status.HTTP_503_SERVICE_UNAVAILABLE,
-            )
-
-        outcome = gateway.confirm_payment(
-            amount_cents=intent.total_cents,
-            currency=intent.currency,
-            payment_method_token=payload["payment_method"]["token"],
-            # Scope Stripe's idempotency to this intent + this client attempt:
-            # a client retry replays, a fresh attempt (new key) re-charges a
-            # failed intent.
-            idempotency_key=f"{intent.echo_id}:{request.headers.get(IDEMPOTENCY_HEADER, '')}",
-            metadata={
-                "checkout_intent_id": str(intent.echo_id),
-                "event_id": str(intent.event_id),
-                "user_id": str(intent.user_id),
-            },
+        return confirm_intent_response(
+            request, intent=intent, payment_method=payload["payment_method"]
         )
-
-        if outcome.payment_intent_id:
-            CheckoutIntent.objects.filter(pk=intent.pk).update(
-                stripe_payment_intent_id=outcome.payment_intent_id, updated_at=timezone.now()
-            )
-            intent.stripe_payment_intent_id = outcome.payment_intent_id
-
-        if not outcome.succeeded:
-            # Leave the hold in place: the buyer may retry with another
-            # method until the TTL returns it.
-            self._revert_to_payable(intent)
-            audit.record(
-                "payment.failed",
-                request=request,
-                target=("checkout_intent", intent.echo_id),
-                metadata={
-                    "source": "confirm",
-                    "error_code": outcome.error_code,
-                    "stripe_payment_intent_id": outcome.payment_intent_id,
-                    "payment_method_type": payload["payment_method"]["type"],
-                },
-            )
-            return error_response(
-                outcome.error_code or stripe_gateway.ERROR_UNKNOWN,
-                outcome.error_message or "Payment could not be confirmed.",
-                status.HTTP_402_PAYMENT_REQUIRED,
-            )
-
-        tickets = services.complete_intent(intent, source="confirm", request=request)
-        if tickets is None:
-            # The TTL expired mid-charge and inventory is gone (complete_intent
-            # audited payment.orphaned) — surface the locked stock-race code.
-            return error_response(
-                "inventory_changed",
-                "Your ticket hold expired before payment completed and the tier "
-                "sold out. Support has been notified.",
-                status.HTTP_409_CONFLICT,
-            )
-
-        return Response(
-            {"status": "succeeded", "tickets": TicketSerializer(tickets, many=True).data},
-            status=status.HTTP_201_CREATED,
-        )
-
-    def _refuse_unconfirmable(self, intent) -> Response | None:
-        """Terminal / gated intents never reach Stripe."""
-        if intent.status == IntentStatus.REQUIRES_VERIFICATION:
-            return error_response(
-                "age_verification_required",
-                "Age verification must be completed before payment.",
-                status.HTTP_409_CONFLICT,
-            )
-        if intent.status == IntentStatus.SUCCEEDED:
-            return error_response(
-                "intent_already_completed",
-                "This checkout intent was already paid.",
-                status.HTTP_409_CONFLICT,
-            )
-        if intent.status in (IntentStatus.CANCELED, IntentStatus.EXPIRED):
-            return error_response(
-                "intent_expired",
-                "This checkout intent has expired. Start a new checkout.",
-                status.HTTP_409_CONFLICT,
-            )
-        if intent.status == IntentStatus.PROCESSING:
-            return error_response(
-                "payment_in_flight",
-                "A payment for this intent is already being processed.",
-                status.HTTP_409_CONFLICT,
-            )
-        if intent.expires_at <= timezone.now():
-            # TTL passed but the beat hasn't swept it yet — expire it now.
-            services.release_hold(
-                intent, target_status=IntentStatus.EXPIRED, audit_action="checkout.hold_expired"
-            )
-            return error_response(
-                "intent_expired",
-                "This checkout intent has expired. Start a new checkout.",
-                status.HTTP_409_CONFLICT,
-            )
-        return None
-
-    def _revert_to_payable(self, intent) -> None:
-        CheckoutIntent.objects.filter(pk=intent.pk, status=IntentStatus.PROCESSING).update(
-            status=IntentStatus.REQUIRES_PAYMENT, updated_at=timezone.now()
-        )
-        intent.status = IntentStatus.REQUIRES_PAYMENT
 
 
 class StripeWebhookView(APIView):

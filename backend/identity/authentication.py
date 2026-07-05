@@ -22,7 +22,7 @@ from identity.tokens import TokenError, verify_access_token
 class EchoAuthContext:
     """request.auth for authenticated calls: the token's verified claims."""
 
-    scope: str  # "guest" | "user"
+    scope: str  # "guest" | "user" | "door"
     device_id: str
     family_id: str
     user_id: str | None

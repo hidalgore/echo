@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "events",
     "checkout",
     "tickets",
+    "door",
 ]
 
 AUTH_USER_MODEL = "identity.User"
@@ -127,6 +128,8 @@ REST_FRAMEWORK = {
         # Phase 4: per-(identity, ticket) on credential get/refresh — the 30s
         # rotation cadence is 2/min, so this is pure headroom + abuse ceiling.
         "credential": env("RATE_LIMIT_CREDENTIAL", "30/min"),
+        # Door purchases: per (device, session) — walk-up sales are human-paced.
+        "door_purchase": env("RATE_LIMIT_DOOR_PURCHASE", "10/min"),
     },
 }
 
@@ -194,6 +197,21 @@ ECHO_CREDENTIAL_SIGNING_KEY = env("ECHO_CREDENTIAL_SIGNING_KEY", "")
 # CONFIG.NFC_CREDENTIAL_ROTATE_INTERVAL_MS drives its refresh off the
 # credential's real expires_at).
 ECHO_CREDENTIAL_TTL_SECONDS = int(env("ECHO_CREDENTIAL_TTL_SECONDS", "30"))
+
+# ─── Door mode (Phase 5: door app) ───────────────────────────────────────────
+
+# Clock-skew allowance when a door verifies a rotating credential (token TTL
+# is ~30s and scans happen right after display, so a small leeway absorbs
+# device drift without meaningfully widening the window).
+ECHO_DOOR_SCAN_LEEWAY_SECONDS = int(env("ECHO_DOOR_SCAN_LEEWAY_SECONDS", "10"))
+# Re-scan of a checked-in ticket inside this window approves with an alert
+# (locked rule: alert, not block); outside it, the scan refuses.
+ECHO_DOOR_DUPLICATE_WINDOW_SECONDS = int(env("ECHO_DOOR_DUPLICATE_WINDOW_SECONDS", "300"))
+# Pause/resume passcode lockout: this many consecutive failures locks the
+# resume path for the lockout period (attempts are audited, never logged
+# with the presented code).
+ECHO_DOOR_PASSCODE_MAX_ATTEMPTS = int(env("ECHO_DOOR_PASSCODE_MAX_ATTEMPTS", "5"))
+ECHO_DOOR_PASSCODE_LOCKOUT_SECONDS = int(env("ECHO_DOOR_PASSCODE_LOCKOUT_SECONDS", "900"))
 
 # ─── Apple Wallet / PassKit (Phase 4: tickets.passkit; fail-closed) ──────────
 

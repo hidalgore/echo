@@ -13,7 +13,9 @@ import type { ApiResult, Paged, PageParams } from '../../types/api/shared';
 import type {
   EventDTO, EventInventoryDTO, TicketDTO, CredentialDTO, CheckoutIntentDTO,
   ConfirmPaymentResponseDTO, CreateCheckoutIntentRequestDTO, PaymentMethodDTO,
-  DoorScanRequestDTO, DoorScanResultDTO, CircleDTO, RiskDecisionDTO,
+  DoorScanRequestDTO, DoorScanResultDTO, DoorSessionDTO, DoorOfflineBundleDTO,
+  DoorReconcileResultDTO, DoorPurchaseIntentRequestDTO,
+  DoorPurchaseConfirmRequestDTO, CircleDTO, RiskDecisionDTO,
 } from '../../types/api/dto';
 
 export type DiscoveryPort = {
@@ -53,9 +55,27 @@ export type TicketPort = {
   listWallet(params: PageParams): Promise<ApiResult<Paged<TicketDTO>>>;
 };
 
+// Phase 5: session/bundle/purchase methods back S-07 registry rows that had
+// no port method until now (the Phase 4 listWallet precedent — frontend-
+// internal additions, not registry amendments). reconcile's result widened
+// from {ok} to the audit-produced merge summary.
 export type DoorPort = {
+  getSession(sessionId: string): Promise<ApiResult<DoorSessionDTO>>;
+  /** Pause takes no passcode; resume validates it server-side (flagged rows). */
+  pauseSession(sessionId: string): Promise<ApiResult<DoorSessionDTO>>;
+  resumeSession(sessionId: string, passcode: string): Promise<ApiResult<DoorSessionDTO>>;
+  getOfflineBundle(sessionId: string): Promise<ApiResult<DoorOfflineBundleDTO>>;
   submitScan(req: DoorScanRequestDTO, idempotencyKey: string): Promise<ApiResult<DoorScanResultDTO>>;
-  reconcile(ledger: DoorScanRequestDTO[], idempotencyKey: string): Promise<ApiResult<{ ok: true }>>;
+  reconcile(ledger: DoorScanRequestDTO[], idempotencyKey: string): Promise<ApiResult<DoorReconcileResultDTO>>;
+  createPurchaseIntent(
+    request: DoorPurchaseIntentRequestDTO,
+    idempotencyKey: string,
+  ): Promise<ApiResult<CheckoutIntentDTO>>;
+  confirmPurchase(
+    request: DoorPurchaseConfirmRequestDTO,
+    idempotencyKey: string,
+  ): Promise<ApiResult<ConfirmPaymentResponseDTO>>;
+  getPurchaseIntent(intentId: string): Promise<ApiResult<CheckoutIntentDTO>>;
 };
 
 export type CirclePort = {

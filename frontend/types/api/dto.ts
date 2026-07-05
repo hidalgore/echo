@@ -209,13 +209,93 @@ export type DoorScanRequestDTO = {
   offline: boolean;
 };
 
+// ── Phase 5 AMENDMENT (flagged, needs registry lock sign-off) ────────────────
+// DoorScanResultDTO gains `age_badge`: the locked scan verdict includes the
+// age badge (signature, status, age badge, zone, duplicate) but v1.0 gave it
+// no field. `tier_id` carries the Access Control System v1 tier key (e.g.
+// 'vip'), not a catalog UUID — tier color/label are a client mapping (locked
+// W5 rule), and the mock adapter always served the access-tier key.
+
 export type DoorScanResultDTO = {
   approved: boolean;
   ticket_status: TicketStatusDTO;
   verification_state: string; // maps to DoorVerificationState
   failure_reason?: string;
+  /** Access-tier key (ACCESS_TIER_DEFINITIONS), not a catalog tier UUID. */
   tier_id: string;
   authorized_zones: string[];
+  /** Phase 5 amendment: the event's badge, part of the locked verdict. */
+  age_badge: AgeBadgeDTO;
+};
+
+// ── Phase 5 AMENDMENT (flagged, needs registry lock sign-off) ────────────────
+// Audit-produced shapes for S-07 rows the registry locked without DTOs (the
+// ticketStatus precedent): the session resource, the versioned offline
+// bundle, and the reconcile summary. Door purchases reuse the S-05 checkout
+// DTOs — same engine server-side (locked rule: never a second checkout path).
+
+export type DoorSessionDTO = {
+  session_id: EchoId;
+  event_id: EchoId;
+  label: string;
+  /** The checkpoint this post scans for (AccessZoneId vocabulary). */
+  zone: string;
+  status: 'active' | 'paused' | 'closed';
+  expires_at: string;
+  /** Set while the resume passcode is locked out after failed attempts. */
+  passcode_locked_until: string | null;
+};
+
+export type DoorOfflineBundleAdmissionDTO = {
+  ticket_id: EchoId;
+  /** Null when the holder never minted a credential (still QR/pkpass-scannable). */
+  nfc_credential_id: string | null;
+  status: TicketStatusDTO;
+  tier_id: string;
+  age_badge: AgeBadgeDTO;
+  authorized_zones: string[];
+};
+
+export type DoorOfflineBundleDTO = {
+  format_version: number;
+  generated_at: string;
+  session_id: EchoId;
+  event_id: EchoId;
+  zone: string;
+  /** Ed25519 verification key (PEM) — no secret material ever ships. */
+  signing_public_key_pem: string;
+  qr_payload_prefix: string;
+  scan_leeway_seconds: number;
+  duplicate_window_seconds: number;
+  /** What offline verification relaxes vs the server (documented, versioned). */
+  relaxations: string[];
+  admissions: DoorOfflineBundleAdmissionDTO[];
+};
+
+export type DoorReconcileResultDTO = {
+  ok: true;
+  received: number;
+  merged: number;
+  replayed: number;
+  conflicts: number;
+  rejected: number;
+  results: Array<{
+    scanned_at: string;
+    merged: boolean;
+    approved?: boolean;
+    verification_state?: string;
+    reason?: string;
+  }>;
+};
+
+export type DoorPurchaseIntentRequestDTO = CreateCheckoutIntentRequestDTO & {
+  session_id: EchoId;
+};
+
+export type DoorPurchaseConfirmRequestDTO = {
+  session_id: EchoId;
+  intent_id: EchoId;
+  payment_method: PaymentMethodDTO;
 };
 
 export type CircleDTO = {

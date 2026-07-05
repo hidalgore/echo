@@ -97,7 +97,7 @@ class RefreshToken(EchoIdModel):
     token_hash = models.CharField(max_length=64, unique=True)
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="refresh_tokens")
     device = models.ForeignKey(Device, on_delete=models.CASCADE, related_name="refresh_tokens")
-    scope = models.CharField(max_length=16)  # "user" | "guest" (host/door land later phases)
+    scope = models.CharField(max_length=16)  # "user" | "guest" | "door" (host lands Phase 7)
     family_id = models.UUIDField(default=uuid7, db_index=True)
     parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL, related_name="children")
     expires_at = models.DateTimeField(db_index=True)
